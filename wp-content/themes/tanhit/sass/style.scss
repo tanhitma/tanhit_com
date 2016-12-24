@@ -1,0 +1,82 @@
+/*
+Theme Name: Tanhit
+Theme URI:
+Author: the Tanhit team
+Version: 1.2
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Tags:
+Text Domain: tanhit
+*/
+
+
+@import "bower_components/compass-sass-mixins/lib/compass";
+@import 'libs/_style';
+@import 'base/_style';
+@import 'header/_style';
+@import 'content/_style';
+@import 'footer/_style';
+@import 'responsive/_style';
+
+
+html {
+  background: url('/wp-includes/img/backgroung.jpg') no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+body {
+  background-color: transparent !important;
+  /* overflow-x: hidden; */
+  /*font-family: 'Lora', serif;*/
+  font-family: $font-4;
+  min-width: 1024px;
+}
+
+.container {
+  width: 1000px !important;
+}
+
+.header {
+  width: 100%;
+  /*background-color: rgba(255, 255, 255, 0.5);*/
+}
+
+.content {
+  width: 100%;
+  min-height: 300px;
+  background-color: rgba(255, 255, 255, 0.5);
+  font-size: 17px;
+  line-height: 19px;
+  padding: 0 10px 50px 10px;
+}
+
+.footer {
+  width: 100%;
+  min-height: 50px;
+  background-color: rgba(255, 174, 0, 0.27);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
+  background-image: url('/wp-includes/img/ironpatern.png');
+}
+
+/* FancyBix fix */
+.fancybox-title-over {
+  bottom: 0 !important;
+  margin: 0 !important;
+}
+
+
+/* NGG slider fix */
+.ngg-imagebrowser>h3 {
+  display: none;
+}
+
+.comment-reply-title small a:before {
+  display: none !important;
+  content: "" !important;
+  opacity: 0;
+}
+
+#billing_city_field{display:none;}

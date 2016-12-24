@@ -1,0 +1,181 @@
+@import url(https://fonts.googleapis.com/css?family=Lora:400,700&subset=latin,cyrillic);
+@import url(https://fonts.googleapis.com/css?family=Exo+2&subset=latin,cyrillic);
+a {
+  text-decoration: none; }
+  a:hover, a:focus, a:active {
+    outline: none; }
+
+ul {
+  list-style-type: none; }
+
+.block_title {
+  color: #fff;
+  font-size: 3.5em;
+  text-align: center;
+  margin-top: 15px; }
+
+.p0 {
+  padding: 0; }
+
+.align-left {
+  text-align: left; }
+
+.align-right {
+  text-align: right; }
+
+.menu {
+  border-bottom: 1px solid #ffc800; }
+
+.header.upper {
+  padding-top: 30px; }
+
+.header.upper span {
+  display: inline-block;
+  vertical-align: bottom;
+  font-size: 24px;
+  color: red; }
+
+.upper > img {
+  width: 100%; }
+
+.header.logo {
+  background: url("/wp-includes/img/main_logo.jpg") no-repeat;
+  width: 970px;
+  height: 200px;
+  background-size: cover;
+  font-family: 'Exo 2', sans-serif;
+  position: relative; }
+
+.logo-text {
+  position: absolute;
+  color: #ffc800;
+  bottom: 10px;
+  right: 35px;
+  font-size: 18px;
+  text-shadow: 1px 1px #333, -1px -1px #333; }
+
+.lang a {
+  display: inline-block;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  border: 1px solid #ffae00;
+  background-color: #ffae00;
+  overflow: hidden;
+  height: 36px;
+  width: 36px;
+  margin: 0 5px 0 0; }
+
+.lang-ru {
+  background: url("/wp-includes/img/lang_ru.png") no-repeat center center; }
+
+.lang-en {
+  background: url("/wp-includes/img/lang_en.png") no-repeat center center; }
+
+.content table {
+  border-spacing: 10px !important;
+  border-collapse: initial !important; }
+.content .rounded {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  border: 3px solid #ffae00;
+  background-color: #ffae00; }
+.content h1, .content h2, .content h3, .content h4, .content h5 {
+  color: #dd8800;
+  font-weight: bold; }
+.content p {
+  text-indent: 30px; }
+
+.footer {
+  font-size: 13px;
+  color: #666;
+  font-family: 'Exo 2', sans-serif; }
+
+.icons {
+  display: inline-block; }
+
+.icons a {
+  display: inline-block;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  border: 1px solid #ffae00;
+  background-color: #ffae00;
+  overflow: hidden;
+  height: 30px;
+  width: 30px;
+  margin: 10px 5px 0 0; }
+
+.icon-fb {
+  background: url("/wp-includes/img/icon_fb.png") no-repeat center center; }
+
+.icon-vk {
+  background: url("/wp-includes/img/icon_vk.png") no-repeat center center; }
+
+.icon-youtube {
+  background: url("/wp-includes/img/icon_youtube.png") no-repeat center center; }
+
+.footer-text {
+  margin: 5px;
+  text-shadow: 1px 1px #fea; }
+
+.footer-string {
+  display: inline-block;
+  position: relative;
+  top: -10px;
+  left: -5px; }
+
+html {
+  background: url("/wp-includes/img/backgroung.jpg") no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover; }
+
+body {
+  background-color: transparent !important;
+  /* overflow-x: hidden; */
+  font-family: 'Lora', serif;
+  min-width: 1024px; }
+
+.container {
+  width: 1000px !important; }
+
+.header {
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.5); }
+
+.content {
+  width: 100%;
+  min-height: 300px;
+  background-color: rgba(255, 255, 255, 0.5);
+  font-size: 17px;
+  line-height: 19px;
+  padding: 0 10px; }
+
+.footer {
+  width: 100%;
+  min-height: 50px;
+  background-color: rgba(255, 174, 0, 0.27);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
+  background-image: url("/wp-includes/img/ironpatern.png"); }
+
+.nav {
+  font-family: 'Exo 2', sans-serif;
+  text-transform: uppercase; }
+
+.nav a {
+  color: #333333 !important; }
+
+.nav > li > a:focus, .nav > li > a:hover,
+.nav .open > a,
+.dropdown-menu > li > a:focus, .dropdown-menu > li > a:hover {
+  background-color: #ffeebb !important;
+  color: #ee7700 !important; }
+
+.dropdown-menu {
+  border: 1px solid #ff9900;
+  border: 1px solid rgba(255, 200, 0, 0.55); }
+
+.dropdown-menu > .active > a, .dropdown-menu > .active > a:focus, .dropdown-menu > .active > a:hover {
+  background-color: #ff9900; }
+
+/*# sourceMappingURL=style.css.map */

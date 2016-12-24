@@ -1,0 +1,257 @@
+/**
+ * 11.4 - Comments
+ */
+
+.comments-area {
+  background: rgba(230,160,0,0.5);
+  border-radius: 10px;
+  margin-top: 30px;
+}
+
+.comment-list + .comment-respond,
+.comment-navigation + .comment-respond {
+  padding-top: 20px;
+}
+
+.comment-respond {
+  margin: 0 20px;
+  padding: 10px 0 20px 0;
+}
+
+.comment-respond input[type=text],
+.comment-respond textarea {
+  border-radius: 10px;
+  border: 1px solid rgba(153, 153, 153, 0.64);
+  padding: 5px;
+  background: #f6fcad;
+  padding: 1px 3px;
+  max-height: 70px;
+}
+
+
+.comments-title,
+.comment-reply-title {
+  /*border-top: 1px dashed #ff9900;*/
+  font-size: 23px;
+  font-weight: 700;
+  padding-top: 10px;
+}
+
+h2.comment-reply-title  {
+  margin: 0;
+  padding: 0;
+}
+
+.comments-title { }
+
+.comment-list {
+  list-style: none;
+  margin: 0;
+}
+
+.comment-list article,
+.comment-list .pingback,
+.comment-list .trackback {
+  border-top: 1px solid #d1d1d1;
+  padding: 1.75em 0;
+}
+
+.comment {
+  margin: 10px 20px 10px 0;
+  border-top: 1px dashed #dd9933;
+  padding: 10px 0 0 0;
+  &:first-child {
+    border-top: none !important;
+  }
+}
+
+.comment:last-child {
+  /*border-bottom: none !important;*/
+}
+
+.comment-list .children {
+  list-style: none;
+  margin: 0;
+}
+
+.comment-list .children > li {
+  padding-left: 0.875em;
+}
+
+.comment-author {
+  color: #1a1a1a;
+  font-size: 15px;
+}
+
+.comment-body p {
+  font-size: 15px;
+  margin: 0 10px 0 0 !important;
+  text-align: justify;
+  text-indent: 20px;
+}
+
+.comment-author .avatar {
+  float: left;
+  height: 28px;
+  width: 28px;
+  margin-right: 0.875em;
+  position: relative;
+  border: 1px solid #cc8855;
+  border-radius: 3px;
+}
+
+.comment-author .says {
+  color: #993300;
+}
+
+.bypostauthor > article .fn:after {
+  content: "\f304";
+  left: 3px;
+  position: relative;
+  top: 5px;
+}
+
+.comment-metadata,
+.pingback .edit-link {
+  color: #686868;
+  font-family: 'Exo 2', sans-serif;
+  font-size: 13px;
+  font-size: 0.8125rem;
+  line-height: 1.6153846154;
+}
+.comment-meta a {
+  font-size: 13px !important;
+}
+
+.comment-metadata {
+  margin-bottom: 2.1538461538em;
+}
+
+.comment-metadata a,
+.pingback .comment-edit-link {
+  color: #686868;
+}
+
+.comment-metadata a:hover,
+.comment-metadata a:focus,
+.pingback .comment-edit-link:hover,
+.pingback .comment-edit-link:focus {
+  color: #007acc;
+}
+
+.comment-metadata .edit-link,
+.pingback .edit-link {
+  display: inline-block;
+}
+
+.comment-metadata .edit-link:before,
+.pingback .edit-link:before {
+  content: "\002f";
+  display: inline-block;
+  opacity: 0.7;
+  padding: 0 0.538461538em;
+}
+
+.comment-content ul,
+.comment-content ol {
+  margin: 0 0 1.5em 1.25em;
+}
+
+.comment-content li > ul,
+.comment-content li > ol {
+  margin-bottom: 0;
+}
+
+.reply {
+  text-align: right;
+}
+
+.comment-reply-link {
+  border-radius: 3px;
+  display: inline-block;
+  font-family: 'Exo 2', sans-serif;
+  font-size: 13px !important;
+  line-height: 1;
+  padding: 5px 10px;
+  background: #bb7700;
+  color: #fff;
+}
+
+.comment-reply-link:hover,
+.comment-reply-link:focus {
+  border-color: currentColor;
+  color: #007acc;
+  outline: 0;
+}
+
+.comment-form { }
+
+.comment-form label {
+  color: #555555;
+  display: block;
+  font-family: 'Exo 2', sans-serif;
+  font-size: 15px;
+  text-transform: uppercase;
+}
+
+.comment-list .comment-form {
+  /*padding-bottom: 1.75em;*/
+}
+
+.comment-notes,
+.comment-awaiting-moderation,
+.logged-in-as,
+.form-allowed-tags {
+  color: #686868;
+  font-size: 13px;
+}
+
+.no-comments {
+  border-top: 1px solid #d1d1d1;
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 700;
+  margin: 0;
+  padding-top: 1.75em;
+}
+
+.comment-navigation + .no-comments {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.form-allowed-tags code {
+  font-family: Inconsolata, monospace;
+}
+
+.form-submit {
+  margin-bottom: 0;
+}
+
+.required {
+  color: #007acc;
+  font-family: Merriweather, Georgia, serif;
+}
+
+.comment-reply-title small {
+  font-size: 100%;
+}
+
+.comment-reply-title small a {
+  border: 0;
+  float: right;
+  height: 32px;
+  overflow: hidden;
+  /*width: 26px;*/
+}
+
+.comment-reply-title small a:hover,
+.comment-reply-title small a:focus {
+  color: #1a1a1a;
+}
+
+.comment-reply-title small a:before {
+  content: "\f405";
+  font-size: 32px;
+  position: relative;
+  top: -5px;
+}

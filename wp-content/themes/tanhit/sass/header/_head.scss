@@ -1,0 +1,89 @@
+.menu {
+  border-bottom: 1px solid rgba(227, 18, 18, 1);
+}
+
+.header.menu {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.header.upper {
+  padding-top: 40px;
+}
+
+.header.upper .lbl {
+  display: inline-block;
+  vertical-align: bottom;
+  font-size: 24px;
+  color: red;
+  font-family: $font-1,serif;
+}
+
+.upper > img {
+  width: 100%;
+}
+
+.header.logo {
+    background: url("/wp-includes/img/main_logo.jpg") no-repeat;
+    width: 970px;
+    height: 200px;
+    background-size: cover;
+    font-family: 'Exo 2', sans-serif;
+    position: relative;
+    margin-top: 5px;
+
+}
+
+.logo-text {
+    position: absolute;
+    color: rgb(255, 228, 170);
+    bottom: 10px;
+    right: 35px;
+    font-size: 16px;
+    font-family: din-next-w01-light, din-next-w02-light, din-next-w10-light, sans-serif;
+}
+
+.lang {
+  margin-top: 10px;
+  .lang-ru, .lang-en {
+    display: inline-block;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    border: 1px solid rgba(255, 174, 0, 1);
+    background-color: rgba(255, 174, 0, 1);
+    overflow: hidden;
+    height: 36px;
+    width: 36px;
+    margin: 0 5px 0 0;
+  }
+}
+
+.up-contact,
+.up-login {
+  font-size: 17px;
+  text-decoration: underline;
+  display: inline-block;
+  line-height: 35px;
+  vertical-align: text-bottom;
+  padding-left: 10px;
+  color: #000000;
+}
+
+.up-logout {
+  font-size: 17px;
+  text-decoration: none;
+  display: inline-block;
+  line-height: 35px;
+  vertical-align: text-bottom;
+  padding-right: 10px;
+  a {
+    color: #000000;
+  }
+}
+
+
+.lang-ru {
+  background: url("/wp-includes/img/lang_ru.png") no-repeat center center;
+}
+.lang-en {
+  background: url("/wp-includes/img/lang_en.png") no-repeat center center;
+}

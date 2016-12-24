@@ -1,0 +1,31 @@
+var wpmVideo = {
+    initYT : function (videoId, file, ratio, autostart) {
+         var player = jwplayer(videoId).setup({
+			//flashplayer : '/wp-content/plugins/member-luxe/js/jwplayer/jwplayer.flash.swf',
+            file        : file,
+            width       : "100%",
+            aspectratio : ratio,
+            autostart   : autostart,
+            stretching  : "fill",
+            fallback    : false,
+			//primary	: 'flash',
+        });
+        player.onPlay(function () {
+            var _this = $(this.container);
+            setTimeout(function () {
+                _this.closest('.wpmjw').removeClass("inactive");
+            }, 1000);
+            $("#" + videoId).hover(function () {
+                var $this = $(this),
+                    interval = setInterval(function () {
+                        if ($this.is(":hover")) {
+                            $this.removeClass("jw-flag-user-inactive")
+                        } else {
+                            clearInterval(interval);
+                        }
+                    }, 50);
+                $(this).removeClass("jw-flag-user-inactive");
+            });
+        });
+    }
+};

@@ -1,0 +1,36 @@
+.certificated {
+
+  border-left: 1px solid #999;
+  border-right: 1px solid #999;
+  border-bottom: 1px solid #999;
+  border-collapse: collapse;
+  border-spacing: 0 !important;
+
+
+  tr:first-child {
+    background-color: rgba(228, 247, 15, 0.34) !important;
+    /*text-align: center;*/
+    font-weight: bold;
+  }
+
+  tr {
+  height: 50px;
+
+   &:hover {
+      background-color: rgba(255, 200, 100, 0.3);
+    }
+
+    td {
+      border-top: 1px solid #999;
+      min-height: 50px;
+      vertical-align: top;
+      padding: 20px 10px;
+
+      a {
+        text-decoration: none;
+      }
+
+    }
+
+  }
+}

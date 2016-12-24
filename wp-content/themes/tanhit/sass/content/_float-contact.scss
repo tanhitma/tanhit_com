@@ -1,0 +1,54 @@
+/**
+ * 11.4 - Contact
+ */
+
+#float-contact {
+
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 280px;
+  z-index: 5;
+
+  #shildik {
+    background: rgba(255, 174, 0, 1);
+    color: #000;
+    padding: 7px 0 3px 7px;
+    border-radius: 10px 0 0 0;
+    cursor: pointer;
+    font-family: 'Exo 2', sans-serif;
+    box-shadow: -1px -1px 1px #fff;
+    font-size: 17px;
+    line-height: 25px;
+
+    span {
+      padding: 0 5px;
+    }
+
+    #float-close {
+      float: right;
+      display: none;
+    }
+  }
+
+  #contact-form {
+    display: none;
+    border: 1px solid rgba(255, 174, 0, 1);
+    text-align: center;
+    padding: 30px;
+    background: rgb(255, 255, 255);
+    overflow-y: auto;
+    max-height: 550px;
+    box-shadow: -1px 1px 1px #fff;
+
+    textarea {
+      height: 120px;
+    }
+
+  }
+
+}
+
+.full-width {
+  width: 400px !important;
+}

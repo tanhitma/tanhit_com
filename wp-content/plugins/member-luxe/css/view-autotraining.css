@@ -1,0 +1,66 @@
+.view-autotraining-list {
+    height: 260px;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+}
+.autotraining-material {
+    box-sizing: border-box;
+    display: inline-block;
+    height: 220px;
+    margin: 2px;
+    padding-right: 80px;
+    position: relative;
+    vertical-align: top;
+    width: 350px;
+}
+.autotraining-material .inner-wrapper {
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+    height: 220px;
+    padding: 5px;
+    width: 270px;
+}
+.autotraining-material .title {
+    color: #000;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.autotraining-material .total-shift {
+    margin-bottom: 15px;
+}
+.autotraining-material .total-shift > b,
+.autotraining-material .homework > b {
+    color: #000;
+    font-size: 14px;
+    font-weight: bold;
+    margin: 10px 0 0;
+}
+.autotraining-material ul {
+    margin: 0;
+    padding: 0;
+}
+.autotraining-material ul li {
+    background: #eee;
+    color: #777;
+    font-size: 12px;
+    margin: 0 0 5px;
+    white-space: normal;
+}
+.autotraining-material ul li b {
+    color: #555;
+}
+.autotraining-material .timeline-arrow {
+    background: url(../i/timeline-arrow.png) no-repeat;
+    display: block;
+    height: 18px;
+    margin-top: -9px;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    width: 80px;
+}

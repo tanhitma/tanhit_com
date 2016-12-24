@@ -1,0 +1,221 @@
+/*.digital-downloads, .my-webinars, .my-seminars */
+.offer-block {
+
+  margin-left: 0;
+  padding-left: 0;
+
+  ul {
+    padding-top: 20px;
+  }
+
+  li {
+    border-bottom: 1px dotted #ddd;
+    padding-bottom: 3px;
+    height: 50px;
+    line-height: 40px;
+
+    &.emptyli {
+      height: 20px;
+      &:hover {
+        background: none !important;
+      }
+    }
+  }
+
+  li:hover {
+    background: rgba(255, 200, 100, 0.3);
+  }
+
+  .item-date,
+  .item-time,
+  .item-preview,
+  .item-link,
+  .btn-download,
+  .btn-show,
+  .btn-cart,
+  .btn-enter {
+    display: inline-block;
+    vertical-align: middle;
+    margin-top: 5px;
+  }
+
+  .btn-download, .btn-show {
+    float: right;
+    margin: 5px;
+  }
+
+  .item-preview {
+    height: 50px;
+    width: 50px;
+    background-size: cover !important;
+    background-position: center !important;
+    margin: 0px !important;
+  }
+
+  .item-date {
+    width: 95px;
+    text-align: center;
+    padding: 5px;
+    line-height: 16px;
+    vertical-align: middle;
+  }
+
+  .time-remains {
+    display: inline-block;
+    font-size: 17px;
+    text-align: center;
+    vertical-align: middle;
+    padding: 5px;
+    font-weight: bold;
+    float: right;
+    line-height: 18px;
+  }
+
+  .item-link {
+    width: 500px;
+    display: inline-block;
+    line-height: 16px;
+    vertical-align: middle;
+  }
+
+  .item-price {
+    display: inline-block;
+    width: 100px;
+    line-height: 16px;
+    vertical-align: middle;
+    text-align: center;
+    .amount {
+      white-space: nowrap;
+      display: inline-block;
+    }
+  }
+
+  .vid-link {
+    width: 290px;
+  }
+
+  .file-name {
+    display: inline-block;
+    line-height: 16px;
+    width: 200px;
+    vertical-align: middle;
+  }
+
+  .btn-download,
+  .btn-show,
+  .btn-cart,
+  .btn-enter {
+    line-height: 40px;
+    background: #ffae00;
+    color: #000;
+    cursor: pointer;
+    position: relative;
+    text-decoration: none;
+    padding: 0px 20px;
+    font-weight: 700;
+    border-radius: 3px;
+    &:hover {
+
+    }
+  }
+
+  .btn-download {
+
+  }
+
+  .btn-show {
+    
+  }
+
+  .btn-enter {
+
+  }
+
+}
+
+.show_vid {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 100%;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+}
+
+.vid_player {
+  position: absolute;
+  top: 50%;
+  width: 800px;
+  height: 600px;
+  left: 50%;
+  margin-left: -400px;
+  margin-top: -300px;
+}
+
+td.order:hover {
+  background: rgba(255, 200, 100, 0.3);
+}
+
+
+
+.last-news {
+  background: rgba(228, 247, 15, 0.34);
+  padding: 3px;
+  border-radius: 5px;
+}
+
+.last-news {
+  background: rgba(228, 247, 15, 0.34);
+  padding: 3px;
+  border-radius: 5px;
+}
+
+.last-news img {
+  width: 50px;
+  border-radius: 5px;
+  display: inline-block;
+}
+
+.last-news a {
+  display: inline-block;
+  max-width: 885px;
+  vertical-align: middle;
+}
+
+.order-details {
+  display:none;
+  background-color:rgba(228, 247, 15, 0.34);
+  border: 1px solid rgba(0,0,0,.1);
+}
+
+.my_account_order-items {
+  width: 100%;
+}
+
+/*
+* Responsive rules fix
+*/
+
+@media only screen and (max-width: 768px) {
+  tr.order:not(.clone-wrapper)>td.order-details {
+    display: none !important;
+  }
+  tr.order.clone-wrapper>td.order-details {
+    background: rgba(228, 247, 15, 0.34) !important;
+  }
+  tr.order>td {
+    display: table-cell !important;
+    width: 20%;
+  }
+  .order-details:before {
+    display: none;
+  }
+  .order-item>td:before {
+    display: none;
+  }
+  /*  */
+
+}

@@ -1,0 +1,74 @@
+@import "bower_components/compass-sass-mixins/lib/compass";
+@import 'libs/_style';
+@import 'base/_style';
+@import 'header/_style';
+@import 'content/_style';
+@import 'footer/_style';
+@import 'responsive/_style';
+
+html {
+  background: url('/wp-includes/img/backgroung.jpg') no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+body {
+  background-color: transparent !important;
+  /* overflow-x: hidden; */
+  font-family: 'Lora', serif;
+  min-width: 1024px;
+}
+
+.container {
+  width: 1000px !important;
+}
+
+.header {
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.content {
+  width: 100%;
+  min-height: 300px;
+  background-color: rgba(255, 255, 255, 0.5);
+  font-size: 17px;
+  line-height: 19px;
+  padding: 0 10px;
+}
+
+.footer {
+  width: 100%;
+  min-height: 50px;
+  background-color: rgba(255, 174, 0, 0.27);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
+  background-image: url('/wp-includes/img/ironpatern.png');
+}
+
+.nav {
+  font-family: 'Exo 2', sans-serif;
+  text-transform: uppercase;
+
+}
+
+.nav a {
+  color: #333333 !important;
+}
+
+.nav>li>a:focus, .nav>li>a:hover,
+.nav .open>a,
+.dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover{
+  background-color: #ffeebb !important;
+  color: #ee7700 !important;
+}
+
+.dropdown-menu {
+  border: 1px solid #ff9900;
+  border: 1px solid rgba(255,200,0,.55);
+}
+
+.dropdown-menu>.active>a, .dropdown-menu>.active>a:focus, .dropdown-menu>.active>a:hover {
+  background-color: #ff9900;
+}

@@ -1,0 +1,2105 @@
+/* jQuery Countdown styles 2.0.0. */
+
+
+/* -------------------------------------------- skin 1 -------------------------------- */
+.countdown-wrap .c-image{
+    display: block;
+    margin: 10px auto;
+    max-width: 100%;
+    height: auto;
+}
+.countdown-wrap{
+    position: relative;
+
+    font-size: 0;
+}
+
+.countdown-wrap .countdown{
+    margin: 20px auto;
+}
+.c-skin-1.c-size-big .countdown {
+    width: 622px;
+    height: 164px;
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: 622px 164px;
+}
+.c-skin-1.c-size-medium .countdown {
+    width: 467px;
+    height: 124px;
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: 467px 124px;
+}
+.c-skin-1.c-size-small .countdown {
+    width: 311px;
+    height: 84px;
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: 311px 84px;
+}
+
+.c-skin-1.c-color-1 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/1/color-1/bg.png');
+}
+.c-skin-1.c-color-2 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/1/color-2/bg.png');
+}
+.c-skin-1.c-color-3 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/1/color-3/bg.png');
+}
+.c-skin-1.c-color-4 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/1/color-4/bg.png');
+}
+.c-skin-1.c-color-5 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/1/color-5/bg.png');
+}
+.c-skin-1.c-color-6 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/1/color-6/bg.png');
+}
+.c-skin-1.c-color-7 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/1/color-7/bg.png');
+}
+.c-skin-1.c-color-8 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/1/color-8/bg.png');
+}
+.c-skin-1.c-size-big .digits-wrap{
+     padding: 32px 0 0;
+     text-align: center;
+ }
+.c-skin-1.c-size-medium .digits-wrap{
+    padding: 24px 0 0;
+    text-align: center;
+}
+.c-skin-1.c-size-small .digits-wrap{
+    padding: 16px 0 0;
+    text-align: center;
+}
+
+.c-skin-1 .digits-group{
+    display: inline-block;
+}
+.c-skin-1.c-size-big .digit, .c-skin-1.c-size-big .image-sep {
+    display: inline-block!important;
+    width: 43px;
+    height: 68px;
+    background-repeat: no-repeat;
+    background-size: 473px 68px;
+    margin: 0 2px;
+    padding: 0;
+}
+.c-skin-1.c-size-medium .digit, .c-skin-1.c-size-medium .image-sep {
+    display: inline-block!important;
+    width: 32px;
+    height: 51px;
+    background-repeat: no-repeat;
+    background-size: 352px 51px;
+    margin: 0 2px;
+    padding: 0;
+}
+.c-skin-1.c-size-small .digit, .c-skin-1.c-size-small .image-sep {
+    display: inline-block!important;
+    width: 22px;
+    height: 35px;
+    background-repeat: no-repeat;
+    background-size: 242px 35px;
+    margin: 0 1px;
+    padding: 0;
+}
+
+.c-skin-1.c-color-1 .digit, .c-skin-1.c-color-1 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/1/color-1/digits.png');
+}
+.c-skin-1.c-color-2 .digit, .c-skin-1.c-color-2 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/1/color-2/digits.png');
+}
+.c-skin-1.c-color-3 .digit, .c-skin-1.c-color-3 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/1/color-2/digits.png');
+}
+.c-skin-1.c-color-4 .digit, .c-skin-1.c-color-4 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/1/color-2/digits.png');
+}
+.c-skin-1.c-color-5 .digit, .c-skin-1.c-color-5 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/1/color-2/digits.png');
+}
+.c-skin-1.c-color-6 .digit, .c-skin-1.c-color-6 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/1/color-2/digits.png');
+}
+.c-skin-1.c-color-7 .digit, .c-skin-1.c-color-7 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/1/color-2/digits.png');
+}
+.c-skin-1.c-color-8 .digit, .c-skin-1.c-color-8 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/1/color-2/digits.png');
+}
+
+.c-skin-1.c-size-big span.image-0 {
+    background-position: 0 0;
+}
+
+.c-skin-1.c-size-big span.image-1 {
+    background-position: -43px 0;
+}
+
+.c-skin-1.c-size-big span.image-2 {
+    background-position: -86px 0;
+}
+
+.c-skin-1.c-size-big span.image-3 {
+    background-position: -129px 0;
+}
+
+.c-skin-1.c-size-big span.image-4 {
+    background-position: -172px 0;
+}
+
+.c-skin-1.c-size-big span.image-5 {
+    background-position: -215px 0;
+}
+
+.c-skin-1.c-size-big span.image-6 {
+    background-position: -258px 0;
+}
+
+.c-skin-1.c-size-big span.image-7 {
+    background-position: -301px 0;
+}
+
+.c-skin-1.c-size-big span.image-8 {
+    background-position: -344px 0;
+}
+
+.c-skin-1.c-size-big span.image-9 {
+    background-position: -387px 0;
+}
+
+.c-skin-1.c-size-big span.image-sep {
+    background-position: -430px 0;
+}
+
+/* --------------------------- */
+
+.c-skin-1.c-size-medium span.image-0 {
+    background-position: 0 0;
+}
+
+.c-skin-1.c-size-medium span.image-1 {
+    background-position: -32px 0;
+}
+
+.c-skin-1.c-size-medium span.image-2 {
+    background-position: -64px 0;
+}
+
+.c-skin-1.c-size-medium span.image-3 {
+    background-position: -96px 0;
+}
+
+.c-skin-1.c-size-medium span.image-4 {
+    background-position: -128px 0;
+}
+
+.c-skin-1.c-size-medium span.image-5 {
+    background-position: -160px 0;
+}
+
+.c-skin-1.c-size-medium span.image-6 {
+    background-position: -192px 0;
+}
+
+.c-skin-1.c-size-medium span.image-7 {
+    background-position: -224px 0;
+}
+
+.c-skin-1.c-size-medium span.image-8 {
+    background-position: -256px 0;
+}
+
+.c-skin-1.c-size-medium span.image-9 {
+    background-position: -288px 0;
+}
+
+.c-skin-1.c-size-medium span.image-sep {
+    background-position: -320px 0;
+}
+/* --------------------------- */
+
+.c-skin-1.c-size-small span.image-0 {
+    background-position: 0 0;
+}
+
+.c-skin-1.c-size-small span.image-1 {
+    background-position: -22px 0;
+}
+
+.c-skin-1.c-size-small span.image-2 {
+    background-position: -44px 0;
+}
+
+.c-skin-1.c-size-small span.image-3 {
+    background-position: -66px 0;
+}
+
+.c-skin-1.c-size-small span.image-4 {
+    background-position: -88px 0;
+}
+
+.c-skin-1.c-size-small span.image-5 {
+    background-position: -110px 0;
+}
+
+.c-skin-1.c-size-small span.image-6 {
+    background-position: -132px 0;
+}
+
+.c-skin-1.c-size-small span.image-7 {
+    background-position: -154px 0;
+}
+
+.c-skin-1.c-size-small span.image-8 {
+    background-position: -176px 0;
+}
+
+.c-skin-1.c-size-small span.image-9 {
+    background-position: -198px 0;
+}
+
+.c-skin-1.c-size-small span.image-sep {
+    background-position: -220px 0;
+}
+/* ------------------------------------ */
+/* -------------------------------------------- skin 2 -------------------------------- */
+
+.c-skin-2.c-size-big .countdown {
+    width: 624px;
+    height: 162px;
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: 624px 162px;
+}
+.c-skin-2.c-size-medium .countdown {
+    width: 468px;
+    height: 122px;
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: 468px 122px;
+}
+.c-skin-2.c-size-small .countdown {
+    width: 312px;
+    height: 81px;
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: 312px 81px;
+}
+
+.c-skin-2.c-color-1 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/2/color-1/bg.png');
+}
+.c-skin-2.c-color-2 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/2/color-2/bg.png');
+}
+.c-skin-2.c-color-3 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/2/color-3/bg.png');
+}
+.c-skin-2.c-color-4 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/2/color-4/bg.png');
+}
+.c-skin-2.c-color-5 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/2/color-5/bg.png');
+}
+.c-skin-2.c-color-6 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/2/color-6/bg.png');
+}
+.c-skin-2.c-color-7 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/2/color-7/bg.png');
+}
+.c-skin-2.c-color-8 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/2/color-8/bg.png');
+}
+.c-skin-2.c-size-big .digits-wrap{
+    padding: 44px 0 0;
+    text-align: center;
+}
+.c-skin-2.c-size-medium .digits-wrap{
+    padding: 33px 0 0;
+    text-align: center;
+}
+.c-skin-2.c-size-small .digits-wrap{
+    padding: 22px 0 0;
+    text-align: center;
+}
+
+.c-skin-2 .digits-group{
+    display: inline-block;
+}
+.c-skin-2.c-size-big .digit, .c-skin-2.c-size-big .image-sep {
+    display: inline-block!important;
+    width: 43px;
+    height: 47px;
+    background-repeat: no-repeat;
+    background-size: 473px 47px;
+    margin: 0 2px;
+    padding: 0;
+}
+.c-skin-2.c-size-medium .digit, .c-skin-2.c-size-medium .image-sep {
+    display: inline-block!important;
+    width: 32px;
+    height: 35px;
+    background-repeat: no-repeat;
+    background-size: 352px 35px;
+    margin: 0 2px;
+    padding: 0;
+}
+.c-skin-2.c-size-small .digit, .c-skin-2.c-size-small .image-sep {
+    display: inline-block!important;
+    width: 22px;
+    height: 24px;
+    background-repeat: no-repeat;
+    background-size: 242px 24px;
+    margin: 0 1px;
+    padding: 0;
+}
+
+.c-skin-2.c-color-1 .digit, .c-skin-2.c-color-1 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/2/color-1/digits.png');
+}
+.c-skin-2.c-color-2 .digit, .c-skin-2.c-color-2 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/2/color-2/digits.png');
+}
+.c-skin-2.c-color-3 .digit, .c-skin-2.c-color-3 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/2/color-3/digits.png');
+}
+.c-skin-2.c-color-4 .digit, .c-skin-2.c-color-4 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/2/color-4/digits.png');
+}
+.c-skin-2.c-color-5 .digit, .c-skin-2.c-color-5 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/2/color-5/digits.png');
+}
+.c-skin-2.c-color-6 .digit, .c-skin-2.c-color-6 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/2/color-6/digits.png');
+}
+.c-skin-2.c-color-7 .digit, .c-skin-2.c-color-7 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/2/color-7/digits.png');
+}
+.c-skin-2.c-color-8 .digit, .c-skin-2.c-color-8 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/2/color-8/digits.png');
+}
+
+.c-skin-2.c-size-big span.image-0 {
+    background-position: 0 0;
+}
+
+.c-skin-2.c-size-big span.image-1 {
+    background-position: -43px 0;
+}
+
+.c-skin-2.c-size-big span.image-2 {
+    background-position: -86px 0;
+}
+
+.c-skin-2.c-size-big span.image-3 {
+    background-position: -129px 0;
+}
+
+.c-skin-2.c-size-big span.image-4 {
+    background-position: -172px 0;
+}
+
+.c-skin-2.c-size-big span.image-5 {
+    background-position: -215px 0;
+}
+
+.c-skin-2.c-size-big span.image-6 {
+    background-position: -258px 0;
+}
+
+.c-skin-2.c-size-big span.image-7 {
+    background-position: -301px 0;
+}
+
+.c-skin-2.c-size-big span.image-8 {
+    background-position: -344px 0;
+}
+
+.c-skin-2.c-size-big span.image-9 {
+    background-position: -387px 0;
+}
+
+.c-skin-2.c-size-big span.image-sep {
+    background-position: -430px 0;
+}
+
+/* --------------------------- */
+
+.c-skin-2.c-size-medium span.image-0 {
+    background-position: 0 0;
+}
+
+.c-skin-2.c-size-medium span.image-1 {
+    background-position: -32px 0;
+}
+
+.c-skin-2.c-size-medium span.image-2 {
+    background-position: -64px 0;
+}
+
+.c-skin-2.c-size-medium span.image-3 {
+    background-position: -96px 0;
+}
+
+.c-skin-2.c-size-medium span.image-4 {
+    background-position: -128px 0;
+}
+
+.c-skin-2.c-size-medium span.image-5 {
+    background-position: -160px 0;
+}
+
+.c-skin-2.c-size-medium span.image-6 {
+    background-position: -192px 0;
+}
+
+.c-skin-2.c-size-medium span.image-7 {
+    background-position: -224px 0;
+}
+
+.c-skin-2.c-size-medium span.image-8 {
+    background-position: -256px 0;
+}
+
+.c-skin-2.c-size-medium span.image-9 {
+    background-position: -288px 0;
+}
+
+.c-skin-2.c-size-medium span.image-sep {
+    background-position: -320px 0;
+}
+/* --------------------------- */
+
+.c-skin-2.c-size-small span.image-0 {
+    background-position: 0 0;
+}
+
+.c-skin-2.c-size-small span.image-1 {
+    background-position: -22px 0;
+}
+
+.c-skin-2.c-size-small span.image-2 {
+    background-position: -44px 0;
+}
+
+.c-skin-2.c-size-small span.image-3 {
+    background-position: -66px 0;
+}
+
+.c-skin-2.c-size-small span.image-4 {
+    background-position: -88px 0;
+}
+
+.c-skin-2.c-size-small span.image-5 {
+    background-position: -110px 0;
+}
+
+.c-skin-2.c-size-small span.image-6 {
+    background-position: -132px 0;
+}
+
+.c-skin-2.c-size-small span.image-7 {
+    background-position: -154px 0;
+}
+
+.c-skin-2.c-size-small span.image-8 {
+    background-position: -176px 0;
+}
+
+.c-skin-2.c-size-small span.image-9 {
+    background-position: -198px 0;
+}
+
+.c-skin-2.c-size-small span.image-sep {
+    background-position: -220px 0;
+}
+/* ------------------------------------ */
+/* -------------------------------------------- skin 3 -------------------------------- */
+
+.c-skin-3.c-size-big .countdown {
+    width: 622px;
+    height: 143px;
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: 622px 143px;
+}
+.c-skin-3.c-size-medium .countdown {
+    width: 467px;
+    height: 107px;
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: 467px 107px;
+}
+.c-skin-3.c-size-small .countdown {
+    width: 311px;
+    height: 72px;
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: 311px 72px;
+}
+
+.c-skin-3.c-color-1 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/3/color-1/bg.png');
+}
+.c-skin-3.c-color-2 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/3/color-1/bg.png');
+}
+.c-skin-3.c-color-3 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/3/color-1/bg.png');
+}
+.c-skin-3.c-color-4 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/3/color-1/bg.png');
+}
+.c-skin-3.c-color-5 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/3/color-1/bg.png');
+}
+.c-skin-3.c-color-6 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/3/color-1/bg.png');
+}
+.c-skin-3.c-color-7 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/3/color-1/bg.png');
+}
+.c-skin-3.c-color-8 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/3/color-1/bg.png');
+}
+.c-skin-3.c-size-big .digits-wrap{
+    padding: 22px 0 0;
+    text-align: center;
+}
+.c-skin-3.c-size-medium .digits-wrap{
+    padding: 16px 0 0;
+    text-align: center;
+}
+.c-skin-3.c-size-small .digits-wrap{
+    padding: 11px 0 0;
+    text-align: center;
+}
+
+.c-skin-3 .digits-group{
+    display: inline-block;
+}
+.c-skin-3.c-size-big .digit, .c-skin-3.c-size-big .image-sep {
+    display: inline-block!important;
+    width: 32px;
+    height: 49px;
+    background-repeat: no-repeat;
+    background-size: 352px 49px;
+    margin: 0 5px;
+    padding: 0;
+}
+.c-skin-3.c-size-big .image-sep{
+    margin: 0 22px;
+}
+.c-skin-3.c-size-medium .digit, .c-skin-3.c-size-medium .image-sep {
+    display: inline-block!important;
+    width: 24px;
+    height: 37px;
+    background-repeat: no-repeat;
+    background-size: 264px 37px;
+    margin: 0 3px;
+    padding: 0;
+}
+.c-skin-3.c-size-medium .image-sep{
+    margin: 0 18px;
+}
+.c-skin-3.c-size-small .digit, .c-skin-3.c-size-small .image-sep {
+    display: inline-block!important;
+    width: 16px;
+    height: 25px;
+    background-repeat: no-repeat;
+    background-size: 176px 25px;
+    margin: 0 2px;
+    padding: 0;
+}
+.c-skin-3.c-size-small .image-sep{
+    margin: 0 12px;
+}
+
+.c-skin-3.c-color-1 .digit, .c-skin-3.c-color-1 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/3/color-1/digits.png');
+}
+.c-skin-3.c-color-2 .digit, .c-skin-3.c-color-2 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/3/color-2/digits.png');
+}
+.c-skin-3.c-color-3 .digit, .c-skin-3.c-color-3 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/3/color-3/digits.png');
+}
+.c-skin-3.c-color-4 .digit, .c-skin-3.c-color-4 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/3/color-4/digits.png');
+}
+.c-skin-3.c-color-5 .digit, .c-skin-3.c-color-5 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/3/color-5/digits.png');
+}
+.c-skin-3.c-color-6 .digit, .c-skin-3.c-color-6 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/3/color-6/digits.png');
+}
+.c-skin-3.c-color-7 .digit, .c-skin-3.c-color-7 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/3/color-7/digits.png');
+}
+.c-skin-3.c-color-8 .digit, .c-skin-3.c-color-8 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/3/color-8/digits.png');
+}
+
+.c-skin-3.c-size-big span.image-0 {
+    background-position: 0 0;
+}
+
+.c-skin-3.c-size-big span.image-1 {
+    background-position: -32px 0;
+}
+
+.c-skin-3.c-size-big span.image-2 {
+    background-position: -64px 0;
+}
+
+.c-skin-3.c-size-big span.image-3 {
+    background-position: -96px 0;
+}
+
+.c-skin-3.c-size-big span.image-4 {
+    background-position: -128px 0;
+}
+
+.c-skin-3.c-size-big span.image-5 {
+    background-position: -160px 0;
+}
+
+.c-skin-3.c-size-big span.image-6 {
+    background-position: -192px 0;
+}
+
+.c-skin-3.c-size-big span.image-7 {
+    background-position: -224px 0;
+}
+
+.c-skin-3.c-size-big span.image-8 {
+    background-position: -256px 0;
+}
+
+.c-skin-3.c-size-big span.image-9 {
+    background-position: -288px 0;
+}
+
+.c-skin-3.c-size-big span.image-sep {
+    background-position: -320px 0;
+}
+
+/* --------------------------- */
+
+.c-skin-3.c-size-medium span.image-0 {
+    background-position: 0 0;
+}
+
+.c-skin-3.c-size-medium span.image-1 {
+    background-position: -24px 0;
+}
+
+.c-skin-3.c-size-medium span.image-2 {
+    background-position: -48px 0;
+}
+
+.c-skin-3.c-size-medium span.image-3 {
+    background-position: -72px 0;
+}
+
+.c-skin-3.c-size-medium span.image-4 {
+    background-position: -96px 0;
+}
+
+.c-skin-3.c-size-medium span.image-5 {
+    background-position: -120px 0;
+}
+
+.c-skin-3.c-size-medium span.image-6 {
+    background-position: -144px 0;
+}
+
+.c-skin-3.c-size-medium span.image-7 {
+    background-position: -168px 0;
+}
+
+.c-skin-3.c-size-medium span.image-8 {
+    background-position: -192px 0;
+}
+
+.c-skin-3.c-size-medium span.image-9 {
+    background-position: -216px 0;
+}
+
+.c-skin-3.c-size-medium span.image-sep {
+    background-position: -240px 0;
+}
+/* --------------------------- */
+
+.c-skin-3.c-size-small span.image-0 {
+    background-position: 0 0;
+}
+
+.c-skin-3.c-size-small span.image-1 {
+    background-position: -16px 0;
+}
+
+.c-skin-3.c-size-small span.image-2 {
+    background-position: -32px 0;
+}
+
+.c-skin-3.c-size-small span.image-3 {
+    background-position: -48px 0;
+}
+
+.c-skin-3.c-size-small span.image-4 {
+    background-position: -64px 0;
+}
+
+.c-skin-3.c-size-small span.image-5 {
+    background-position: -80px 0;
+}
+
+.c-skin-3.c-size-small span.image-6 {
+    background-position: -96px 0;
+}
+
+.c-skin-3.c-size-small span.image-7 {
+    background-position: -112px 0;
+}
+
+.c-skin-3.c-size-small span.image-8 {
+    background-position: -128px 0;
+}
+
+.c-skin-3.c-size-small span.image-9 {
+    background-position: -144px 0;
+}
+
+.c-skin-3.c-size-small span.image-sep {
+    background-position: -160px 0;
+}
+/* ------------------------------------ */
+/* -------------------------------------------- skin 4 -------------------------------- */
+
+.c-skin-4.c-size-big .countdown {
+    width: 625px;
+    height: 145px;
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: 625px 145px;
+}
+.c-skin-4.c-size-medium .countdown {
+    width: 469px;
+    height: 109px;
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: 469px 109px;
+}
+.c-skin-4.c-size-small .countdown {
+    width: 313px;
+    height: 73px;
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: 313px 73px;
+}
+
+.c-skin-4.c-color-1 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/4/color-1/bg.png');
+}
+.c-skin-4.c-color-2 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/4/color-2/bg.png');
+}
+.c-skin-4.c-color-3 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/4/color-3/bg.png');
+}
+.c-skin-4.c-color-4 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/4/color-4/bg.png');
+}
+.c-skin-4.c-color-5 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/4/color-5/bg.png');
+}
+.c-skin-4.c-color-6 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/4/color-6/bg.png');
+}
+.c-skin-4.c-color-7 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/4/color-7/bg.png');
+}
+.c-skin-4.c-color-8 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/4/color-8/bg.png');
+}
+.c-skin-4.c-size-big .digits-wrap{
+    padding: 27px 0 0;
+    text-align: center;
+}
+.c-skin-4.c-size-medium .digits-wrap{
+    padding: 18px 0 0;
+    text-align: center;
+}
+.c-skin-4.c-size-small .digits-wrap{
+    padding: 13px 0 0;
+    text-align: center;
+}
+
+.c-skin-4 .digits-group{
+    display: inline-block;
+}
+.c-skin-4.c-size-big .digit, .c-skin-4.c-size-big .image-sep {
+    display: inline-block!important;
+    width: 37px;
+    height: 49px;
+    background-repeat: no-repeat;
+    background-size: 407px 47px;
+    margin: 0 3px;
+    padding: 0;
+}
+.c-skin-4.c-size-big .image-sep{
+    margin: 0 23px;
+}
+.c-skin-4.c-size-medium .digit, .c-skin-4.c-size-medium .image-sep {
+    display: inline-block!important;
+    width: 28px;
+    height: 36px;
+    background-repeat: no-repeat;
+    background-size: 308px 36px;
+    margin: 0 2px;
+    padding: 0;
+}
+.c-skin-4.c-size-medium .image-sep{
+    margin: 0 17px;
+}
+.c-skin-4.c-size-small .digit, .c-skin-4.c-size-small .image-sep {
+    display: inline-block!important;
+    width: 19px;
+    height: 24px;
+    background-repeat: no-repeat;
+    background-size: 209px 24px;
+    margin: 0 1px;
+    padding: 0;
+}
+.c-skin-4.c-size-small .image-sep{
+    margin: 0 12px;
+}
+
+.c-skin-4.c-color-1 .digit, .c-skin-4.c-color-1 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/4/color-1/digits.png');
+}
+.c-skin-4.c-color-2 .digit, .c-skin-4.c-color-2 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/4/color-2/digits.png');
+}
+.c-skin-4.c-color-3 .digit, .c-skin-4.c-color-3 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/4/color-3/digits.png');
+}
+.c-skin-4.c-color-4 .digit, .c-skin-4.c-color-4 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/4/color-4/digits.png');
+}
+.c-skin-4.c-color-5 .digit, .c-skin-4.c-color-5 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/4/color-5/digits.png');
+}
+.c-skin-4.c-color-6 .digit, .c-skin-4.c-color-6 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/4/color-6/digits.png');
+}
+.c-skin-4.c-color-7 .digit, .c-skin-4.c-color-7 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/4/color-7/digits.png');
+}
+.c-skin-4.c-color-8 .digit, .c-skin-4.c-color-8 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/4/color-8/digits.png');
+}
+
+.c-skin-4.c-size-big span.image-0 {
+    background-position: 0 0;
+}
+
+.c-skin-4.c-size-big span.image-1 {
+    background-position: -37px 0;
+}
+
+.c-skin-4.c-size-big span.image-2 {
+    background-position: -74px 0;
+}
+
+.c-skin-4.c-size-big span.image-3 {
+    background-position: -111px 0;
+}
+
+.c-skin-4.c-size-big span.image-4 {
+    background-position: -148px 0;
+}
+
+.c-skin-4.c-size-big span.image-5 {
+    background-position: -185px 0;
+}
+
+.c-skin-4.c-size-big span.image-6 {
+    background-position: -222px 0;
+}
+
+.c-skin-4.c-size-big span.image-7 {
+    background-position: -259px 0;
+}
+
+.c-skin-4.c-size-big span.image-8 {
+    background-position: -296px 0;
+}
+
+.c-skin-4.c-size-big span.image-9 {
+    background-position: -333px 0;
+}
+
+.c-skin-4.c-size-big span.image-sep {
+    background-position: -370px 0;
+}
+
+/* --------------------------- */
+
+.c-skin-4.c-size-medium span.image-0 {
+    background-position: 0 0;
+}
+
+.c-skin-4.c-size-medium span.image-1 {
+    background-position: -28px 0;
+}
+
+.c-skin-4.c-size-medium span.image-2 {
+    background-position: -56px 0;
+}
+
+.c-skin-4.c-size-medium span.image-3 {
+    background-position: -84px 0;
+}
+
+.c-skin-4.c-size-medium span.image-4 {
+    background-position: -112px 0;
+}
+
+.c-skin-4.c-size-medium span.image-5 {
+    background-position: -140px 0;
+}
+
+.c-skin-4.c-size-medium span.image-6 {
+    background-position: -168px 0;
+}
+
+.c-skin-4.c-size-medium span.image-7 {
+    background-position: -196px 0;
+}
+
+.c-skin-4.c-size-medium span.image-8 {
+    background-position: -224px 0;
+}
+
+.c-skin-4.c-size-medium span.image-9 {
+    background-position: -252px 0;
+}
+
+.c-skin-4.c-size-medium span.image-sep {
+    background-position: -280px 0;
+}
+/* --------------------------- */
+
+.c-skin-4.c-size-small span.image-0 {
+    background-position: 0 0;
+}
+
+.c-skin-4.c-size-small span.image-1 {
+    background-position: -19px 0;
+}
+
+.c-skin-4.c-size-small span.image-2 {
+    background-position: -38px 0;
+}
+
+.c-skin-4.c-size-small span.image-3 {
+    background-position: -57px 0;
+}
+
+.c-skin-4.c-size-small span.image-4 {
+    background-position: -76px 0;
+}
+
+.c-skin-4.c-size-small span.image-5 {
+    background-position: -95px 0;
+}
+
+.c-skin-4.c-size-small span.image-6 {
+    background-position: -114px 0;
+}
+
+.c-skin-4.c-size-small span.image-7 {
+    background-position: -133px 0;
+}
+
+.c-skin-4.c-size-small span.image-8 {
+    background-position: -152px 0;
+}
+
+.c-skin-4.c-size-small span.image-9 {
+    background-position: -171px 0;
+}
+
+.c-skin-4.c-size-small span.image-sep {
+    background-position: -190px 0;
+}
+/* ------------------------------------ */
+/* -------------------------------------------- skin 5 -------------------------------- */
+
+.c-skin-5.c-size-big .countdown {
+    width: 629px;
+    height: 176px;
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: 629px 176px;
+}
+.c-skin-5.c-size-medium .countdown {
+    width: 472px;
+    height: 134px;
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: 472px 134px;
+}
+.c-skin-5.c-size-small .countdown {
+    width: 315px;
+    height: 89px;
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: 315px 89px;
+}
+
+.c-skin-5.c-color-1 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/5/color-1/bg.png');
+}
+.c-skin-5.c-color-2 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/5/color-2/bg.png');
+}
+.c-skin-5.c-color-3 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/5/color-3/bg.png');
+}
+.c-skin-5.c-color-4 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/5/color-4/bg.png');
+}
+.c-skin-5.c-color-5 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/5/color-5/bg.png');
+}
+.c-skin-5.c-color-6 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/5/color-6/bg.png');
+}
+.c-skin-5.c-color-7 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/5/color-7/bg.png');
+}
+.c-skin-5.c-color-8 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/5/color-8/bg.png');
+}
+.c-skin-5.c-size-big .digits-wrap{
+    padding: 30px 0 0;
+    text-align: center;
+}
+.c-skin-5.c-size-medium .digits-wrap{
+    padding: 22px 0 0;
+    text-align: center;
+}
+.c-skin-5.c-size-small .digits-wrap{
+    padding: 14px 0 0;
+    text-align: center;
+}
+
+.c-skin-5 .digits-group{
+    display: inline-block;
+}
+.c-skin-5.c-size-big .digit, .c-skin-5.c-size-big .image-sep {
+    display: inline-block!important;
+    width: 26px;
+    height: 45px;
+    background-repeat: no-repeat;
+    background-size: 286px 45px;
+    margin: 0 1px;
+    padding: 0;
+}
+.c-skin-5.c-size-big .image-sep{
+    margin: 0 31px;
+}
+.c-skin-5.c-size-medium .digit, .c-skin-5.c-size-medium .image-sep {
+    display: inline-block!important;
+    width: 20px;
+    height: 35px;
+    background-repeat: no-repeat;
+    background-size: 220px 35px;
+    margin: 0 1px;
+    padding: 0;
+}
+.c-skin-5.c-size-medium .image-sep{
+    margin: 0 22px;
+}
+.c-skin-5.c-size-small .digit, .c-skin-5.c-size-small .image-sep {
+    display: inline-block!important;
+    width: 13px;
+    height: 23px;
+    background-repeat: no-repeat;
+    background-size: 143px 23px;
+    margin: 0 1px;
+    padding: 0;
+}
+.c-skin-5.c-size-small .image-sep{
+    margin: 0 15px;
+}
+
+.c-skin-5.c-color-1 .digit, .c-skin-5.c-color-1 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/5/color-1/digits.png');
+}
+.c-skin-5.c-color-2 .digit, .c-skin-5.c-color-2 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/5/color-2/digits.png');
+}
+.c-skin-5.c-color-3 .digit, .c-skin-5.c-color-3 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/5/color-3/digits.png');
+}
+.c-skin-5.c-color-4 .digit, .c-skin-5.c-color-4 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/5/color-4/digits.png');
+}
+.c-skin-5.c-color-5 .digit, .c-skin-5.c-color-5 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/5/color-5/digits.png');
+}
+.c-skin-5.c-color-6 .digit, .c-skin-5.c-color-6 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/5/color-6/digits.png');
+}
+.c-skin-5.c-color-7 .digit, .c-skin-5.c-color-7 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/5/color-7/digits.png');
+}
+.c-skin-5.c-color-8 .digit, .c-skin-5.c-color-8 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/5/color-8/digits.png');
+}
+
+.c-skin-5.c-size-big span.image-0 {
+    background-position: 0 0;
+}
+
+.c-skin-5.c-size-big span.image-1 {
+    background-position: -26px 0;
+}
+
+.c-skin-5.c-size-big span.image-2 {
+    background-position: -52px 0;
+}
+
+.c-skin-5.c-size-big span.image-3 {
+    background-position: -78px 0;
+}
+
+.c-skin-5.c-size-big span.image-4 {
+    background-position: -104px 0;
+}
+
+.c-skin-5.c-size-big span.image-5 {
+    background-position: -130px 0;
+}
+
+.c-skin-5.c-size-big span.image-6 {
+    background-position: -156px 0;
+}
+
+.c-skin-5.c-size-big span.image-7 {
+    background-position: -182px 0;
+}
+
+.c-skin-5.c-size-big span.image-8 {
+    background-position: -208px 0;
+}
+
+.c-skin-5.c-size-big span.image-9 {
+    background-position: -234px 0;
+}
+
+.c-skin-5.c-size-big span.image-sep {
+    background-position: -260px 0;
+}
+
+/* --------------------------- */
+
+.c-skin-5.c-size-medium span.image-0 {
+    background-position: 0 0;
+}
+
+.c-skin-5.c-size-medium span.image-1 {
+    background-position: -20px 0;
+}
+
+.c-skin-5.c-size-medium span.image-2 {
+    background-position: -40px 0;
+}
+
+.c-skin-5.c-size-medium span.image-3 {
+    background-position: -60px 0;
+}
+
+.c-skin-5.c-size-medium span.image-4 {
+    background-position: -80px 0;
+}
+
+.c-skin-5.c-size-medium span.image-5 {
+    background-position: -100px 0;
+}
+
+.c-skin-5.c-size-medium span.image-6 {
+    background-position: -120px 0;
+}
+
+.c-skin-5.c-size-medium span.image-7 {
+    background-position: -140px 0;
+}
+
+.c-skin-5.c-size-medium span.image-8 {
+    background-position: -160px 0;
+}
+
+.c-skin-5.c-size-medium span.image-9 {
+    background-position: -180px 0;
+}
+
+.c-skin-5.c-size-medium span.image-sep {
+    background-position: -200px 0;
+}
+/* --------------------------- */
+
+.c-skin-5.c-size-small span.image-0 {
+    background-position: 0 0;
+}
+
+.c-skin-5.c-size-small span.image-1 {
+    background-position: -13px 0;
+}
+
+.c-skin-5.c-size-small span.image-2 {
+    background-position: -26px 0;
+}
+
+.c-skin-5.c-size-small span.image-3 {
+    background-position: -39px 0;
+}
+
+.c-skin-5.c-size-small span.image-4 {
+    background-position: -52px 0;
+}
+
+.c-skin-5.c-size-small span.image-5 {
+    background-position: -65px 0;
+}
+
+.c-skin-5.c-size-small span.image-6 {
+    background-position: -78px 0;
+}
+
+.c-skin-5.c-size-small span.image-7 {
+    background-position: -91px 0;
+}
+
+.c-skin-5.c-size-small span.image-8 {
+    background-position: -104px 0;
+}
+
+.c-skin-5.c-size-small span.image-9 {
+    background-position: -117px 0;
+}
+
+.c-skin-5.c-size-small span.image-sep {
+    background-position: -130px 0;
+}
+/* ------------------------------------ */
+
+/* -------------------------------------------- skin 6 -------------------------------- */
+
+.c-skin-6.c-size-big .countdown {
+    width: 621px;
+    height: 151px;
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: 621px 151px;
+}
+.c-skin-6.c-size-medium .countdown {
+    width: 466px;
+    height: 113px;
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: 466px 113px;
+}
+.c-skin-6.c-size-small .countdown {
+    width: 311px;
+    height: 76px;
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: 311px 76px;
+}
+
+.c-skin-6.c-color-1 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/6/color-1/bg.png');
+}
+.c-skin-6.c-color-2 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/6/color-1/bg.png');
+}
+.c-skin-6.c-color-3 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/6/color-1/bg.png');
+}
+.c-skin-6.c-color-4 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/6/color-1/bg.png');
+}
+.c-skin-6.c-color-5 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/6/color-1/bg.png');
+}
+.c-skin-6.c-color-6 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/6/color-1/bg.png');
+}
+.c-skin-6.c-color-7 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/6/color-1/bg.png');
+}
+.c-skin-6.c-color-8 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/6/color-1/bg.png');
+}
+.c-skin-6.c-size-big .digits-wrap{
+    padding: 0;
+    text-align: center;
+}
+.c-skin-6.c-size-medium .digits-wrap{
+    padding: 0;
+    text-align: center;
+}
+.c-skin-6.c-size-small .digits-wrap{
+    padding: 0;
+    text-align: center;
+}
+
+.c-skin-6 .digits-group{
+    display: inline-block;
+}
+.c-skin-6.c-size-big .digit, .c-skin-6.c-size-big .image-sep {
+    display: inline-block!important;
+    width: 60px;
+    height: 91px;
+    background-repeat: no-repeat;
+    background-size: 660px 91px;
+    margin: 0 4px;
+    padding: 0;
+}
+.c-skin-6 .digit:first-child{
+    margin-left: 0;
+}
+.c-skin-6 .digit:last-child{
+    margin-right: 0;
+}
+.c-skin-6.c-size-big .image-sep{
+    margin: 0 -12px;
+}
+.c-skin-6.c-size-medium .digit, .c-skin-6.c-size-medium .image-sep {
+    display: inline-block!important;
+    width: 45px;
+    height: 68px;
+    background-repeat: no-repeat;
+    background-size: 495px 68px;
+    margin: 0 3px;
+    padding: 0;
+}
+
+.c-skin-6.c-size-medium .image-sep{
+    margin: 0 -13px;
+}
+.c-skin-6.c-size-small .digit, .c-skin-6.c-size-small .image-sep {
+    display: inline-block!important;
+    width: 30px;
+    height: 46px;
+    background-repeat: no-repeat;
+    background-size: 330px 46px;
+    margin: 0 2px;
+    padding: 0;
+}
+.c-skin-6.c-size-small .image-sep{
+    margin: 0 -9px;
+}
+
+.c-skin-6.c-color-1 .digit, .c-skin-6.c-color-1 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/6/color-1/digits.png');
+}
+.c-skin-6.c-color-2 .digit, .c-skin-6.c-color-2 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/6/color-2/digits.png');
+}
+.c-skin-6.c-color-3 .digit, .c-skin-6.c-color-3 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/6/color-3/digits.png');
+}
+.c-skin-6.c-color-4 .digit, .c-skin-6.c-color-4 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/6/color-4/digits.png');
+}
+.c-skin-6.c-color-5 .digit, .c-skin-6.c-color-5 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/6/color-5/digits.png');
+}
+.c-skin-6.c-color-6 .digit, .c-skin-6.c-color-6 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/6/color-6/digits.png');
+}
+.c-skin-6.c-color-7 .digit, .c-skin-6.c-color-7 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/6/color-7/digits.png');
+}
+.c-skin-6.c-color-8 .digit, .c-skin-6.c-color-8 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/6/color-8/digits.png');
+}
+
+.c-skin-6.c-size-big span.image-0 {
+    background-position: 0 0;
+}
+
+.c-skin-6.c-size-big span.image-1 {
+    background-position: -60px 0;
+}
+
+.c-skin-6.c-size-big span.image-2 {
+    background-position: -120px 0;
+}
+
+.c-skin-6.c-size-big span.image-3 {
+    background-position: -180px 0;
+}
+
+.c-skin-6.c-size-big span.image-4 {
+    background-position: -240px 0;
+}
+
+.c-skin-6.c-size-big span.image-5 {
+    background-position: -300px 0;
+}
+
+.c-skin-6.c-size-big span.image-6 {
+    background-position: -360px 0;
+}
+
+.c-skin-6.c-size-big span.image-7 {
+    background-position: -420px 0;
+}
+
+.c-skin-6.c-size-big span.image-8 {
+    background-position: -480px 0;
+}
+
+.c-skin-6.c-size-big span.image-9 {
+    background-position: -540px 0;
+}
+
+.c-skin-6.c-size-big span.image-sep {
+    background-position: -600px 0;
+}
+
+/* --------------------------- */
+
+.c-skin-6.c-size-medium span.image-0 {
+    background-position: 0 0;
+}
+
+.c-skin-6.c-size-medium span.image-1 {
+    background-position: -45px 0;
+}
+
+.c-skin-6.c-size-medium span.image-2 {
+    background-position: -90px 0;
+}
+
+.c-skin-6.c-size-medium span.image-3 {
+    background-position: -135px 0;
+}
+
+.c-skin-6.c-size-medium span.image-4 {
+    background-position: -180px 0;
+}
+
+.c-skin-6.c-size-medium span.image-5 {
+    background-position: -225px 0;
+}
+
+.c-skin-6.c-size-medium span.image-6 {
+    background-position: -270px 0;
+}
+
+.c-skin-6.c-size-medium span.image-7 {
+    background-position: -315px 0;
+}
+
+.c-skin-6.c-size-medium span.image-8 {
+    background-position: -360px 0;
+}
+
+.c-skin-6.c-size-medium span.image-9 {
+    background-position: -405px 0;
+}
+
+.c-skin-6.c-size-medium span.image-sep {
+    background-position: -450px 0;
+}
+/* --------------------------- */
+
+.c-skin-6.c-size-small span.image-0 {
+    background-position: 0 0;
+}
+
+.c-skin-6.c-size-small span.image-1 {
+    background-position: -30px 0;
+}
+
+.c-skin-6.c-size-small span.image-2 {
+    background-position: -60px 0;
+}
+
+.c-skin-6.c-size-small span.image-3 {
+    background-position: -90px 0;
+}
+
+.c-skin-6.c-size-small span.image-4 {
+    background-position: -120px 0;
+}
+
+.c-skin-6.c-size-small span.image-5 {
+    background-position: -150px 0;
+}
+
+.c-skin-6.c-size-small span.image-6 {
+    background-position: -180px 0;
+}
+
+.c-skin-6.c-size-small span.image-7 {
+    background-position: -210px 0;
+}
+
+.c-skin-6.c-size-small span.image-8 {
+    background-position: -240px 0;
+}
+
+.c-skin-6.c-size-small span.image-9 {
+    background-position: -270px 0;
+}
+
+.c-skin-6.c-size-small span.image-sep {
+    background-position: -300px 0;
+}
+/* ------------------------------------ */
+/* -------------------------------------------- skin 7 -------------------------------- */
+
+.c-skin-7.c-size-big .countdown {
+    width: 507px;
+    height: 135px;
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: 507px 135px;
+}
+.c-skin-7.c-size-medium .countdown {
+    width: 380px;
+    height: 101px;
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: 380px 101px;
+}
+.c-skin-7.c-size-small .countdown {
+    width: 254px;
+    height: 68px;
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: 254px 68px;
+}
+
+.c-skin-7.c-color-1 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/7/color-1/bg.png');
+}
+.c-skin-7.c-color-2 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/7/color-2/bg.png');
+}
+.c-skin-7.c-color-3 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/7/color-3/bg.png');
+}
+.c-skin-7.c-color-4 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/7/color-4/bg.png');
+}
+.c-skin-7.c-color-5 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/7/color-5/bg.png');
+}
+.c-skin-7.c-color-6 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/7/color-6/bg.png');
+}
+.c-skin-7.c-color-7 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/7/color-7/bg.png');
+}
+.c-skin-7.c-color-8 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/7/color-8/bg.png');
+}
+.c-skin-7.c-size-big .digits-wrap{
+    padding: 22px 0 0;
+    text-align: center;
+}
+.c-skin-7.c-size-medium .digits-wrap{
+    padding: 16px 0 0;
+    text-align: center;
+}
+.c-skin-7.c-size-small .digits-wrap{
+    padding: 11px 0 0;
+    text-align: center;
+}
+
+.c-skin-7 .digits-group{
+    display: inline-block;
+}
+.c-skin-7.c-size-big .digit, .c-skin-7.c-size-big .image-sep {
+    display: inline-block!important;
+    width: 28px;
+    height: 37px;
+    background-repeat: no-repeat;
+    background-size: 280px 37px;
+    margin: 0 2px;
+    padding: 0;
+}
+
+.c-skin-7.c-size-big .image-sep{
+    margin: 0 24px;
+}
+.c-skin-7.c-size-medium .digit, .c-skin-7.c-size-medium .image-sep {
+    display: inline-block!important;
+    width: 21px;
+    height: 28px;
+    background-repeat: no-repeat;
+    background-size: 210px 28px;
+    margin: 0 1px;
+    padding: 0;
+}
+
+.c-skin-7.c-size-medium .image-sep{
+    margin: 0 19px;
+}
+.c-skin-7.c-size-small .digit, .c-skin-7.c-size-small .image-sep {
+    display: inline-block!important;
+    width: 14px;
+    height: 19px;
+    background-repeat: no-repeat;
+    background-size: 140px 19px;
+    margin: 0 1px;
+    padding: 0;
+}
+.c-skin-7.c-size-small .image-sep{
+    margin: 0 12px;
+}
+
+.c-skin-7.c-color-1 .digit, .c-skin-7.c-color-1 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/7/color-1/digits.png');
+}
+.c-skin-7.c-color-2 .digit, .c-skin-7.c-color-2 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/7/color-1/digits.png');
+}
+.c-skin-7.c-color-3 .digit, .c-skin-7.c-color-3 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/7/color-1/digits.png');
+}
+.c-skin-7.c-color-4 .digit, .c-skin-7.c-color-4 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/7/color-1/digits.png');
+}
+.c-skin-7.c-color-5 .digit, .c-skin-7.c-color-5 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/7/color-1/digits.png');
+}
+.c-skin-7.c-color-6 .digit, .c-skin-7.c-color-6 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/7/color-1/digits.png');
+}
+.c-skin-7.c-color-7 .digit, .c-skin-7.c-color-7 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/7/color-1/digits.png');
+}
+.c-skin-7.c-color-8 .digit, .c-skin-7.c-color-8 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/7/color-1/digits.png');
+}
+
+.c-skin-7.c-size-big span.image-0 {
+    background-position: 0 0;
+}
+
+.c-skin-7.c-size-big span.image-1 {
+    background-position: -28px 0;
+}
+
+.c-skin-7.c-size-big span.image-2 {
+    background-position: -56px 0;
+}
+
+.c-skin-7.c-size-big span.image-3 {
+    background-position: -84px 0;
+}
+
+.c-skin-7.c-size-big span.image-4 {
+    background-position: -112px 0;
+}
+
+.c-skin-7.c-size-big span.image-5 {
+    background-position: -140px 0;
+}
+
+.c-skin-7.c-size-big span.image-6 {
+    background-position: -168px 0;
+}
+
+.c-skin-7.c-size-big span.image-7 {
+    background-position: -196px 0;
+}
+
+.c-skin-7.c-size-big span.image-8 {
+    background-position: -224px 0;
+}
+
+.c-skin-7.c-size-big span.image-9 {
+    background-position: -252px 0;
+}
+
+.c-skin-7.c-size-big span.image-sep {
+    /*background-position: -600px 0;*/
+    background: none;
+}
+
+/* --------------------------- */
+
+.c-skin-7.c-size-medium span.image-0 {
+    background-position: 0 0;
+}
+
+.c-skin-7.c-size-medium span.image-1 {
+    background-position: -21px 0;
+}
+
+.c-skin-7.c-size-medium span.image-2 {
+    background-position: -42px 0;
+}
+
+.c-skin-7.c-size-medium span.image-3 {
+    background-position: -63px 0;
+}
+
+.c-skin-7.c-size-medium span.image-4 {
+    background-position: -84px 0;
+}
+
+.c-skin-7.c-size-medium span.image-5 {
+    background-position: -105px 0;
+}
+
+.c-skin-7.c-size-medium span.image-6 {
+    background-position: -126px 0;
+}
+
+.c-skin-7.c-size-medium span.image-7 {
+    background-position: -147px 0;
+}
+
+.c-skin-7.c-size-medium span.image-8 {
+    background-position: -168px 0;
+}
+
+.c-skin-7.c-size-medium span.image-9 {
+    background-position: -189px 0;
+}
+
+.c-skin-7.c-size-medium span.image-sep {
+   /* background-position: -450px 0;*/
+    background: none;
+}
+/* --------------------------- */
+
+.c-skin-7.c-size-small span.image-0 {
+    background-position: 0 0;
+}
+
+.c-skin-7.c-size-small span.image-1 {
+    background-position: -14px 0;
+}
+
+.c-skin-7.c-size-small span.image-2 {
+    background-position: -28px 0;
+}
+
+.c-skin-7.c-size-small span.image-3 {
+    background-position: -42px 0;
+}
+
+.c-skin-7.c-size-small span.image-4 {
+    background-position: -56px 0;
+}
+
+.c-skin-7.c-size-small span.image-5 {
+    background-position: -70px 0;
+}
+
+.c-skin-7.c-size-small span.image-6 {
+    background-position: -84px 0;
+}
+
+.c-skin-7.c-size-small span.image-7 {
+    background-position: -98px 0;
+}
+
+.c-skin-7.c-size-small span.image-8 {
+    background-position: -112px 0;
+}
+
+.c-skin-7.c-size-small span.image-9 {
+    background-position: -126px 0;
+}
+
+.c-skin-7.c-size-small span.image-sep {
+   /* background-position: -300px 0;*/
+    background: none;
+}
+/* ------------------------------------ */
+/* -------------------------------------------- skin 8 -------------------------------- */
+
+.c-skin-8.c-size-big .countdown {
+    width: 623px;
+    height: 94px;
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: 623px 94px;
+}
+.c-skin-8.c-size-medium .countdown {
+    width: 467px;
+    height: 71px;
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: 467px 71px;
+}
+.c-skin-8.c-size-small .countdown {
+    width: 312px;
+    height: 47px;
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: 312px 47px;
+}
+
+.c-skin-8.c-color-1 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/8/color-1/bg.png');
+}
+.c-skin-8.c-color-2 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/8/color-2/bg.png');
+}
+.c-skin-8.c-color-3 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/8/color-3/bg.png');
+}
+.c-skin-8.c-color-4 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/8/color-4/bg.png');
+}
+.c-skin-8.c-color-5 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/8/color-5/bg.png');
+}
+.c-skin-8.c-color-6 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/8/color-6/bg.png');
+}
+.c-skin-8.c-color-7 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/8/color-7/bg.png');
+}
+.c-skin-8.c-color-8 .countdown{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/8/color-8/bg.png');
+}
+.c-skin-8.c-size-big .digits-wrap{
+    padding: 41px 0 0;
+    text-align: center;
+}
+.c-skin-8.c-size-medium .digits-wrap{
+    padding: 31px 0 0;
+    text-align: center;
+}
+.c-skin-8.c-size-small .digits-wrap{
+    padding: 21px 0 0;
+    text-align: center;
+}
+
+.c-skin-8 .digits-group{
+    display: inline-block;
+}
+.c-skin-8.c-size-big .digit, .c-skin-8.c-size-big .image-sep {
+    display: inline-block!important;
+    width: 28px;
+    height: 37px;
+    background-repeat: no-repeat;
+    background-size: 280px 37px;
+    margin: 0 1px;
+    padding: 0;
+}
+
+.c-skin-8.c-size-big .image-sep{
+    margin: 0 40px;
+}
+.c-skin-8.c-size-medium .digit, .c-skin-8.c-size-medium .image-sep {
+    display: inline-block!important;
+    width: 21px;
+    height: 28px;
+    background-repeat: no-repeat;
+    background-size: 210px 28px;
+    margin: 0 1px;
+    padding: 0;
+}
+
+.c-skin-8.c-size-medium .image-sep{
+    margin: 0 30px;
+}
+.c-skin-8.c-size-small .digit, .c-skin-8.c-size-small .image-sep {
+    display: inline-block!important;
+    width: 14px;
+    height: 19px;
+    background-repeat: no-repeat;
+    background-size: 140px 19px;
+    margin: 0;
+    padding: 0;
+}
+.c-skin-8.c-size-small .image-sep{
+    margin: 0 22px;
+}
+
+.c-skin-8.c-color-1 .digit, .c-skin-8.c-color-1 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/8/color-1/digits.png');
+}
+.c-skin-8.c-color-2 .digit, .c-skin-8.c-color-2 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/8/color-1/digits.png');
+}
+.c-skin-8.c-color-3 .digit, .c-skin-8.c-color-3 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/8/color-1/digits.png');
+}
+.c-skin-8.c-color-4 .digit, .c-skin-8.c-color-4 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/8/color-1/digits.png');
+}
+.c-skin-8.c-color-5 .digit, .c-skin-8.c-color-5 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/8/color-1/digits.png');
+}
+.c-skin-8.c-color-6 .digit, .c-skin-8.c-color-6 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/8/color-1/digits.png');
+}
+.c-skin-8.c-color-7 .digit, .c-skin-8.c-color-7 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/8/color-1/digits.png');
+}
+.c-skin-8.c-color-8 .digit, .c-skin-8.c-color-8 .image-sep{
+    background-image: url('http://static.wppage.ru/wppage/i/countdown/skins/8/color-1/digits.png');
+}
+
+.c-skin-8.c-size-big span.image-0 {
+    background-position: 0 0;
+}
+
+.c-skin-8.c-size-big span.image-1 {
+    background-position: -28px 0;
+}
+
+.c-skin-8.c-size-big span.image-2 {
+    background-position: -56px 0;
+}
+
+.c-skin-8.c-size-big span.image-3 {
+    background-position: -84px 0;
+}
+
+.c-skin-8.c-size-big span.image-4 {
+    background-position: -112px 0;
+}
+
+.c-skin-8.c-size-big span.image-5 {
+    background-position: -140px 0;
+}
+
+.c-skin-8.c-size-big span.image-6 {
+    background-position: -168px 0;
+}
+
+.c-skin-8.c-size-big span.image-7 {
+    background-position: -196px 0;
+}
+
+.c-skin-8.c-size-big span.image-8 {
+    background-position: -224px 0;
+}
+
+.c-skin-8.c-size-big span.image-9 {
+    background-position: -252px 0;
+}
+
+.c-skin-8.c-size-big span.image-sep {
+    /*background-position: -600px 0;*/
+    background: none;
+}
+
+/* --------------------------- */
+
+.c-skin-8.c-size-medium span.image-0 {
+    background-position: 0 0;
+}
+
+.c-skin-8.c-size-medium span.image-1 {
+    background-position: -21px 0;
+}
+
+.c-skin-8.c-size-medium span.image-2 {
+    background-position: -42px 0;
+}
+
+.c-skin-8.c-size-medium span.image-3 {
+    background-position: -63px 0;
+}
+
+.c-skin-8.c-size-medium span.image-4 {
+    background-position: -84px 0;
+}
+
+.c-skin-8.c-size-medium span.image-5 {
+    background-position: -105px 0;
+}
+
+.c-skin-8.c-size-medium span.image-6 {
+    background-position: -126px 0;
+}
+
+.c-skin-8.c-size-medium span.image-7 {
+    background-position: -147px 0;
+}
+
+.c-skin-8.c-size-medium span.image-8 {
+    background-position: -168px 0;
+}
+
+.c-skin-8.c-size-medium span.image-9 {
+    background-position: -189px 0;
+}
+
+.c-skin-8.c-size-medium span.image-sep {
+    /* background-position: -450px 0;*/
+    background: none;
+}
+/* --------------------------- */
+
+.c-skin-8.c-size-small span.image-0 {
+    background-position: 0 0;
+}
+
+.c-skin-8.c-size-small span.image-1 {
+    background-position: -14px 0;
+}
+
+.c-skin-8.c-size-small span.image-2 {
+    background-position: -28px 0;
+}
+
+.c-skin-8.c-size-small span.image-3 {
+    background-position: -42px 0;
+}
+
+.c-skin-8.c-size-small span.image-4 {
+    background-position: -56px 0;
+}
+
+.c-skin-8.c-size-small span.image-5 {
+    background-position: -70px 0;
+}
+
+.c-skin-8.c-size-small span.image-6 {
+    background-position: -84px 0;
+}
+
+.c-skin-8.c-size-small span.image-7 {
+    background-position: -98px 0;
+}
+
+.c-skin-8.c-size-small span.image-8 {
+    background-position: -112px 0;
+}
+
+.c-skin-8.c-size-small span.image-9 {
+    background-position: -126px 0;
+}
+
+.c-skin-8.c-size-small span.image-sep {
+    /* background-position: -300px 0;*/
+    background: none;
+}
+/* ------------------------------------ */

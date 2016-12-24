@@ -1,0 +1,40 @@
+/**
+ * 11.4 - Contact
+ */
+
+.news {
+
+  padding: 10px !important;
+
+}
+
+.news-item {
+  border-top: 1px dashed #ffDD99;
+  /*margin: 5px;*/
+
+  .more-link {
+    float: right;
+  }
+
+  img {
+    border-radius: 5px;
+  }
+}
+
+.news-item {
+  img {
+    float: left;
+    margin: 0 15px 0 0;
+  }
+
+  .entry {
+    min-height: 150px;
+    margin-bottom: 20px;
+    a.more-link {
+      position: absolute;
+      right: 15px;
+      bottom: 0;
+    }
+  }
+
+}

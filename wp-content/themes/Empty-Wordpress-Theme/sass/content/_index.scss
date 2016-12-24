@@ -1,0 +1,25 @@
+.content {
+
+  table {
+    border-spacing: 10px !important;
+    border-collapse: initial !important;
+  }
+
+  .rounded {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    border: 3px solid #ffae00;
+    background-color: #ffae00;
+  }
+
+  h1, h2, h3, h4, h5 {
+    color: #dd8800;
+    font-weight: bold;
+  }
+
+  p {
+    text-indent: 30px;
+  }
+
+}
+

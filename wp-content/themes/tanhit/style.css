@@ -1,0 +1,26 @@
+/*
+Theme Name: Tanhit
+Theme URI: 
+Author: the Tanhit team
+Author URI: @todo
+Description: @todo
+Version: 1.2
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Tags: 
+Text Domain: tanhit
+*/
+
+header {
+  width: 1000px; }
+  header ul li {
+    display: inline-block; }
+  header .head {
+    background: #000; }
+    header .head p {
+      color: #F5F5F5; }
+
+footer {
+  width: 100%; }
+
+/*# sourceMappingURL=style.css.map */

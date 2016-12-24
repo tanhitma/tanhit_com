@@ -1,0 +1,64 @@
+/* for all  *************************************/
+.mejs-controls .mejs-time-rail span, .mejs-controls .mejs-time-rail a{
+    border-radius: 0;
+}
+.mejs-controls .mejs-horizontal-volume-slider .mejs-horizontal-volume-total, .mejs-controls .mejs-horizontal-volume-slider .mejs-horizontal-volume-current{
+    border-radius: 0;
+}
+.mejs-controls div, .mejs-controls span, .mejs-controls button{
+    outline: none!important;
+}
+
+.mejs-container{
+	display: block;
+	margin: 20px auto;
+}
+
+/* Black skin ***********************************/
+.mbl-skin-black .mejs-controls .mejs-time-rail .mejs-time-total, .mbl-skin-black .mejs-controls .mejs-horizontal-volume-slider .mejs-horizontal-volume-total{
+    background: #4b4b4b;
+}
+.mbl-skin-black .mejs-controls .mejs-time-rail .mejs-time-loaded{
+    background: #656565;
+}
+
+.mbl-skin-black .mejs-controls .mejs-time-rail .mejs-time-current, .mbl-skin-black .mejs-controls .mejs-horizontal-volume-slider .mejs-horizontal-volume-current{
+    background: #ffffff;
+}
+
+.mbl-skin-black .mejs-controls .mejs-button button{
+    background-image:url(controls-white.svg);
+}
+
+
+/* Black skin **********************************/
+
+.mbl-skin-white.mejs-container .mejs-controls{
+    background: #ffffff;
+    color: #333333;
+}
+.mbl-skin-white .mejs-controls .mejs-time span{
+    color: #333333!important;
+}
+
+.mbl-skin-white .mejs-controls .mejs-time-rail .mejs-time-total, .mbl-skin-white .mejs-controls .mejs-horizontal-volume-slider .mejs-horizontal-volume-total{
+    background: #dedede;
+}
+.mbl-skin-white .mejs-controls .mejs-time-rail .mejs-time-loaded{
+    background: #c4c4c4;
+}
+
+.mbl-skin-white .mejs-controls .mejs-time-rail .mejs-time-current, .mbl-skin-white .mejs-controls .mejs-horizontal-volume-slider .mejs-horizontal-volume-current{
+    background: #333333;
+}
+
+.mbl-skin-white .mejs-controls .mejs-button button{
+    background-image:url(controls-black.svg);
+}
+/**/
+.mejs-audio .mejs-controls{
+    display: block!important;
+}
+.mejs-audio {
+    width:100% !important;
+}

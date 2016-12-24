@@ -1,0 +1,936 @@
+
+
+/* bonus */
+div.bonus_table_box_t{
+    display: block;
+    margin: 0 -20px;
+}
+.ps_bonus_box_wide_t {
+    width: 100%!important;
+    position: relative;
+}
+.ps_bonus_box_wide_t td.td_right_box, .ps_bonus_box_wide_t td.td_left_box{
+    padding: 0!important;
+}
+.ps_bonus_box_wide_t .left, .ps_bonus_box_wide_t .right{
+    position: absolute;
+    top: 0;
+}
+.ps_bonus_box_wide_t .ps_bonus_text_wide_t {
+    display: block;
+    width: 100%;
+}
+.wp_bonus_text_box_t{
+    width: 100%;
+    padding: 0 20px!important;
+    color: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 24px;
+}
+.wp_bonus_text_box_t b, .wp_bonus_text_box_t strong{
+    font-weight: bold!important;
+}
+.wp_bonus_text_box_t i, .wp_bonus_text_box_t em{
+    font-style: italic!important;
+}
+.ps_bonus_wide_t_1 {
+    height: 79px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/1/1_center.png) center top repeat-x;
+}
+.ps_bonus_wide_t_1 .left{
+    width: 56px;
+    height: 79px;
+    left: -56px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/1/1_left.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_t_1 .right{
+    width: 56px;
+    height: 79px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/1/1_right.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_t_1 .ps_bonus_text_wide_t {
+    height: 79px;
+    text-align: center;
+    line-height: 66px;
+}
+
+.ps_bonus_wide_t_2 {
+    height: 72px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/2/center.png) center top repeat-x;
+}
+.ps_bonus_wide_t_2 .left{
+    width: 17px;
+    height: 72px;
+    left: -17px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/2/left.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_t_2 .right{
+    width: 17px;
+    height: 72px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/2/right.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_t_2 .ps_bonus_text_wide_t {
+    height: 72px;
+    text-align: center;
+    line-height: 68px;
+}
+
+.ps_bonus_wide_t_3 {
+    height: 90px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/3/center.png) center top repeat-x;
+}
+
+.ps_bonus_wide_t_3 .left{
+    width: 91px;
+    height: 90px;
+    left: -91px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/3/left.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_t_3 .right{
+    width: 91px;
+    height: 90px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/3/right.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_t_3 .ps_bonus_text_wide_t {
+    height: 90px;
+    text-align: center;
+    line-height: 84px;
+}
+
+.ps_bonus_wide_t_4 {
+    height: 75px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/4/center.png) center top repeat-x;
+}
+
+.ps_bonus_wide_t_4 .left{
+    width: 76px;
+    height: 75px;
+    left: -76px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/4/left.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_t_4 .right{
+    width: 76px;
+    height: 75px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/4/right.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_t_4 .ps_bonus_text_wide_t {
+    height: 75px;
+    text-align: center;
+    line-height: 70px;
+}
+
+.ps_bonus_wide_t_5 {
+    height: 90px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/5/center.png) center top repeat-x;
+}
+
+.ps_bonus_wide_t_5 .left{
+    width: 99px;
+    height: 90px;
+    left: -99px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/5/left.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_t_5 .right{
+    width: 99px;
+    height: 90px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/5/right.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_t_5 .ps_bonus_text_wide_t {
+    height: 90px;
+    text-align: center;
+    line-height: 84px;
+}
+
+.ps_bonus_wide_t_6 {
+    height: 89px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/6/center.png) center top repeat-x;
+}
+.ps_bonus_wide_t_6 .left{
+    width: 99px;
+    height: 89px;
+    left: -99px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/6/left.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_t_6 .right{
+    width: 99px;
+    height: 89px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/6/right.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_t_6 .ps_bonus_text_wide_t {
+    height: 69px;
+    padding-top: 20px;
+    text-align: center;
+    line-height: 64px;
+}
+
+.ps_bonus_wide_t_7 {
+    height: 79px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/7/center.png) center top repeat-x;
+}
+.ps_bonus_wide_t_7 .left{
+    width: 91px;
+    height: 79px;
+    left: -91px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/7/left.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_t_7 .right{
+    width: 91px;
+    height: 79px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/7/right.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_t_7 .ps_bonus_text_wide_t {
+    height: 79px;
+    text-align: center;
+    line-height: 64px;
+}
+
+.ps_bonus_wide_t_8 {
+    height: 96px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/8/center.png) center top repeat-x;
+}
+.ps_bonus_wide_t_8 .left{
+    width: 33px;
+    height: 96px;
+    left: -33px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/8/left.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_t_8 .right{
+    width: 33px;
+    height: 96px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/8/right.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_t_8 .ps_bonus_text_wide_t {
+    height: 96px;
+    text-align: center;
+    line-height: 76px;
+}
+
+.ps_bonus_wide_t_9 {
+    height: 95px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/9/center.png) center top repeat-x;
+}
+.ps_bonus_wide_t_9 .left{
+    width: 33px;
+    height: 95px;
+    left: -33px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/9/left.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_t_9 .right{
+    width: 33px;
+    height: 95px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/9/right.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_t_9 .ps_bonus_text_wide_t {
+    height: 95px;
+    text-align: center;
+    line-height: 76px;
+}
+.ps_bonus_wide_t_10 {
+    height: 95px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/10/center.png) center top repeat-x;
+}
+.ps_bonus_wide_t_10 .left{
+    width: 33px;
+    height: 95px;
+    left: -33px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/10/left.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_t_10 .right{
+    width: 33px;
+    height: 95px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/10/right.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_t_10 .ps_bonus_text_wide_t {
+    height: 95px;
+    text-align: center;
+    line-height: 76px;
+}
+
+.ps_bonus_wide_t_11 {
+    height: 95px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/11/center.png) center top repeat-x;
+}
+.ps_bonus_wide_t_11 .left{
+    width: 33px;
+    height: 95px;
+    left: -33px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/11/left.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_t_11 .right{
+    width: 33px;
+    height: 95px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/11/right.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_t_11 .ps_bonus_text_wide_t {
+    height: 95px;
+    text-align: center;
+    line-height: 76px;
+}
+
+.ps_bonus_wide_t_12 {
+    height: 95px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/12/center.png) center top repeat-x;
+}
+.ps_bonus_wide_t_12 .left{
+    width: 33px;
+    height: 95px;
+    left: -33px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/12/left.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_t_12 .right{
+    width: 33px;
+    height: 95px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/12/right.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_t_12 .ps_bonus_text_wide_t {
+    height: 95px;
+    text-align: center;
+    line-height: 76px;
+}
+
+.ps_bonus_wide_t_13 {
+    height: 116px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/13/center.png) center top repeat-x;
+}
+.ps_bonus_wide_t_13 .left{
+    width: 113px;
+    height: 116px;
+    left: -113px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/13/left.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_t_13 .right{
+    width: 113px;
+    height: 116px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/13/right.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_t_13 .ps_bonus_text_wide_t {
+    height: 116px;
+    text-align: center;
+    line-height: 90px;
+}
+.ps_bonus_wide_t_14 {
+    height: 79px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/14/center.png) center top repeat-x;
+}
+.ps_bonus_wide_t_14 .left{
+    width: 90px;
+    height: 79px;
+    left: -90px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/14/left.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_t_14 .right{
+    width: 90px;
+    height: 79px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/14/right.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_t_14 .ps_bonus_text_wide_t {
+    height: 90px;
+    text-align: center;
+    line-height: 55px;
+}
+
+.ps_bonus_wide_t_15 {
+    height: 74px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/15/center.png) center top repeat-x;
+}
+.ps_bonus_wide_t_15 .left{
+    width: 110px;
+    height: 74px;
+    left: -110px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/15/left.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_t_15 .right{
+    width: 110px;
+    height: 74px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/15/right.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_t_15 .ps_bonus_text_wide_t {
+    height: 74px;
+    text-align: center;
+    line-height: 55px;
+}
+
+.ps_bonus_wide_t_16 {
+    height: 70px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/16/center.png) center top repeat-x;
+}
+.ps_bonus_wide_t_16 .left{
+    width: 108px;
+    height: 70px;
+    left: -108px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/16/left.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_t_16 .right{
+    width: 108px;
+    height: 70px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/16/right.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_t_16 .ps_bonus_text_wide_t {
+    height: 70px;
+    text-align: center;
+    line-height: 55px;
+}
+
+.ps_bonus_wide_t_17 {
+    height: 65px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/17/center.png) center top repeat-x;
+}
+.ps_bonus_wide_t_17 .left{
+    width: 57px;
+    height: 65px;
+    left: -57px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/17/left.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_t_17 .right{
+    width: 57px;
+    height: 65px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/17/right.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_t_17 .ps_bonus_text_wide_t {
+    height: 65px;
+    text-align: center;
+    line-height: 65px;
+}
+
+.ps_bonus_wide_t_18 {
+    height: 65px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/18/center.png) center top repeat-x;
+}
+.ps_bonus_wide_t_18 .left{
+    width: 57px;
+    height: 65px;
+    left: -57px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/18/left.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_t_18 .right{
+    width: 57px;
+    height: 65px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/18/right.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_t_18 .ps_bonus_text_wide_t {
+    height: 65px;
+    text-align: center;
+    line-height: 65px;
+}
+
+.ps_bonus_wide_t_19 {
+    height: 65px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/19/center.png) center top repeat-x;
+}
+.ps_bonus_wide_t_19 .left{
+    width: 57px;
+    height: 65px;
+    left: -57px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/19/left.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_t_19 .right{
+    width: 57px;
+    height: 65px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/19/right.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_t_19 .ps_bonus_text_wide_t {
+    height: 65px;
+    text-align: center;
+    line-height: 65px;
+}
+
+.ps_bonus_wide_t_20 {
+    height: 65px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/20/center.png) center top repeat-x;
+}
+.ps_bonus_wide_t_20 .left{
+    width: 57px;
+    height: 65px;
+    left: -57px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/20/left.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_t_20 .right{
+    width: 57px;
+    height: 65px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/20/right.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_t_20 .ps_bonus_text_wide_t {
+    height: 65px;
+    text-align: center;
+    line-height: 65px;
+}
+
+.ps_bonus_wide_t_21 {
+    height: 65px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/21/center.png) center top repeat-x;
+}
+.ps_bonus_wide_t_21 .left{
+    width: 57px;
+    height: 65px;
+    left: -57px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/21/left.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_t_21 .right{
+    width: 57px;
+    height: 65px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/21/right.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_t_21 .ps_bonus_text_wide_t {
+    height: 65px;
+    text-align: center;
+    line-height: 65px;
+}
+
+.ps_bonus_wide_t_22 {
+    height: 65px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/22/center.png) center top repeat-x;
+}
+.ps_bonus_wide_t_22 .left{
+    width: 57px;
+    height: 65px;
+    left: -57px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/22/left.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_t_22 .right{
+    width: 57px;
+    height: 65px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/22/right.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_t_22 .ps_bonus_text_wide_t {
+    height: 65px;
+    text-align: center;
+    line-height: 65px;
+}
+
+.ps_bonus_wide_t_23 {
+    height: 65px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/23/center.png) center top repeat-x;
+}
+.ps_bonus_wide_t_23 .left{
+    width: 57px;
+    height: 65px;
+    left: -57px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/23/left.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_t_23 .right{
+    width: 57px;
+    height: 65px;
+    background: url(http://static.wppage.ru/wppage/i/bonus/23/right.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_t_23 .ps_bonus_text_wide_t {
+    height: 65px;
+    text-align: center;
+    line-height: 65px;
+}
+
+/* bonus boxes 2.4 */
+.ps_bonus_box_wide {
+    display: block;
+    margin: 10px 0;
+    margin-left: -20px;
+    padding: 0 20px;
+    position: relative;
+}
+.ps_bonus_box_wide .left, .ps_bonus_box_wide .right{
+    position: absolute;
+    top: 0;
+}
+.ps_bonus_box_wide .ps_bonus_text_wide {
+    display: block;
+    color: #fff;
+    margin: 0 -20px;
+}
+.ps_bonus_wide_1 {
+    height: 79px;
+}
+.ps_bonus_wide_1 .left{
+    width: 56px;
+    height: 79px;
+    left: -56px;
+    background: url(../i/bonus/1/1_left.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_1 .right{
+    width: 56px;
+    height: 79px;
+    right: -56px;
+    background: url(../i/bonus/1/1_right.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_1 .ps_bonus_text_wide {
+    height: 79px;
+    text-align: center;
+    font: 24px/66px Arial, Helvetica, sans-serif;
+    background: url(../i/bonus/1/1_center.png) center top repeat-x;
+}
+
+.ps_bonus_wide_2 {
+    height: 72px;
+}
+.ps_bonus_wide_2 .left{
+    width: 17px;
+    height: 72px;
+    left: -17px;
+    background: url(../i/bonus/2/left.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_2 .right{
+    width: 17px;
+    height: 72px;
+    right: -17px;
+    background: url(../i/bonus/2/right.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_2 .ps_bonus_text_wide {
+    height: 72px;
+    text-align: center;
+    font: 24px/68px Arial, Helvetica, sans-serif;
+    background: url(../i/bonus/2/center.png) center top repeat-x;
+}
+
+.ps_bonus_wide_3 {
+    height: 90px;
+}
+
+.ps_bonus_wide_3 .left{
+    width: 91px;
+    height: 90px;
+    left: -91px;
+    background: url(../i/bonus/3/left.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_3 .right{
+    width: 91px;
+    height: 90px;
+    right: -91px;
+    background: url(../i/bonus/3/right.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_3 .ps_bonus_text_wide {
+    height: 90px;
+    text-align: center;
+    font: 24px/84px Arial, Helvetica, sans-serif;
+    background: url(../i/bonus/3/center.png) center top repeat-x;
+}
+
+.ps_bonus_wide_4 {
+    height: 75px;
+}
+
+.ps_bonus_wide_4 .left{
+    width: 76px;
+    height: 75px;
+    left: -76px;
+    background: url(../i/bonus/4/left.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_4 .right{
+    width: 76px;
+    height: 75px;
+    right: -76px;
+    background: url(../i/bonus/4/right.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_4 .ps_bonus_text_wide {
+    height: 75px;
+    text-align: center;
+    font: 24px/70px Arial, Helvetica, sans-serif;
+    background: url(../i/bonus/4/center.png) center top repeat-x;
+}
+
+.ps_bonus_wide_5 {
+    height: 90px;
+}
+
+.ps_bonus_wide_5 .left{
+    width: 99px;
+    height: 90px;
+    left: -99px;
+    background: url(../i/bonus/5/left.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_5 .right{
+    width: 99px;
+    height: 90px;
+    right: -99px;
+    background: url(../i/bonus/5/right.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_5 .ps_bonus_text_wide {
+    height: 90px;
+    text-align: center;
+    font: 24px/84px Arial, Helvetica, sans-serif;
+    background: url(../i/bonus/5/center.png) center top repeat-x;
+}
+
+.ps_bonus_wide_6 {
+    height: 89px;
+}
+.ps_bonus_wide_6 .left{
+    width: 99px;
+    height: 89px;
+    left: -99px;
+    background: url(../i/bonus/6/left.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_6 .right{
+    width: 99px;
+    height: 89px;
+    right: -99px;
+    background: url(../i/bonus/6/right.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_6 .ps_bonus_text_wide {
+    height: 69px;
+    padding-top: 20px;
+    text-align: center;
+    font: 24px/64px Arial, Helvetica, sans-serif;
+    background: url(../i/bonus/6/center.png) center top repeat-x;
+}
+
+.ps_bonus_wide_7 {
+    height: 79px;
+}
+.ps_bonus_wide_7 .left{
+    width: 91px;
+    height: 79px;
+    left: -91px;
+    background: url(../i/bonus/7/left.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_7 .right{
+    width: 91px;
+    height: 79px;
+    right: -91px;
+    background: url(../i/bonus/7/right.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_7 .ps_bonus_text_wide {
+    height: 79px;
+    text-align: center;
+    font: 24px/64px Arial, Helvetica, sans-serif;
+    background: url(../i/bonus/7/center.png) center top repeat-x;
+}
+
+.ps_bonus_wide_8 {
+    height: 96px;
+}
+.ps_bonus_wide_8 .left{
+    width: 33px;
+    height: 96px;
+    left: -33px;
+    background: url(../i/bonus/8/left.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_8 .right{
+    width: 33px;
+    height: 96px;
+    right: -33px;
+    background: url(../i/bonus/8/right.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_8 .ps_bonus_text_wide {
+    height: 96px;
+    text-align: center;
+    font: 24px/76px Arial, Helvetica, sans-serif;
+    background: url(../i/bonus/8/center.png) center top repeat-x;
+}
+
+.ps_bonus_wide_9 {
+    height: 95px;
+}
+.ps_bonus_wide_9 .left{
+    width: 33px;
+    height: 95px;
+    left: -33px;
+    background: url(../i/bonus/9/left.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_9 .right{
+    width: 33px;
+    height: 95px;
+    right: -33px;
+    background: url(../i/bonus/9/right.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_9 .ps_bonus_text_wide {
+    height: 95px;
+    text-align: center;
+    font: 24px/76px Arial, Helvetica, sans-serif;
+    background: url(../i/bonus/9/center.png) center top repeat-x;
+}
+.ps_bonus_wide_10 {
+    height: 95px;
+}
+.ps_bonus_wide_10 .left{
+    width: 33px;
+    height: 95px;
+    left: -33px;
+    background: url(../i/bonus/10/left.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_10 .right{
+    width: 33px;
+    height: 95px;
+    right: -33px;
+    background: url(../i/bonus/10/right.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_10 .ps_bonus_text_wide {
+    height: 95px;
+    text-align: center;
+    font: 24px/76px Arial, Helvetica, sans-serif;
+    background: url(../i/bonus/10/center.png) center top repeat-x;
+}
+
+.ps_bonus_wide_11 {
+    height: 95px;
+}
+.ps_bonus_wide_11 .left{
+    width: 33px;
+    height: 95px;
+    left: -33px;
+    background: url(../i/bonus/11/left.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_11 .right{
+    width: 33px;
+    height: 95px;
+    right: -33px;
+    background: url(../i/bonus/11/right.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_11 .ps_bonus_text_wide {
+    height: 95px;
+    text-align: center;
+    font: 24px/76px Arial, Helvetica, sans-serif;
+    background: url(../i/bonus/11/center.png) center top repeat-x;
+}
+
+.ps_bonus_wide_12 {
+    height: 95px;
+}
+.ps_bonus_wide_12 .left{
+    width: 33px;
+    height: 95px;
+    left: -33px;
+    background: url(../i/bonus/12/left.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_12 .right{
+    width: 33px;
+    height: 95px;
+    right: -33px;
+    background: url(../i/bonus/12/right.png) 0 0 no-repeat;
+}
+.ps_bonus_wide_12 .ps_bonus_text_wide {
+    height: 95px;
+    text-align: center;
+    font: 24px/76px Arial, Helvetica, sans-serif;
+    background: url(../i/bonus/12/center.png) center top repeat-x;
+}
+/* old bonus styles */
+/* bonus */
+.ps_bonus_box {
+    display:block;
+    width:930px;
+    margin:10px 0px 10px -122px;
+}
+.ps_bonus_1 {
+    height:79px;
+    background:url(../i/bonus/1.png) center top no-repeat;
+}
+.ps_bonus_2 {
+    height:72px;
+    background:url(../i/bonus/2.png) center top no-repeat;
+}
+.ps_bonus_3 {
+    height:90px;
+    background:url(../i/bonus/3.png) center top no-repeat;
+}
+.ps_bonus_4 {
+    height:75px;
+    background:url(../i/bonus/4.png) center top no-repeat;
+}
+.ps_bonus_5 {
+    height:90px;
+    background:url(../i/bonus/5.png) center top no-repeat;
+}
+.ps_bonus_6 {
+    height:89px;
+    background:url(../i/bonus/6.png) center top no-repeat;
+}
+.ps_bonus_7 {
+    height:79px;
+    background:url(../i/bonus/7.png) center top no-repeat;
+}
+.ps_bonus_8 {
+    height:95px;
+    background:url(../i/bonus/8.png) center top no-repeat;
+}
+.ps_bonus_9 {
+    height:95px;
+    background:url(../i/bonus/9.png) center top no-repeat;
+}
+.ps_bonus_10 {
+    height:95px;
+    background:url(../i/bonus/10.png) center top no-repeat;
+}
+.ps_bonus_11 {
+    height:95px;
+    background:url(../i/bonus/11.png) center top no-repeat;
+}
+.ps_bonus_12 {
+    height:95px;
+    background:url(../i/bonus/12.png) center top no-repeat;
+}
+.ps_bonus_box .ps_bonus_text {
+    display:block;
+    margin:0px auto;
+    color:#fff;
+}
+.ps_bonus_1 .ps_bonus_text {
+    width:710px;
+    height:66px;
+    text-align:center;
+    font:24px/66px Arial, Helvetica, sans-serif;
+}
+.ps_bonus_2 .ps_bonus_text {
+    width:710px;
+    height:61px;
+    text-align:center;
+    font:24px/61px Arial, Helvetica, sans-serif;
+}
+.ps_bonus_3 .ps_bonus_text {
+    width:710px;
+    height:75px;
+    text-align:center;
+    font:24px/75px Arial, Helvetica, sans-serif;
+}
+.ps_bonus_4 .ps_bonus_text {
+    width:720px;
+    height:61px;
+    text-align:center;
+    font:24px/61px Arial, Helvetica, sans-serif;
+}
+.ps_bonus_5 .ps_bonus_text {
+    width:720px;
+    height:72px;
+    text-align:center;
+    font:24px/72px Arial, Helvetica, sans-serif;
+}
+.ps_bonus_6 .ps_bonus_text {
+    width:730px;
+    height:69px;
+    text-align:center;
+    font:24px/69px Arial, Helvetica, sans-serif;
+    padding-top:20px;
+}
+.ps_bonus_7 .ps_bonus_text {
+    width:730px;
+    height:57px;
+    text-align:center;
+    font:24px/57px Arial, Helvetica, sans-serif;
+}
+.ps_bonus_8 .ps_bonus_text {
+    width:730px;
+    height:67px;
+    text-align:center;
+    font:24px/67px Arial, Helvetica, sans-serif;
+}
+.ps_bonus_9 .ps_bonus_text {
+    width:730px;
+    height:67px;
+    text-align:center;
+    font:24px/67px Arial, Helvetica, sans-serif;
+}
+.ps_bonus_10 .ps_bonus_text {
+    width:730px;
+    height:67px;
+    text-align:center;
+    font:24px/67px Arial, Helvetica, sans-serif;
+}
+.ps_bonus_11 .ps_bonus_text {
+    width:730px;
+    height:67px;
+    text-align:center;
+    font:24px/67px Arial, Helvetica, sans-serif;
+}
+.ps_bonus_12 .ps_bonus_text {
+    width:730px;
+    height:67px;
+    text-align:center;
+    font:24px/67px Arial, Helvetica, sans-serif;
+}

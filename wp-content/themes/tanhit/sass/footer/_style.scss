@@ -1,0 +1,51 @@
+.footer {
+  font-size: 13px;
+  color: #000;
+  font-family: 'Exo 2', sans-serif;
+}
+
+.icons a, .soc-link {
+  display: inline-block;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  border: 1px solid rgba(255, 174, 0, 1);
+  background-color: rgba(255, 174, 0, 1);
+  overflow: hidden;
+  height: 30px;
+  width: 30px;
+  margin: 10px 5px 0 0;
+}
+
+.foto-icon {
+  display: inline-block;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  border: 1px solid rgba(255, 174, 0, 1);
+  background-color: rgba(255, 174, 0, 1);
+  overflow: hidden;
+  height: 65px !important;
+  width: 65px !important;
+  margin: 0px 5px 15px 0px;
+  max-width: none !important;
+}
+
+.icon-fb {
+  background: url("/wp-includes/img/icon_fb.png") no-repeat center center;
+}
+.icon-vk {
+  background: url("/wp-includes/img/icon_vk.png") no-repeat center center;
+}
+.icon-youtube {
+  background: url("/wp-includes/img/icon_youtube.png") no-repeat center center;
+}
+
+.footer-text {
+  text-shadow: 1px 1px #fea;
+  font-size: 15px;
+  line-height: 20px;
+  margin-top: 5px;
+}
+
+.down-text {
+  padding: 0 25px;
+}

@@ -1,0 +1,84 @@
+.schedule {
+
+  .filter {
+    text-align: center;
+    padding: 10px;
+
+    a {
+      display: inline-block;
+      background: #ffae00;
+      color: #000;
+      min-width: 100px;
+      padding: 10px;
+      border-radius: 5px;
+      text-decoration: none;
+    }
+    a:hover, a.selected {
+      text-decoration: none;
+      background: #b70;
+    }
+
+  }
+
+  .sched-link {
+    display: table-cell;
+    text-align: center;
+    width: 200px;
+    height: 50px;
+    vertical-align: middle;
+
+
+    a {
+      background: #ffae00;
+      color: #000;
+      text-decoration: none;
+      border-radius: 5px;
+      cursor: pointer;
+      display: block;
+      padding: 5px;
+      margin: 5px;
+      min-height: 40px;
+      line-height: 30px;
+
+      &:hover {
+        background-color: #b70;
+      }
+    }
+  }
+
+  .sched-date {
+    display: table-cell;
+    vertical-align: middle;
+    width: 180px;
+    text-align: center;
+  }
+
+  .sched-desc {
+    display: table-cell;
+    vertical-align: middle;
+    padding: 5px;
+    a {
+      text-decoration: none;
+    }
+  }
+
+  .sched-table {
+    display: table;
+    width: 100%;
+    border: 1px solid #999;
+    border-collapse: collapse;
+  }
+
+  .sched-row {
+    display: table-row;
+    padding: 5px;
+    width: 100%;
+    border-bottom: 1px solid #999;
+
+    &:hover {
+      background-color: rgba(255, 200, 100, 0.3);
+    }
+  }
+
+
+}

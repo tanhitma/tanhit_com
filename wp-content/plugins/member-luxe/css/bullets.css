@@ -1,0 +1,265 @@
+ul{
+    list-style: disc;
+    list-style-position: inside;
+}
+
+ul.ps_ul, ol.ps_ol {
+    padding: 5px 0 5px 40px;
+    margin: 5px 10px;
+}
+
+ul.ps_text_box {
+    padding: 20px 20px 20px 80px !important;
+}
+
+ul.ps_ul li {
+    padding-bottom: 5px;
+    margin: 0;
+    line-height: normal;
+}
+
+.ps_bullet_1 {
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/1.png) outside;
+}
+
+.ps_bullet_2 {
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/2.png) outside;
+}
+
+.ps_bullet_3 {
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/3.png) outside;
+}
+
+.ps_bullet_4 {
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/4.png) outside;
+}
+
+.ps_bullet_5 {
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/5.png) outside;
+}
+
+.ps_bullet_6 {
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/6.png) outside;
+}
+
+.ps_bullet_7 {
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/7.png) outside;
+}
+
+.ps_bullet_8 {
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/8.png) outside;
+}
+
+.ps_bullet_9 {
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/9.png) outside;
+}
+
+.ps_bullet_10 {
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/10.png) outside;
+}
+
+.ps_bullet_11 {
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/11.png) outside;
+}
+
+.ps_bullet_12 {
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/12.png) outside;
+}
+
+.ps_bullet_13 {
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/13.png) outside;
+}
+
+.ps_bullet_14 {
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/14.png) outside;
+}
+
+.ps_bullet_15 {
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/15.png) outside;
+}
+
+.ps_bullet_16 {
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/16.png) outside;
+}
+
+.ps_bullet_17 {
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/17.png) outside;
+}
+.ps_bullet_18 {
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/18.png) outside;
+}
+.ps_bullet_19 {
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/19.png) outside;
+}
+.ps_bullet_20 {
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/20.png) outside;
+}
+.ps_bullet_21 {
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/21.png) outside;
+}
+.ps_bullet_22 {
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/22.png) outside;
+}
+.ps_bullet_23 {
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/23.png) outside;
+}
+.ps_bullet_24 {
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/24.png) outside;
+}
+.ps_bullet_25 {
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/25.png) outside;
+}
+.ps_bullet_26 {
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/26.png) outside;
+}
+.ps_bullet_27 {
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/27.png) outside;
+}
+.ps_bullet_28 {
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/28.png) outside;
+}
+.ps_bullet_29 {
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/29.png) outside;
+}
+.ps_bullet_30 {
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/30.png) outside;
+}
+.ps_bullet_31 {
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/31.png) outside;
+}
+.ps_bullet_32 {
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/32.png) outside;
+}
+.ps_bullet_33 {
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/33.png) outside;
+}
+/* middle bullets */
+
+ul.middle_bullets{
+    font-size: 24px;
+}
+ul.middle_bullets li{
+    margin: 3px 0;
+    padding-bottom: 10px;
+}
+
+.ps_bullet_24_1 {
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/24/1.png) outside;
+}
+
+.ps_bullet_24_2 {
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/24/2.png) outside;
+}
+
+.ps_bullet_24_3 {
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/24/3.png) outside;
+}
+
+.ps_bullet_24_4 {
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/24/4.png) outside;
+}
+
+.ps_bullet_24_5 {
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/24/5.png) outside;
+}
+
+.ps_bullet_24_6 {
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/24/6.png) outside;
+}
+
+.ps_bullet_24_7 {
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/24/7.png) outside;
+}
+
+.ps_bullet_24_8 {
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/24/8.png) outside;
+}
+
+.ps_bullet_24_9 {
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/24/9.png) outside;
+}
+
+.ps_bullet_24_10 {
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/24/10.png) outside;
+}
+
+.ps_bullet_24_11 {
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/24/11.png) outside;
+}
+
+.ps_bullet_24_12 {
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/24/12.png) outside;
+}
+
+.ps_bullet_24_13 {
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/24/13.png) outside;
+}
+
+.ps_bullet_24_14 {
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/24/14.png) outside;
+}
+
+.ps_bullet_24_15 {
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/24/15.png) outside;
+}
+
+.ps_bullet_24_16 {
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/24/16.png) outside;
+}
+
+/* big bullets */
+ul.big_bullets{
+    font-size: 28px;
+}
+ul.big_bullets > li{
+    margin: 5px 0;
+    padding-bottom: 10px;
+}
+.ps_bullet_big_1{
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/big/1.png) outside;
+}
+.ps_bullet_big_2{
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/big/2.png) outside;
+}
+.ps_bullet_big_3{
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/big/3.png) outside;
+}
+.ps_bullet_big_4{
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/big/4.png) outside;
+}
+.ps_bullet_big_5{
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/big/5.png) outside;
+}
+.ps_bullet_big_6{
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/big/6.png) outside;
+}
+.ps_bullet_big_7{
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/big/7.png) outside;
+}
+.ps_bullet_big_8{
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/big/8.png) outside;
+}
+.ps_bullet_big_9{
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/big/9.png) outside;
+}
+.ps_bullet_big_10{
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/big/10.png) outside;
+}
+.ps_bullet_big_11{
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/big/11.png) outside;
+}
+.ps_bullet_big_12{
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/big/12.png) outside;
+}
+.ps_bullet_big_13{
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/big/13.png) outside;
+}
+.ps_bullet_big_14{
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/big/14.png) outside;
+}
+.ps_bullet_big_15{
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/big/15.png) outside;
+}
+.ps_bullet_big_16{
+    list-style: url(http://static.wppage.ru/wppage/i/bullets/big/16.png) outside;
+}

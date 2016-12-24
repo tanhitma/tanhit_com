@@ -1,0 +1,59 @@
+
+/*
+Styles for protected page
+*/
+body.protected{
+    background-color: #f1f1f1!important;
+    background-image: url('../../i/protected-bg.png')!important;
+    background-position: center 40px!important;
+    background-repeat: no-repeat!important;
+}
+.wppage-protected {
+    width: 340px;
+    height: 200px;
+    margin: 180px auto 0;
+    border-radius: 3px;
+    text-align: center;
+    font-family: 'Arial';
+    font-size: 16px;
+    line-height: normal;
+    color: #000000;
+}
+.wppage-protected input[type=password]{
+    width: 338px;
+    display: block;
+    float: none;
+    clear: both;
+    height: 30px;
+    padding: 5px;
+    border-radius: 3px;
+    border: 1px solid #e6e6e6;
+    background: #fdfdfd;
+    box-shadow: none;
+    font-size: 26px;
+    text-align: center;
+    margin: 10px 0;
+    box-sizing: content-box;
+}
+.wppage-protected input[type=submit]{
+    width: 338px;
+    display: block;
+    margin: 10px 0;
+    height: 36px;
+    padding: 5px;
+    background: #5492fe;
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: normal;
+    text-align: center;
+    line-height: 30px;
+    border-radius: 3px;
+    box-shadow: 0 5px 0 #4c83e4;
+    box-sizing: content-box;
+}
+.wppage-protected input[type=submit]:hover{
+    background: #6da2fe;
+}
+.wppage-protected input[type=submit]:active{
+    box-shadow: 0 3px 0 #4c83e4;
+}

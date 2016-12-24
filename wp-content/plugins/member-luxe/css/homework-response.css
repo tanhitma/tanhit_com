@@ -1,0 +1,48 @@
+.response_content ul{
+    list-style: disc;
+    list-style-position: inside;
+}
+
+.response_content ul.ps_ul, .response_content ol.ps_ol {
+    padding: 5px 0 5px 40px;
+    margin: 5px 10px;
+}
+
+.response_content ul.ps_text_box {
+    padding: 20px 20px 20px 80px !important;
+}
+
+.response_content ul.ps_ul li {
+    padding-bottom: 5px;
+    margin: 0;
+    line-height: normal;
+}
+
+.response_content ul, .response_content ol {
+    padding-left: 0;
+}
+
+.response_content ol {
+    margin-left: 25px;
+}
+
+.response_content p {
+    margin: 0 !important;
+}
+
+.response_content .homework-attachments {
+    display: block;
+    margin-top: 15px;
+}
+.response_content .homework-attachments .homework-attachment {
+    display: block;
+    float: left;
+    margin-right: 5px;
+}
+.response_content .homework-attachments .fa {
+	color: #555;
+    display: inline-block;
+    font-size: 69px;
+    height: 75px;
+}
+

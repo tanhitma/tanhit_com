@@ -1,0 +1,3 @@
+th[class*='column-language_'], td[class*='column-language_'] {
+    width: 30px !important;
+}

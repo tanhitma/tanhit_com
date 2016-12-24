@@ -1,0 +1,46 @@
+a {
+  	color: #993300;
+  	text-decoration: underline;
+	&:hover, &:focus, &:active{
+		outline: none;
+	  	color: #662200;
+	}
+}
+
+ul {
+	list-style-type: none;
+}
+
+.block_title {
+	color: #fff;
+    font-size: 3.5em;
+	text-align: center;
+	margin-top: 15px;	
+}
+
+.p0  {
+	padding: 0;
+}
+
+.align-left {
+	text-align: left;
+}
+.align-right {
+	text-align: right;
+}
+
+p.font_7 {
+  text-indent: 20px;
+}
+
+b {
+  /* Safari font fix */
+  /* font-weight: 400 !important; */
+}
+
+// Font.
+$font-1:	'Enriqueta', Times, Helvetica, sans-serif;
+$font-2:	arial,'ms pgothic',dotum,helvetica,sans-serif; // Nav
+$font-3:	'EB Garamond', Arial, Helvetica, sans-serif;
+//$font-4:	'Fira Sans', Tahoma, Helvetica, sans-serif !important;
+$font-4:	Helvetica, arial, sans-serif !important;

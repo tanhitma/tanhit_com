@@ -1,0 +1,101 @@
+
+.item-table {
+
+  width: 102%;
+  margin-left: -10px;
+  margin-right: -20px;
+
+  td:nth-child(3) {
+    h3 {
+      margin-top: 0;
+    }
+  }
+
+}
+
+.current-webinar {
+  iframe {
+    border: 1px solid #999;
+  }
+}
+
+
+/* Flow player fix */
+.fp-context-menu {
+  font-size: 11px;
+  text-align: left;
+  min-width: 250px;
+  a {
+    font-size: 11px;
+  }
+  ul {
+    padding: 0 !important;
+  }
+  li {
+    text-align: left;
+  }
+  li:before {
+    display: none;
+  }
+}
+
+/* Pagination */
+.pagination {
+  display: block;
+  text-align: center;
+}
+
+
+/* Post comments */
+.post-comments {
+  position: absolute;
+  top: 10px;
+  right: 0;
+  color: #f90;
+  border: 1px solid #f90;
+  background: #f90;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+
+  &::before {
+    color: #fff;
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    content: '\e111';
+    position: absolute;
+    top: 5px;
+    font-size: 20px;
+    left: 5px;
+  }
+
+  span {
+    position: absolute;
+    top: 5px;
+    left: 4px;
+    width: 21px;
+    text-align: center;
+    font-size: 14px;
+  }
+}
+
+
+/* Post tags */
+.post-tag {
+  color: #999;
+  padding: 10px 0;
+  text-align: right;
+  display: block;
+  font-size: 13px;
+}
+
+.post-date {
+  color: #999;
+  padding-bottom: 10px;
+  span {
+    color: #f90;
+  }
+}

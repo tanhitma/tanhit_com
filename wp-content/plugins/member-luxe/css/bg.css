@@ -1,0 +1,188 @@
+/* bg */
+.wpp_bg{
+    display: inline-block;
+    width: 140px!important;
+    height: 70px!important;
+    border: 5px solid transparent;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    margin: 0 5px 5px 0!important;
+}
+.wpp_bg:hover{
+    border: 5px solid #cccccc;
+}
+.wpp_bg input{
+    display: none;
+}
+.wpp_bg_thumb_1{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/1.jpg");
+}
+.wpp_bg_thumb_2{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/2.jpg");
+}
+.wpp_bg_thumb_3{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/3.jpg");
+}
+.wpp_bg_thumb_4{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/4.jpg");
+}
+.wpp_bg_thumb_5{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/5.jpg");
+}
+.wpp_bg_thumb_6{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/6.jpg");
+}
+.wpp_bg_thumb_7{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/7.jpg");
+}
+.wpp_bg_thumb_8{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/8.jpg");
+}
+.wpp_bg_thumb_9{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/9.jpg");
+}
+.wpp_bg_thumb_10{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/10.jpg");
+}
+.wpp_bg_thumb_11{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/11.jpg");
+}
+.wpp_bg_thumb_12{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/12.jpg");
+}
+.wpp_bg_thumb_13{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/13.jpg");
+}
+.wpp_bg_thumb_14{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/14.jpg");
+}
+.wpp_bg_thumb_15{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/15.jpg");
+}
+.wpp_bg_thumb_16{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/16.jpg");
+}
+.wpp_bg_thumb_17{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/17.jpg");
+}
+.wpp_bg_thumb_18{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/18.jpg");
+}
+.wpp_bg_thumb_19{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/19.jpg");
+}
+.wpp_bg_thumb_20{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/20.jpg");
+}
+.wpp_bg_thumb_21{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/21.jpg");
+}
+.wpp_bg_thumb_22{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/22.jpg");
+}
+.wpp_bg_thumb_23{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/23.jpg");
+}
+.wpp_bg_thumb_24{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/24.jpg");
+}
+.wpp_bg_thumb_25{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/25.png");
+}
+.wpp_bg_thumb_26{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/26.png");
+}
+.wpp_bg_thumb_27{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/27.png");
+}
+.wpp_bg_thumb_28{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/28.png");
+}
+.wpp_bg_thumb_29{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/29.png");
+}
+.wpp_bg_thumb_30{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/30.png");
+}
+.wpp_bg_thumb_31{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/31.png");
+}
+.wpp_bg_thumb_32{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/32.png");
+}
+.wpp_bg_thumb_33{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/33.png");
+}
+.wpp_bg_thumb_34{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/34.png");
+}
+.wpp_bg_thumb_35{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/35.png");
+}
+.wpp_bg_thumb_36{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/36.png");
+}
+.wpp_bg_thumb_37{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/37.png");
+}
+.wpp_bg_thumb_38{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/38.png");
+}
+.wpp_bg_thumb_39{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/39.png");
+}
+.wpp_bg_thumb_40{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/40.gif");
+}
+.wpp_bg_thumb_41{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/41.gif");
+}
+.wpp_bg_thumb_42{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/42.gif");
+}
+.wpp_bg_thumb_43{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/43.gif");
+}
+.wpp_bg_thumb_44{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/44.gif");
+}
+.wpp_bg_thumb_45{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/45.gif");
+}
+.wpp_bg_thumb_46{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/46.gif");
+}
+.wpp_bg_thumb_47{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/47.gif");
+}
+.wpp_bg_thumb_48{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/48.gif");
+}
+.wpp_bg_thumb_49{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/49.gif");
+}
+.wpp_bg_thumb_50{
+    background: url("http://static.wppage.ru/wppage/i/bg/big/50.gif");
+}
+
+/**/
+#ps_background_image_selected {
+    display: block;
+    min-width: 185px;
+    height: 80px;
+    cursor: pointer;
+    background-position: left center;
+}
+.bg_preview{
+    width: 210px;
+    height: 80px;
+    cursor: pointer;
+    background-position: center center;
+}
+.no_image{
+    background: url('http://static.wppage.ru/wppage/i/no_image.png') center center no-repeat;
+}
+#ps_background_image_box{
+    height: 80px;
+}

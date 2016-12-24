@@ -1,0 +1,23 @@
+/**
+ * 1.0 - Float warning
+ */
+
+#float-warning {
+
+  position: fixed;
+  bottom: 80px;
+  opacity: 0.85;
+  right: 3px;
+  width: 280px;
+  background: #ffee99;
+  color: #000;
+  padding: 5px;
+  border-radius: 10px;
+  font-family: 'Exo 2', sans-serif;
+  font-size: 15px;
+  line-height: 16px;
+  z-index: 3;
+  text-align: justify;
+  text-indent: 5px;
+
+}
