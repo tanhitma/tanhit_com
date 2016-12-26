@@ -1673,8 +1673,15 @@ function getLinkAutologinToRoom($product_id, $qty = 1) {
 
             //с токеном
             case 3:
-                $aLinksOld = $aLinks = get_user_meta($current_user->ID, 'webinar_links_' . $product_id, true);
-
+                $aLinksOld = $aLinks = array();
+                
+                $iRevisionPost = (int)get_post_meta($product_id, 'webinar_room_id_rev', true);
+                $iRevisionUser = (int)get_user_meta($current_user->ID, "post_{$product_id}_webinar_room_id_rev", true);
+                
+                if ($iRevisionPost == $iRevisionUser){
+                    $aLinksOld = $aLinks = get_user_meta($current_user->ID, 'webinar_links_' . $product_id, true);
+                }
+                
                 $qtyOld = $qty;
 
                 $qty -= is_array($aLinks) ? count($aLinks) : 0;
@@ -1703,6 +1710,11 @@ function getLinkAutologinToRoom($product_id, $qty = 1) {
                 if ($aLinks) {
                     $aLinks = array_slice($aLinks, 0, $qtyOld);
                 }
+                
+                if ($iRevisionPost != $iRevisionUser){
+                    update_user_meta( $current_user->ID, "post_{$product_id}_webinar_room_id_rev", $iRevisionPost );
+                }
+                
                 break;
         }
     } catch (Exception $e) {
@@ -2122,4 +2134,16 @@ function getPlayerForm($file) {
     //$html .= sprintf($script, $videoId, "'{$link}'", '16:9', 0);
 
     return $html;
+}
+
+
+//Если комната в вебинаре изменена, то обновляем версию, чтоб при запросе ссылки на вебинар у пользователя 
+//если ссылка старая - то обновилась, т.е. обновился кэш 
+add_action( 'updated_postmeta', 'custom_updated_post_meta', 10, 4 );
+function custom_updated_post_meta( $meta_id, $object_id, $meta_key, $meta_value ) {
+    
+    if ($meta_key == 'webinar_room_id'){
+        $iRevision = (int)get_post_meta($object_id, 'webinar_room_id_rev', true);
+        update_post_meta( $object_id, 'webinar_room_id_rev', ++$iRevision );
+    }
 }
