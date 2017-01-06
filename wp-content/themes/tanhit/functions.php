@@ -2147,3 +2147,10 @@ function custom_updated_post_meta( $meta_id, $object_id, $meta_key, $meta_value 
         update_post_meta( $object_id, 'webinar_room_id_rev', ++$iRevision );
     }
 }
+
+function woocommerce_checkout_thankyou_shortcode(){
+    echo '<div class="woocommerce"><p class="woocommerce-message">Спасибо за покупку! Сейчас вы будете перенаправлены в свой личный кабинет!</p>
+        <script >window.onload = function(){setTimeout(\'location="/my-account"\', 4000);}</script></div>';
+}
+
+add_shortcode('woocommerce_checkout_thankyou', 'woocommerce_checkout_thankyou_shortcode');
