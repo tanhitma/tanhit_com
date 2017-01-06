@@ -16857,19 +16857,19 @@ msgstr ""
 
 #: templates/myaccount/form-edit-account.php:45
 msgid "Password Change"
-msgstr ""
+msgstr "Смена пароля"
 
 #: templates/myaccount/form-edit-account.php:48
 msgid "Current Password (leave blank to leave unchanged)"
-msgstr ""
+msgstr "Текущий пароль (не заполняйте, если не хотите менять)"
 
 #: templates/myaccount/form-edit-account.php:52
 msgid "New Password (leave blank to leave unchanged)"
-msgstr ""
+msgstr "Новый пароль (не заполняйте, если не хотите менять)"
 
 #: templates/myaccount/form-edit-account.php:56
 msgid "Confirm New Password"
-msgstr ""
+msgstr "Новый пароль повторно (для подтверждения)"
 
 #: templates/myaccount/form-edit-address.php:22
 #: templates/myaccount/my-address.php:27 templates/myaccount/my-address.php:33

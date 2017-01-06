@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 
 <?php wc_print_notices(); ?>
-
+<h1><?php _e( 'Профиль', 'woocommerce' ); ?></h1>
 <form class="edit-account" action="" method="post" id="tanhit-edit-account">
 
 	<?php do_action( 'woocommerce_edit_account_form_start' ); ?>
@@ -42,20 +42,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 	</p>
 	
 	<?php do_action( 'tanhit_edit_account_form' ); ?>
-	
-	<fieldset>
-		<legend><?php _e( 'Password Change', 'woocommerce' ); ?></legend>
+
+	<fieldset style="margin-top: 25px">
+		<legend><?php _e( 'Смена пароля', 'woocommerce' ); ?></legend>
 
 		<p class="form-row form-row-wide">
-			<label for="password_current"><?php _e( 'Current Password (leave blank to leave unchanged)', 'woocommerce' ); ?></label>
+			<label for="password_current"><?php _e( 'Текущий пароль (не заполняйте, если не хотите менять)', 'woocommerce' ); ?></label>
 			<input type="password" class="input-text" name="password_current" id="password_current" />
 		</p>
 		<p class="form-row form-row-wide">
-			<label for="password_1"><?php _e( 'New Password (leave blank to leave unchanged)', 'woocommerce' ); ?></label>
+			<label for="password_1"><?php _e( 'Новый пароль (не заполняйте, если не хотите менять)', 'woocommerce' ); ?></label>
 			<input type="password" class="input-text" name="password_1" id="password_1" />
 		</p>
 		<p class="form-row form-row-wide">
-			<label for="password_2"><?php _e( 'Confirm New Password', 'woocommerce' ); ?></label>
+			<label for="password_2"><?php _e( 'Новый пароль повторно (для подтверждения)', 'woocommerce' ); ?></label>
 			<input type="password" class="input-text" name="password_2" id="password_2" />
 		</p>
 	</fieldset>

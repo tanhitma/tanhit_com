@@ -8682,3 +8682,19 @@ msgid ""
 msgstr ""
 "Если вы уже покупали у нас, введите данные для входа в полях ниже. Если вы "
 "новый покупатель, то введите данные в секции Детали оплаты"
+
+#: templates/myaccount/form-edit-account.php:45
+msgid "Password Change"
+msgstr "Смена пароля"
+
+#: templates/myaccount/form-edit-account.php:48
+msgid "Current Password (leave blank to leave unchanged)"
+msgstr "Текущий пароль (не заполняйте, если не хотите менять)"
+
+#: templates/myaccount/form-edit-account.php:52
+msgid "New Password (leave blank to leave unchanged)"
+msgstr "Новый пароль (не заполняйте, если не хотите менять)"
+
+#: templates/myaccount/form-edit-account.php:56
+msgid "Confirm New Password"
+msgstr "Новый пароль повторно (для подтверждения)"
