@@ -945,13 +945,13 @@ function custom_woocommerce_checkout_fields($fields) {
     ];
     $fields['billing']['billing_address_1'] = [
         'type'     => 'text',
-        'label'    => 'Адрес (обязательно укажите улицу, дом, квартиру)',
+        'label'    => 'Улица',
         'required' => (isset($_REQUEST['billing_delivery_point']) && $_REQUEST['billing_delivery_point'] ? false : true),
     ];
     $fields['billing']['billing_address_2'] = [
         'type'     => 'text',
-        'label'    => 'Адрес (продолжение)',
-        'required' => false //(isset($_REQUEST['billing_delivery_point']) && $_REQUEST['billing_delivery_point'] ? false : true),
+        'label'    => 'Номер дома/квартиры',
+        'required' => (isset($_REQUEST['billing_delivery_point']) && $_REQUEST['billing_delivery_point'] ? false : true),
     ];
 
     $fields['billing']['billing_state_id'] = [
@@ -1179,11 +1179,12 @@ function custom_woocommerce_order_action_export_to_cdek($order) {
             $aDataExport['currency'] = $aMetaDataOrder['_order_currency'][0];
 
             //Адрес получателя
-            //$aDataExport['address']['street']       = $aMetaDataOrder['_billing_address_1'][0];
-            //$aDataExport['address']['house']        = $aMetaDataOrder['_billing_address_2'][0];
-
-            $aDataExport['address']['address'] = $aMetaDataOrder['_billing_address_1'][0] . ' ' . $aMetaDataOrder['_billing_address_2'][0];
-
+            $aDataExport['address']['street']      = trim($aMetaDataOrder['_billing_address_1'][0]);
+            $aDataExport['address']['house']       = trim($aMetaDataOrder['_billing_address_2'][0]);
+            //$aDataExport['address']['flat']      = 'не указан';
+            
+            //$aDataExport['address']['address'] = trim($aMetaDataOrder['_billing_address_1'][0] . ' ' . $aMetaDataOrder['_billing_address_2'][0]);
+            
             //ИД пункта выдачи
             if (!empty($aMetaDataOrder['_billing_delivery_point'][0])) {
                 $aDataExport['address']['pvz_code'] = $aMetaDataOrder['_billing_delivery_point'][0];
@@ -1207,7 +1208,7 @@ function custom_woocommerce_order_action_export_to_cdek($order) {
                     $iCost = $item_data['line_total'] / $item_data['qty'];
 
                     $DeclaredSum += $item_data['line_total'];
-                    
+                                     
                     $_weight = wc_get_weight(str_replace(',', '.', $oProduct->weight), 'kg');
                     if (!$_weight) {
                         $_weight = $aSettingsEdostavka['minimum_weight'];
@@ -1242,10 +1243,10 @@ function custom_woocommerce_order_action_export_to_cdek($order) {
                     }
 
                     //Вес всех товаров
-                    $aDataPackageExport['size_a'] += $_height * $item_data['qty'];
-                    $aDataPackageExport['size_b'] += $_width * $item_data['qty'];
-                    $aDataPackageExport['size_c'] += $_length * $item_data['qty'];
-                    $aDataPackageExport['weight'] += $_weight * $item_data['qty'];
+                    $aDataPackageExport['size_a'] += ($_height/* * $item_data['qty']*/);
+                    $aDataPackageExport['size_b'] += ($_width/* * $item_data['qty']*/);
+                    $aDataPackageExport['size_c'] += ($_length/* * $item_data['qty']*/);
+                    $aDataPackageExport['weight'] += ($_weight/* * $item_data['qty']*/);
                     
                     //Продукты для выгрузки в FullFillmment
                     $aProductItems[] = array(
@@ -1265,10 +1266,13 @@ function custom_woocommerce_order_action_export_to_cdek($order) {
             //Добавляем данные в выгрузку
             $component->setOrders([$aDataExport]);
             //Отправляем данные на сервер сдэк
+           
             $response = $api_cdek->sendData($component);
             //(new WC_Logger())->add('cdek_integration', 'INFO: order_to_cdek|'.$order->id.'|' . print_r($response, 0));
             $aOrderResponse = (array)$response->Order[0];
 
+            //die(var_dump($aOrderResponse,$component->getData()));
+            
             if (!isset($aOrderResponse["@attributes"]["ErrorCode"])) {
                 
             }
@@ -1276,7 +1280,7 @@ function custom_woocommerce_order_action_export_to_cdek($order) {
             if (class_exists('WC_Logger')) {
                 $logger = new WC_Logger();
 
-                if (isset($aOrderResponse["@attributes"]["ErrorCode"])) {
+                if (isset($aOrderResponse["@attributes"]["ErrorCode"]) && $aOrderResponse["@attributes"]["ErrorCode"]) {
                     $logger->add('cdek_integration', 'ERROR: order_to_cdek|'.$order->id.'|' . implode('|', $aOrderResponse["@attributes"]));
                 } else {
                     $logger->add('cdek_integration', 'OK: order_to_cdek|'.$order->id.'|' . implode('|', $aOrderResponse["@attributes"]));
@@ -1326,7 +1330,7 @@ function custom_woocommerce_order_action_export_to_cdek($order) {
                                             <WarehouseCode>32</WarehouseCode>
                                             <CountryCode></CountryCode>
                                             <POD>'.(isset($aMetaDataOrder['_billing_delivery_point'][0]) ? $aMetaDataOrder['_billing_delivery_point'][0] : '').'</POD>
-                                            <ShipmentAddress>'.$aDataExport['address']['address'].'</ShipmentAddress>
+                                            <ShipmentAddress>'.($aDataExport['address']['street'] ? trim($aDataExport['address']['street'] . ', ' . $aDataExport['address']['house']) : '').'</ShipmentAddress>
                                             <Phones>'.$aDataExport['recipient_telephone'].'</Phones>
                                             <Receiver>'.$aDataExport['recipient_name'].'</Receiver>
                                             <AOGUID></AOGUID>
@@ -1336,8 +1340,8 @@ function custom_woocommerce_order_action_export_to_cdek($order) {
                                             <City>'.$aMetaDataOrder['_billing_state'][0].'</City>
                                             <Region></Region>
                                             <Town></Town>
-                                            <Street></Street>
-                                            <House></House>
+                                            <Street>'.$aDataExport['address']['street'].'</Street>
+                                            <House>'.$aDataExport['address']['house'].'</House>
                                             <DeclaredSum>'.(/*$DeclaredSum*/'0').'</DeclaredSum>
                                             <DeliveryPayment>'.(/*$DeliveryPayment*/'0').'</DeliveryPayment>
                                             <SumToPay>0</SumToPay>
@@ -1403,20 +1407,20 @@ function custom_woocommerce_order_action_export_to_cdek($order) {
                 $your_xml_response = curl_exec($ch);
                 curl_close($ch);
 
-
+                //Разбираем ответ
                 $clean_xml = str_ireplace(['SOAP-ENV:', 'SOAP:'], '', $your_xml_response);
                 $xml = simplexml_load_string($clean_xml);
 
                 $iOrderID = '';
-                if (isset($xml->Body->ClientOrder_RequestDeliveryResponse->ClientOrder_RequestDeliveryResult->OrderID)){
+                if (isset($xml->Body->ClientOrder_RequestDeliveryResponse->ClientOrder_RequestDeliveryResult->OrderID) && (string)$xml->Body->ClientOrder_RequestDeliveryResponse->ClientOrder_RequestDeliveryResult->OrderID){
                     $iOrderID = (string)$xml->Body->ClientOrder_RequestDeliveryResponse->ClientOrder_RequestDeliveryResult->OrderID;
                 }
                 
                 if (class_exists('WC_Logger')) {
                     $logger = new WC_Logger();
 
-                    if (isset($xml->Body->ClientOrder_RequestDeliveryResponse->ClientOrder_RequestDeliveryResult->ErrorCode)) {
-                        $logger->add('ffillment_integration', 'ERROR: '.$order->id.'|' . $xml->Body->ClientOrder_RequestDeliveryResponse->ClientOrder_RequestDeliveryResult->ErrorCode);
+                    if (isset($xml->Body->ClientOrder_RequestDeliveryResponse->ClientOrder_RequestDeliveryResult->ErrorCode) && (string)$xml->Body->ClientOrder_RequestDeliveryResponse->ClientOrder_RequestDeliveryResult->ErrorCode) {
+                        $logger->add('ffillment_integration', 'ERROR: '.$order->id.'|' . (string)$xml->Body->ClientOrder_RequestDeliveryResponse->ClientOrder_RequestDeliveryResult->ErrorCode);
                     } else {
                         $logger->add('ffillment_integration', 'OK: '.$order->id.'|' . $iOrderID);
                     }

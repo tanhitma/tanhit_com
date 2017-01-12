@@ -111,11 +111,16 @@ class orders extends cdek_integrator implements exchange {
 
                 $attribute = [];
 
-                //$attribute[] = 'Street="' . $order_info['address']['street'] . '"';
-                //$attribute[] = 'House="' . $order_info['address']['house'] . '"';
+                //$attribute[] = 'Address="' . $order_info['address']['address'] . '"';
 
-                $attribute[] = 'ShipmentAddress="' . $order_info['address']['address'] . '"';
-
+				if (!empty($order_info['address']['street'])) {
+                    $attribute[] = 'Street="' . $order_info['address']['street'] . '"';
+                }
+				
+				if (!empty($order_info['address']['house'])) {
+                    $attribute[] = 'House="' . $order_info['address']['house'] . '"';
+                }
+				
                 if (!empty($order_info['address']['flat'])) {
                     $attribute[] = 'Flat="' . $order_info['address']['flat'] . '"';
                 }
@@ -243,9 +248,10 @@ class orders extends cdek_integrator implements exchange {
             $xml .= '</DeliveryRequest>';
         }
 
-        /*echo $xml;*/
-
-        /*exit;*/
+        /*
+        echo $xml;
+        exit;
+	*/
 
         return $xml;
     }
@@ -254,5 +260,3 @@ class orders extends cdek_integrator implements exchange {
         return (float)round(str_replace(',', '.', $price), 4);
     }
 }
-
-?>
