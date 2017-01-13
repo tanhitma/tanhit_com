@@ -1752,13 +1752,15 @@ function custom_woocommerce_get_price_html($price, $product) {
     return $price;
 }
 
+//Файлы к бесплатным товарам даже на которые нет заказов
 remove_all_filters('tanhit_free_download_products');
 add_action('tanhit_free_download_products', 'custom_tanhit_free_download_products');
 function custom_tanhit_free_download_products() {
 
     global $tanhit_customer_products;
 
-    $disable_file_online_show = ['.zip', '.rar'];
+    //Для данных файлов, показывать ссылку на скачивание а не онлайн просмотр
+    $disable_file_online_show = ['.zip', '.rar', '.pdf'];
 
     $args = [
         'post_type'      => 'product',
@@ -1782,25 +1784,12 @@ function custom_tanhit_free_download_products() {
 
         $product_date_start = strtotime(get_post_meta($product->ID, 'product_date_start', true));
 
-        //if ( $product_date_start >= strtotime( $now ) ) { // @TODO remove after test
-        /**
-         * Don't add future product
-         */
-        //continue;
-        //}
-
         $pr = wc_get_product($product->ID);
 
         if ($pr->get_price() > 0) {
-            /**
-             * Don't add product with price > 0
-             */
             continue;
         }
 
-        /**
-         * Don't add a product that was bought
-         */
         $product_bought = false;
         foreach ($tanhit_customer_products as $customer_product) {
             if ($customer_product['order']->post_status == 'wc-completed' && $product->ID == $customer_product['product_id']) {
@@ -1815,70 +1804,58 @@ function custom_tanhit_free_download_products() {
         $free_products[] = $pr;
     }
 
-    foreach ($free_products as $product) :
+    foreach ($free_products as $product){
 
         $downloads = $product->get_files();
 
         /**
          * for download @see 'init' action in tanhit-functions.php
          */
-        foreach ($downloads as $key => $download) :
-            ?>
+        foreach ($downloads as $key => $download){?>
           <li data-product="<?php echo $product->id; ?>">
             <span class="item-preview"
                   style="display: inline-block; overflow: hidden"><?php echo $product->get_image(); ?></span>
             <a href="<?php echo get_the_permalink($product->id); ?>"
                class="item-link vid-link" target="_blank"><?php echo $product->post->post_title; ?></a>
             <span class="file-name"><?php echo $download['name']; ?></span>
-              <?php
-              /**
-               * @see class-wc-download-handler.php for query string handle
-               */
+            
+            <?php
+            
+            $youtube = false;
+            if (getYotubeDownLink($download['file'])) {
+                $youtube = $download['file'];
+            }
 
-              $youtube = false;
-              if (getYotubeDownLink($download['file'])) {
-                  $youtube = $download['file'];
-              }
-
-              if (!$youtube) {
-                  ?>
-                <a href="<?php echo home_url() . '/?tanhit_download=true&product=' . $product->id . '&key=' . $key; ?>"
-                   class="btn-download"><?php pll_e('Скачать', 'tanhit'); ?>
-                </a>
-              <?
-              } ?>
-
-              <?php
-              if (!empty($download['file']) && !$youtube) :
-                  /**
-                   * Check for disabled file for online show
-                   */
-                  $disabled = false;
-                  foreach ($disable_file_online_show as $piece) {
-                      if (false !== strpos($download['file'], $piece)) {
-                          $disabled = true;
-                          break;
-                      }
-                  }
-                  if (!$disabled) {
-                      $link = getVideoFileByKey($product->id, $key);
-                      ?>
+            if (!empty($download['file']) && !$youtube){
+                /**
+                 * Check for disabled file for online show
+                 */
+                $disabled = false;
+                foreach ($disable_file_online_show as $piece) {
+                    if (false !== strpos($download['file'], $piece)) {
+                        $disabled = true;
+                        break;
+                    }
+                }
+                if (!$disabled) {
+                    $link = getVideoFileByKey($product->id, $key);
+                    ?>
+            
                     <a href="#vid<?php echo $product->id . "-" . $key; ?>" class="show-video btn-show">
                         <?php pll_e('Онлайн-просмотр', 'tanhit'); ?>
                     </a>
 
-                    <div style="display:none;" class="show_vid" id="vid<?php echo $product->id . "-" . $key; ?>"
-                         data-src="<?= $link; ?>">
-                      <div class="vid_player vid_player2">2
-                          <?php /* echo do_shortcode("[wpm_video video=".getVideoFileByKey($product->id, $key)." ratio=16by9 autoplay=off]"); */ ?>
-                          <?= (getPlayerForm($link)) ?>
-                      </div>
+                    <div style="display:none;" class="show_vid" id="vid<?php echo $product->id . "-" . $key; ?>" data-src="<?= $link; ?>">
+                        <div class="vid_player vid_player2">2
+                            <?= (getPlayerForm($link)) ?>
+                        </div>
                     </div>
-
-                      <?php
-                  } ?>
-
-              <?php elseif ($youtube): ?>
+                <?}else{?>
+                    <a href="<?php echo home_url() . '/?tanhit_download=true&product=' . $product->id . '&key=' . $key; ?>"
+                        class="btn-download"><?php pll_e('Скачать', 'tanhit'); ?>
+                     </a>
+                <?}?>
+              <?}elseif ($youtube){?>
                 <a href="#vid<?php echo $product->id . "-" . $key; ?>" class="show-video btn-show">
                     <?php pll_e('Онлайн-просмотр', 'tanhit'); ?>
                 </a>
@@ -1889,14 +1866,13 @@ function custom_tanhit_free_download_products() {
                       <?= (getPlayerForm($youtube)) ?>
                   </div>
                 </div>
-              <?php endif; ?>
+              <?}?>
           </li>
-            <?php
-        endforeach;
-
-    endforeach;
+        <?}
+    }
 }
 
+//Файлы к товарам которые заказаны
 remove_all_filters('woocommerce_available_download_start');
 add_action('woocommerce_available_download_start', 'custom_woocommerce_available_download_start');
 function custom_woocommerce_available_download_start($download) {
@@ -1912,7 +1888,8 @@ function custom_woocommerce_available_download_start($download) {
         }
     }
 
-    $disable_file_online_show = ['.zip', '.rar'];
+    //Для данных файлов, показывать ссылку на скачивание а не онлайн просмотр
+    $disable_file_online_show = ['.zip', '.rar', '.pdf'];
 
     $youtube = false;
     if (getYotubeDownLink($download['file']['file'])) {
@@ -1920,77 +1897,54 @@ function custom_woocommerce_available_download_start($download) {
     }
     ?>
 
-  <span class="item-preview" style=""><?php echo tanhit_get_product_thumbnail($download['product_id']); ?></span>
+    <span class="item-preview" style=""><?php echo tanhit_get_product_thumbnail($download['product_id']); ?></span>
 
-  <a href="<?php echo $product[$download['product_id']]['permalink']; ?>"
-     class="item-link vid-link" target="_blank"><?php echo $product[$download['product_id']]['product_name']; ?></a>
+    <a href="<?php echo $product[$download['product_id']]['permalink']; ?>" class="item-link vid-link" target="_blank">
+        <?php echo $product[$download['product_id']]['product_name']; ?>
+    </a>
 
-  <span class="file-name"><?php /* pll_e( 'Файл:', 'tanhit' );*/
-      echo $download['file']['name']; ?></span>
-
-    <? if (!$youtube) {
-        ?>
-    <a href="<?php echo esc_url($download['download_url']); ?>"
-       class="btn-download"><?php pll_e('Скачать', 'tanhit'); ?></a>
-    <?
-    } ?>
+    <span class="file-name"><?php /* pll_e( 'Файл:', 'tanhit' );*/echo $download['file']['name']; ?></span>
 
     <?php
-
-    if (empty($download['file']['file'])) : ?>
-        <?php /* <a href="#" class="btn-show"><?php pll_e( 'Онлайн-просмотр', 'tanhit' ); ?></a>	*/ ?><?php
-    else:
-        if ($youtube) {
+    if ( ! empty($download['file']['file']) && ! $youtube){
+        $disabled = false;
+        foreach ($disable_file_online_show as $piece) {
+            if (false !== strpos($download['file']['file'], $piece)) {
+                $disabled = true;
+                break;
+            }
+        }
+        if (!$disabled) {
+            $link = getVideoFile($download['file']['file']);
             ?>
           <a href="#vid<?php echo md5($download['file']['file']); ?>" class="show-video btn-show">
               <?php pll_e('Онлайн-просмотр', 'tanhit'); ?>
           </a>
 
+
           <div style="display:none;" class="show_vid" id="vid<?php echo md5($download['file']['file']); ?>"
-               data-src="<?= $youtube; ?>">
+               data-src="<?= $link; ?>">
+            <div class="vid_player vid_player2">
+                <?php/* echo do_shortcode("[wpm_video video=".getVideoFile($download['file']['file'])." ratio=16by9 autoplay=off]"); */ ?>
+                <?= (getPlayerForm($link)) ?>
+            </div>
+          </div>
+        <?}else{?>
+            <a href="<?php echo esc_url($download['download_url']); ?>"
+                class="btn-download"><?php pll_e('Скачать', 'tanhit'); ?>
+            </a>
+        <?}
+    }elseif ($youtube) {?>
+        <a href="#vid<?php echo md5($download['file']['file']); ?>" class="show-video btn-show">
+            <?php pll_e('Онлайн-просмотр', 'tanhit'); ?>
+        </a>
+
+        <div style="display:none;" class="show_vid" id="vid<?php echo md5($download['file']['file']); ?>" data-src="<?= $youtube; ?>">
             <div class="vid_player vid_player2">
                 <?= (getPlayerForm($youtube)) ?>
             </div>
-          </div>
-        <?
-        } else {
-            /**
-             * @todo remove line below after real video will be loaded to server for check
-             */
-            //$download[ 'file' ][ 'file' ] = 'http://media.jilion.com/videos/demo/midnight_sun_sv1_720p.mp4';
-
-            /**
-             * Check for disabled file for online show
-             */
-            $disabled = false;
-            foreach ($disable_file_online_show as $piece) {
-                if (false !== strpos($download['file']['file'], $piece)) {
-                    $disabled = true;
-                    break;
-                }
-            }
-            if (!$disabled) {
-                $link = getVideoFile($download['file']['file']);
-                ?>
-              <a href="#vid<?php echo md5($download['file']['file']); ?>" class="show-video btn-show">
-                  <?php pll_e('Онлайн-просмотр', 'tanhit'); ?>
-              </a>
-
-
-              <div style="display:none;" class="show_vid" id="vid<?php echo md5($download['file']['file']); ?>"
-                   data-src="<?= $link; ?>">
-                <div class="vid_player vid_player2">
-                    <?php/* echo do_shortcode("[wpm_video video=".getVideoFile($download['file']['file'])." ratio=16by9 autoplay=off]"); */ ?>
-                    <?= (getPlayerForm($link)) ?>
-                </div>
-              </div>
-
-            <?
-            } ?>
-        <?
-        } ?>
-        <?php
-    endif;
+        </div>
+    <?}
 }
 
 //Фильтруем ссылки в письме, выполненного заказа
