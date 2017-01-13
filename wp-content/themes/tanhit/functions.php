@@ -907,8 +907,60 @@ function custom_woocommerce_order_formatted_shipping_address($fields) {
 
 add_filter('woocommerce_admin_billing_fields', 'custom_woocommerce_admin_billing_fields');
 function custom_woocommerce_admin_billing_fields($fields) {
-    unset($fields['city']);
-
+    
+    $fields = array(
+        'first_name' => array(
+                'label' => __( 'First Name', 'woocommerce' ),
+                'show'  => false
+        ),
+        'last_name' => array(
+                'label' => __( 'Last Name', 'woocommerce' ),
+                'show'  => false
+        ),
+        'company' => array(
+                'label' => __( 'Company', 'woocommerce' ),
+                'show'  => false
+        ),
+        'address_1' => array(
+                'label' => 'Улица',
+                'show'  => false
+        ),
+        'address_2' => array(
+                'label' => 'Номер дома',
+                'show'  => false
+        ),
+        'address_3' => array(
+                'label' => 'Номер квартиры',
+                'show'  => false
+        ),
+        /*'city' => array(
+                'label' => __( 'City', 'woocommerce' ),
+                'show'  => false
+        ),*/
+        'postcode' => array(
+                'label' => __( 'Postcode', 'woocommerce' ),
+                'show'  => false
+        ),
+        'country' => array(
+                'label'   => __( 'Country', 'woocommerce' ),
+                'show'    => false,
+                'class'   => 'js_field-country select short',
+                'type'    => 'select',
+                'options' => array( '' => __( 'Select a country&hellip;', 'woocommerce' ) ) + WC()->countries->get_allowed_countries()
+        ),
+        'state' => array(
+                'label' => __( 'State/County', 'woocommerce' ),
+                'class'   => 'js_field-state select short',
+                'show'  => false
+        ),
+        'email' => array(
+                'label' => __( 'Email', 'woocommerce' ),
+        ),
+        'phone' => array(
+                'label' => __( 'Phone', 'woocommerce' ),
+        ),
+    );
+    
     return $fields;
 }
 
@@ -950,8 +1002,13 @@ function custom_woocommerce_checkout_fields($fields) {
     ];
     $fields['billing']['billing_address_2'] = [
         'type'     => 'text',
-        'label'    => 'Номер дома/квартиры',
+        'label'    => 'Номер дома',
         'required' => (isset($_REQUEST['billing_delivery_point']) && $_REQUEST['billing_delivery_point'] ? false : true),
+    ];
+    $fields['billing']['billing_address_3'] = [
+        'type'     => 'text',
+        'label'    => 'Номер квартиры',
+        'required' => false,
     ];
 
     $fields['billing']['billing_state_id'] = [
@@ -976,7 +1033,7 @@ function custom_woocommerce_checkout_update_order_review() {
 
     if ($aPostData) {
         if ($aSaveFields = array_intersect(
-            ['billing_state_id', 'billing_state', 'billing_address_1', 'billing_address_2', 'billing_email', 'billing_city', 'billing_phone', 'billing_first_name', 'billing_last_name'],
+            ['billing_state_id', 'billing_state', 'billing_address_1', 'billing_address_2', 'billing_address_3', 'billing_email', 'billing_city', 'billing_phone', 'billing_first_name', 'billing_last_name'],
             array_keys($aPostData)
         )
         ) {
@@ -1054,7 +1111,7 @@ function custom_woocommerce_after_calculate_totals($el) {
 
 add_filter('woocommerce_checkout_get_value', 'custom_woocommerce_checkout_get_value', 10, 2);
 function custom_woocommerce_checkout_get_value($val, $input) {
-    if (in_array($input, ['billing_state_id', 'billing_state', 'billing_address_1', 'billing_address_2', 'billing_email', 'billing_city', 'billing_phone', 'billing_first_name', 'billing_last_name'])) {
+    if (in_array($input, ['billing_state_id', 'billing_state', 'billing_address_1', 'billing_address_2', 'billing_address_3', 'billing_email', 'billing_city', 'billing_phone', 'billing_first_name', 'billing_last_name'])) {
         if (is_user_logged_in()) {
             $val = get_user_meta('', $input, true);
         } else {
@@ -1181,7 +1238,7 @@ function custom_woocommerce_order_action_export_to_cdek($order) {
             //Адрес получателя
             $aDataExport['address']['street']      = trim($aMetaDataOrder['_billing_address_1'][0]);
             $aDataExport['address']['house']       = trim($aMetaDataOrder['_billing_address_2'][0]);
-            //$aDataExport['address']['flat']      = 'не указан';
+            $aDataExport['address']['flat']        = trim($aMetaDataOrder['_billing_address_3'][0]);
             
             //$aDataExport['address']['address'] = trim($aMetaDataOrder['_billing_address_1'][0] . ' ' . $aMetaDataOrder['_billing_address_2'][0]);
             
@@ -1330,7 +1387,7 @@ function custom_woocommerce_order_action_export_to_cdek($order) {
                                             <WarehouseCode>32</WarehouseCode>
                                             <CountryCode></CountryCode>
                                             <POD>'.(isset($aMetaDataOrder['_billing_delivery_point'][0]) ? $aMetaDataOrder['_billing_delivery_point'][0] : '').'</POD>
-                                            <ShipmentAddress>'.($aDataExport['address']['street'] ? trim($aDataExport['address']['street'] . ', ' . $aDataExport['address']['house']) : '').'</ShipmentAddress>
+                                            <ShipmentAddress>'.($aDataExport['address']['street'] ? trim(trim($aDataExport['address']['street'] .', '. $aDataExport['address']['house'] .', '. $aDataExport['address']['flat']),',') : '').'</ShipmentAddress>
                                             <Phones>'.$aDataExport['recipient_telephone'].'</Phones>
                                             <Receiver>'.$aDataExport['recipient_name'].'</Receiver>
                                             <AOGUID></AOGUID>
@@ -1595,6 +1652,7 @@ function woo_remove_billing_checkout_fields($fields) {
         unset($fields['billing']['billing_state']);
         unset($fields['billing']['billing_address_1']);
         unset($fields['billing']['billing_address_2']);
+        unset($fields['billing']['billing_address_3']);
         unset($fields['billing']['billing_city']);
         unset($fields['billing']['billing_delivery_point']);
         //unset($fields['shipping']);
