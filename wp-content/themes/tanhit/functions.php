@@ -907,8 +907,60 @@ function custom_woocommerce_order_formatted_shipping_address($fields) {
 
 add_filter('woocommerce_admin_billing_fields', 'custom_woocommerce_admin_billing_fields');
 function custom_woocommerce_admin_billing_fields($fields) {
-    unset($fields['city']);
-
+    
+    $fields = array(
+        'first_name' => array(
+                'label' => __( 'First Name', 'woocommerce' ),
+                'show'  => false
+        ),
+        'last_name' => array(
+                'label' => __( 'Last Name', 'woocommerce' ),
+                'show'  => false
+        ),
+        'company' => array(
+                'label' => __( 'Company', 'woocommerce' ),
+                'show'  => false
+        ),
+        'address_1' => array(
+                'label' => 'Улица',
+                'show'  => false
+        ),
+        'address_2' => array(
+                'label' => 'Номер дома',
+                'show'  => false
+        ),
+        'address_3' => array(
+                'label' => 'Номер квартиры',
+                'show'  => false
+        ),
+        /*'city' => array(
+                'label' => __( 'City', 'woocommerce' ),
+                'show'  => false
+        ),*/
+        'postcode' => array(
+                'label' => __( 'Postcode', 'woocommerce' ),
+                'show'  => false
+        ),
+        'country' => array(
+                'label'   => __( 'Country', 'woocommerce' ),
+                'show'    => false,
+                'class'   => 'js_field-country select short',
+                'type'    => 'select',
+                'options' => array( '' => __( 'Select a country&hellip;', 'woocommerce' ) ) + WC()->countries->get_allowed_countries()
+        ),
+        'state' => array(
+                'label' => __( 'State/County', 'woocommerce' ),
+                'class'   => 'js_field-state select short',
+                'show'  => false
+        ),
+        'email' => array(
+                'label' => __( 'Email', 'woocommerce' ),
+        ),
+        'phone' => array(
+                'label' => __( 'Phone', 'woocommerce' ),
+        ),
+    );
+    
     return $fields;
 }
 
@@ -945,13 +997,18 @@ function custom_woocommerce_checkout_fields($fields) {
     ];
     $fields['billing']['billing_address_1'] = [
         'type'     => 'text',
-        'label'    => 'Адрес (обязательно укажите улицу, дом, квартиру)',
+        'label'    => 'Улица',
         'required' => (isset($_REQUEST['billing_delivery_point']) && $_REQUEST['billing_delivery_point'] ? false : true),
     ];
     $fields['billing']['billing_address_2'] = [
         'type'     => 'text',
-        'label'    => 'Адрес (продолжение)',
-        'required' => false //(isset($_REQUEST['billing_delivery_point']) && $_REQUEST['billing_delivery_point'] ? false : true),
+        'label'    => 'Номер дома',
+        'required' => (isset($_REQUEST['billing_delivery_point']) && $_REQUEST['billing_delivery_point'] ? false : true),
+    ];
+    $fields['billing']['billing_address_3'] = [
+        'type'     => 'text',
+        'label'    => 'Номер квартиры',
+        'required' => false,
     ];
 
     $fields['billing']['billing_state_id'] = [
@@ -976,7 +1033,7 @@ function custom_woocommerce_checkout_update_order_review() {
 
     if ($aPostData) {
         if ($aSaveFields = array_intersect(
-            ['billing_state_id', 'billing_state', 'billing_address_1', 'billing_address_2', 'billing_email', 'billing_city', 'billing_phone', 'billing_first_name', 'billing_last_name'],
+            ['billing_state_id', 'billing_state', 'billing_address_1', 'billing_address_2', 'billing_address_3', 'billing_email', 'billing_city', 'billing_phone', 'billing_first_name', 'billing_last_name'],
             array_keys($aPostData)
         )
         ) {
@@ -1054,7 +1111,7 @@ function custom_woocommerce_after_calculate_totals($el) {
 
 add_filter('woocommerce_checkout_get_value', 'custom_woocommerce_checkout_get_value', 10, 2);
 function custom_woocommerce_checkout_get_value($val, $input) {
-    if (in_array($input, ['billing_state_id', 'billing_state', 'billing_address_1', 'billing_address_2', 'billing_email', 'billing_city', 'billing_phone', 'billing_first_name', 'billing_last_name'])) {
+    if (in_array($input, ['billing_state_id', 'billing_state', 'billing_address_1', 'billing_address_2', 'billing_address_3', 'billing_email', 'billing_city', 'billing_phone', 'billing_first_name', 'billing_last_name'])) {
         if (is_user_logged_in()) {
             $val = get_user_meta('', $input, true);
         } else {
@@ -1116,6 +1173,7 @@ function custom_woocommerce_order_actions($actions) {
 
 add_action('woocommerce_order_action_export_to_cdek', 'custom_woocommerce_order_action_export_to_cdek');
 function custom_woocommerce_order_action_export_to_cdek($order) {
+    
     if (is_numeric($order)) {
         $order = new WC_Order($order);
     }
@@ -1133,6 +1191,7 @@ function custom_woocommerce_order_action_export_to_cdek($order) {
         require_once __DIR__ . '/cdek_integrator/class.cdek_integrator.php';
         $api_cdek = new cdek_integrator();
 
+        $DeclaredSum = $DeliveryPayment = 0;
         $aSettingsEdostavka = get_option('woocommerce_edostavka_settings');
         if (isset($aSettingsEdostavka['login']) && $aSettingsEdostavka['login'] && isset($aSettingsEdostavka['password']) && $aSettingsEdostavka['password']) {
             //Авторизационные данные
@@ -1140,7 +1199,7 @@ function custom_woocommerce_order_action_export_to_cdek($order) {
 
             //Формируем список товаров заказа для выгрузки
             $component = $api_cdek->loadComponent('orders');
-            error_log(print_r($component, 0));
+            //error_log(print_r($component, 0));
 
             //Задаем номер выгрузки
             $component->setNumber('shop_' . date('Ymd', strtotime($order->order_date)) . '_' . str_pad($order->id, 10, 0, STR_PAD_LEFT));
@@ -1149,7 +1208,11 @@ function custom_woocommerce_order_action_export_to_cdek($order) {
             $aMetaDataOrder = get_post_meta($order->id);
             //Meta Delivery 
             $aDeliveryMethod = $order->get_shipping_methods();
+            
+            //Стоимость доставки
+            $DeliveryPayment = $aMetaDataOrder['_order_shipping'][0];
 
+            
             //Массив данных для передачи на выгрузку
             $aDataExport = [];
 
@@ -1173,11 +1236,12 @@ function custom_woocommerce_order_action_export_to_cdek($order) {
             $aDataExport['currency'] = $aMetaDataOrder['_order_currency'][0];
 
             //Адрес получателя
-            //$aDataExport['address']['street']       = $aMetaDataOrder['_billing_address_1'][0];
-            //$aDataExport['address']['house']        = $aMetaDataOrder['_billing_address_2'][0];
-
-            $aDataExport['address']['address'] = $aMetaDataOrder['_billing_address_1'][0] . ' ' . $aMetaDataOrder['_billing_address_2'][0];
-
+            $aDataExport['address']['street']      = trim($aMetaDataOrder['_billing_address_1'][0]);
+            $aDataExport['address']['house']       = trim($aMetaDataOrder['_billing_address_2'][0]);
+            $aDataExport['address']['flat']        = trim($aMetaDataOrder['_billing_address_3'][0]);
+            
+            //$aDataExport['address']['address'] = trim($aMetaDataOrder['_billing_address_1'][0] . ' ' . $aMetaDataOrder['_billing_address_2'][0]);
+            
             //ИД пункта выдачи
             if (!empty($aMetaDataOrder['_billing_delivery_point'][0])) {
                 $aDataExport['address']['pvz_code'] = $aMetaDataOrder['_billing_delivery_point'][0];
@@ -1190,6 +1254,7 @@ function custom_woocommerce_order_action_export_to_cdek($order) {
             $aDataPackageExport['size_c'] = 0;
             $aDataPackageExport['weight'] = 0;
 
+            $aProductItems = array();
             //Товары в заказе
             $order_items = $order->get_items();
             foreach ($order_items as $item_id => $item_data) {
@@ -1199,6 +1264,8 @@ function custom_woocommerce_order_action_export_to_cdek($order) {
                     $sSku = $oProduct->get_sku();
                     $iCost = $item_data['line_total'] / $item_data['qty'];
 
+                    $DeclaredSum += $item_data['line_total'];
+                                     
                     $_weight = wc_get_weight(str_replace(',', '.', $oProduct->weight), 'kg');
                     if (!$_weight) {
                         $_weight = $aSettingsEdostavka['minimum_weight'];
@@ -1233,35 +1300,191 @@ function custom_woocommerce_order_action_export_to_cdek($order) {
                     }
 
                     //Вес всех товаров
-                    $aDataPackageExport['size_a'] += $_height * $item_data['qty'];
-                    $aDataPackageExport['size_b'] += $_width * $item_data['qty'];
-                    $aDataPackageExport['size_c'] += $_length * $item_data['qty'];
-                    $aDataPackageExport['weight'] += $_weight * $item_data['qty'];
+                    $aDataPackageExport['size_a'] += ($_height/* * $item_data['qty']*/);
+                    $aDataPackageExport['size_b'] += ($_width/* * $item_data['qty']*/);
+                    $aDataPackageExport['size_c'] += ($_length/* * $item_data['qty']*/);
+                    $aDataPackageExport['weight'] += ($_weight/* * $item_data['qty']*/);
+                    
+                    //Продукты для выгрузки в FullFillmment
+                    $aProductItems[] = array(
+                        'id'            => $oProduct->get_id(),
+                        'name'          => $item_data['name'],
+                        'price'         => $iCost,
+                        'qty'           => $item_data['qty'],
+                        'unit_code'     => $item_data['unit_code']
+                    );
                 }
             }
 
             $aDataPackageExport['pack'] = TRUE;
 
             $aDataExport['package'][1] = $aDataPackageExport;
-            (new WC_Logger())->add('cdek_integration', 'INFO: order_to_cdek|' . print_r($aDataExport, 0));
+            //(new WC_Logger())->add('cdek_integration', 'INFO: order_to_cdek|'.$order->id.'|' . print_r($aDataExport, 0));
             //Добавляем данные в выгрузку
             $component->setOrders([$aDataExport]);
             //Отправляем данные на сервер сдэк
+           
             $response = $api_cdek->sendData($component);
-            (new WC_Logger())->add('cdek_integration', 'INFO: order_to_cdek|' . print_r($response, 0));
+            //(new WC_Logger())->add('cdek_integration', 'INFO: order_to_cdek|'.$order->id.'|' . print_r($response, 0));
             $aOrderResponse = (array)$response->Order[0];
 
+            //die(var_dump($aOrderResponse,$component->getData()));
+            
             if (!isset($aOrderResponse["@attributes"]["ErrorCode"])) {
-                $order->update_status('wc-export_to_cdek');
+                
             }
 
             if (class_exists('WC_Logger')) {
                 $logger = new WC_Logger();
 
-                if (isset($aOrderResponse["@attributes"]["ErrorCode"])) {
-                    $logger->add('cdek_integration', 'ERROR: order_to_cdek|' . implode('|', $aOrderResponse["@attributes"]));
+                if (isset($aOrderResponse["@attributes"]["ErrorCode"]) && $aOrderResponse["@attributes"]["ErrorCode"]) {
+                    $logger->add('cdek_integration', 'ERROR: order_to_cdek|'.$order->id.'|' . implode('|', $aOrderResponse["@attributes"]));
                 } else {
-                    $logger->add('cdek_integration', 'OK: order_to_cdek|' . implode('|', $aOrderResponse["@attributes"]));
+                    $logger->add('cdek_integration', 'OK: order_to_cdek|'.$order->id.'|' . implode('|', $aOrderResponse["@attributes"]));
+                }
+            }
+            
+            
+            //Если заказ выгружен в СДЭК, то выгружаем в FFillment
+            if ($aProductItems && ( ! isset($aOrderResponse["@attributes"]["ErrorCode"]) || $aOrderResponse["@attributes"]["ErrorCode"] == 'ERR_ORDER_DUBL_EXISTS')) {
+                
+                //Дополняем нужными полями
+                foreach ($aProductItems as $iKey => $aItem){
+                    $FF_SkuExternalCode = get_field( "FF_SkuExternalCode", $aItem['id'] );
+                    $FF_Article = get_field( "FF_Article", $aItem['id'] );
+                    $FF_UnitCode = get_field( "FF_UnitCode", $aItem['id'] );
+                    
+                    if ( ! $FF_SkuExternalCode || ! $FF_Article || ! $FF_UnitCode){
+                        if (class_exists('WC_Logger')) {
+                            $logger = new WC_Logger();
+
+                            $logger->add('ffillment_integration', 'ERROR: EMPTY_FF_FIELD_FOR_PRODUCT|'.$aItem['id'].'|'.$order->id);
+                        }
+                        
+                        return FALSE;
+                        break;
+                    }
+                    
+                    $aProductItems[$iKey]['SkuExternalCode'] = $FF_SkuExternalCode;
+                    $aProductItems[$iKey]['Article'] = $FF_Article;
+                    $aProductItems[$iKey]['UnitCode'] = $FF_UnitCode;
+                }
+                
+                $xml_post_string = '<?xml version="1.0" encoding="utf-8"?>
+                    <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+                            <soap:Body>
+                                    <ClientOrder_RequestDelivery xmlns="http://lkff.cdek.ru">
+                                            <sid>24D1A468-A368-40DB-BB1F-BA47DE1A9D69</sid>
+                                            <Sender></Sender>
+                                            <OrderDate>'.date('Y-m-d').'</OrderDate>
+                                            <OrderCode>'.$aDataExport['order_id'].'</OrderCode>
+                                            <OrderRPO></OrderRPO>
+                                            <DeliveryType>9</DeliveryType>
+                                            <DeliveryDate></DeliveryDate>
+                                            <DeliveryHours></DeliveryHours>
+                                            <DeliveryTariff>'.($aDataExport['tariff_id']).'</DeliveryTariff>
+                                            <DeliveryMode>0</DeliveryMode>
+                                            <WarehouseCode>32</WarehouseCode>
+                                            <CountryCode></CountryCode>
+                                            <POD>'.(isset($aMetaDataOrder['_billing_delivery_point'][0]) ? $aMetaDataOrder['_billing_delivery_point'][0] : '').'</POD>
+                                            <ShipmentAddress>'.($aDataExport['address']['street'] ? trim(trim($aDataExport['address']['street'] .', '. $aDataExport['address']['house'] .', '. $aDataExport['address']['flat']),',') : '').'</ShipmentAddress>
+                                            <Phones>'.$aDataExport['recipient_telephone'].'</Phones>
+                                            <Receiver>'.$aDataExport['recipient_name'].'</Receiver>
+                                            <AOGUID></AOGUID>
+                                            <ZipCode></ZipCode>
+                                            <Subject></Subject>
+                                            <CityCode>'.$aDataExport['recipient_city_id'].'</CityCode>
+                                            <City>'.$aMetaDataOrder['_billing_state'][0].'</City>
+                                            <Region></Region>
+                                            <Town></Town>
+                                            <Street>'.$aDataExport['address']['street'].'</Street>
+                                            <House>'.$aDataExport['address']['house'].'</House>
+                                            <DeclaredSum>'.(/*$DeclaredSum*/'0').'</DeclaredSum>
+                                            <DeliveryPayment>'.(/*$DeliveryPayment*/'0').'</DeliveryPayment>
+                                            <SumToPay>0</SumToPay>
+                                            <tblcount>'.count($aProductItems).'</tblcount>
+                                            <Goods>';
+                
+                                            foreach ($aProductItems as $aItem){
+                                                $xml_post_string .= '<Goods>
+                                                    <Life>0</Life>
+                                                    <ExternalCode>'.$aItem['id'].'</ExternalCode>
+                                                    <SkuExternalCode>'.$aItem['SkuExternalCode'].'</SkuExternalCode>
+                                                    <Article>'.$aItem['Article'].'</Article>
+                                                    <FullName>'.$aItem['name'].'</FullName>
+                                                    <Color></Color>
+                                                    <Size></Size>
+                                                    <Variant></Variant>
+                                                    <Season></Season>
+                                                    <Price>'.$aItem['price'].'</Price>
+                                                    <MinQty>1</MinQty>
+                                                    <PackQty>1</PackQty>
+                                                    <BoxQty>1</BoxQty>
+                                                    <SkuGroupName></SkuGroupName>
+                                                    <Barcode></Barcode>
+                                                    <Brand></Brand>
+                                                    <Weight>0</Weight>
+                                                    <Volume>0</Volume>
+                                                    <Length>0</Length>
+                                                    <Width>0</Width>
+                                                    <Height>0</Height>
+                                                    <UnitCode>'.$aItem['UnitCode'].'</UnitCode>
+                                                    <Qty>'.$aItem['qty'].'</Qty>
+                                                    <SerialNumber></SerialNumber>
+                                                </Goods>';
+                                            }
+
+                                            $xml_post_string .= '
+                                            </Goods>
+                                    </ClientOrder_RequestDelivery>
+                            </soap:Body>
+                    </soap:Envelope>';
+
+                $headers = array(
+                        "Content-type: text/xml;charset=\"utf-8\"",
+                        "Accept: text/xml",
+                        "Cache-Control: no-cache",
+                        "Pragma: no-cache",
+                        "SOAPAction: http://lkff.cdek.ru/ClientOrder_RequestDelivery", 
+                        "Content-length: ".strlen($xml_post_string),
+                ); 
+
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, 'http://lkff.cdek.ru:8080/cdekfullfillment.asmx?op=ClientOrder_RequestDelivery');
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                //curl_setopt($ch, CURLOPT_HEADER, TRUE);
+                curl_setopt($ch, CURLOPT_TIMEOUT, 20);
+
+                if (!empty($xml_post_string)) {
+                        curl_setopt($ch, CURLOPT_POST, 1);
+                        curl_setopt($ch, CURLOPT_POSTFIELDS, /*array('xml_request' => */$xml_post_string/*)*/);
+                }
+                curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+                $your_xml_response = curl_exec($ch);
+                curl_close($ch);
+
+                //Разбираем ответ
+                $clean_xml = str_ireplace(['SOAP-ENV:', 'SOAP:'], '', $your_xml_response);
+                $xml = simplexml_load_string($clean_xml);
+
+                $iOrderID = '';
+                if (isset($xml->Body->ClientOrder_RequestDeliveryResponse->ClientOrder_RequestDeliveryResult->OrderID) && (string)$xml->Body->ClientOrder_RequestDeliveryResponse->ClientOrder_RequestDeliveryResult->OrderID){
+                    $iOrderID = (string)$xml->Body->ClientOrder_RequestDeliveryResponse->ClientOrder_RequestDeliveryResult->OrderID;
+                }
+                
+                if (class_exists('WC_Logger')) {
+                    $logger = new WC_Logger();
+
+                    if (isset($xml->Body->ClientOrder_RequestDeliveryResponse->ClientOrder_RequestDeliveryResult->ErrorCode) && (string)$xml->Body->ClientOrder_RequestDeliveryResponse->ClientOrder_RequestDeliveryResult->ErrorCode) {
+                        $logger->add('ffillment_integration', 'ERROR: '.$order->id.'|' . (string)$xml->Body->ClientOrder_RequestDeliveryResponse->ClientOrder_RequestDeliveryResult->ErrorCode);
+                    } else {
+                        $logger->add('ffillment_integration', 'OK: '.$order->id.'|' . $iOrderID);
+                    }
+                }
+                
+                if ($iOrderID){
+                    $order->update_status('wc-export_to_cdek');
                 }
             }
         }
@@ -1304,7 +1527,7 @@ function custom_woocommerce_order_action_delete_from_cdek($order) {
             $logger->add('cdek_integration', 'OK: order_delete_from_cdek|' . $iOrderIdCDEK . '|' . implode('|', $aOrderResponse["@attributes"]) . "\r\n");
         }
     }
-
+    
     return true;
 }
 
@@ -1429,6 +1652,7 @@ function woo_remove_billing_checkout_fields($fields) {
         unset($fields['billing']['billing_state']);
         unset($fields['billing']['billing_address_1']);
         unset($fields['billing']['billing_address_2']);
+        unset($fields['billing']['billing_address_3']);
         unset($fields['billing']['billing_city']);
         unset($fields['billing']['billing_delivery_point']);
         //unset($fields['shipping']);
