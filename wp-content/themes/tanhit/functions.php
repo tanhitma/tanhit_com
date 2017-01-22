@@ -907,8 +907,60 @@ function custom_woocommerce_order_formatted_shipping_address($fields) {
 
 add_filter('woocommerce_admin_billing_fields', 'custom_woocommerce_admin_billing_fields');
 function custom_woocommerce_admin_billing_fields($fields) {
-    unset($fields['city']);
-
+    
+    $fields = array(
+        'first_name' => array(
+                'label' => __( 'First Name', 'woocommerce' ),
+                'show'  => false
+        ),
+        'last_name' => array(
+                'label' => __( 'Last Name', 'woocommerce' ),
+                'show'  => false
+        ),
+        'company' => array(
+                'label' => __( 'Company', 'woocommerce' ),
+                'show'  => false
+        ),
+        'address_1' => array(
+                'label' => 'Улица',
+                'show'  => false
+        ),
+        'address_2' => array(
+                'label' => 'Номер дома',
+                'show'  => false
+        ),
+        'address_3' => array(
+                'label' => 'Номер квартиры',
+                'show'  => false
+        ),
+        /*'city' => array(
+                'label' => __( 'City', 'woocommerce' ),
+                'show'  => false
+        ),*/
+        'postcode' => array(
+                'label' => __( 'Postcode', 'woocommerce' ),
+                'show'  => false
+        ),
+        'country' => array(
+                'label'   => __( 'Country', 'woocommerce' ),
+                'show'    => false,
+                'class'   => 'js_field-country select short',
+                'type'    => 'select',
+                'options' => array( '' => __( 'Select a country&hellip;', 'woocommerce' ) ) + WC()->countries->get_allowed_countries()
+        ),
+        'state' => array(
+                'label' => __( 'State/County', 'woocommerce' ),
+                'class'   => 'js_field-state select short',
+                'show'  => false
+        ),
+        'email' => array(
+                'label' => __( 'Email', 'woocommerce' ),
+        ),
+        'phone' => array(
+                'label' => __( 'Phone', 'woocommerce' ),
+        ),
+    );
+    
     return $fields;
 }
 
@@ -945,13 +997,18 @@ function custom_woocommerce_checkout_fields($fields) {
     ];
     $fields['billing']['billing_address_1'] = [
         'type'     => 'text',
-        'label'    => 'Адрес (обязательно укажите улицу, дом, квартиру)',
+        'label'    => 'Улица',
         'required' => (isset($_REQUEST['billing_delivery_point']) && $_REQUEST['billing_delivery_point'] ? false : true),
     ];
     $fields['billing']['billing_address_2'] = [
         'type'     => 'text',
-        'label'    => 'Адрес (продолжение)',
-        'required' => false //(isset($_REQUEST['billing_delivery_point']) && $_REQUEST['billing_delivery_point'] ? false : true),
+        'label'    => 'Номер дома',
+        'required' => (isset($_REQUEST['billing_delivery_point']) && $_REQUEST['billing_delivery_point'] ? false : true),
+    ];
+    $fields['billing']['billing_address_3'] = [
+        'type'     => 'text',
+        'label'    => 'Номер квартиры',
+        'required' => false,
     ];
 
     $fields['billing']['billing_state_id'] = [
@@ -976,7 +1033,7 @@ function custom_woocommerce_checkout_update_order_review() {
 
     if ($aPostData) {
         if ($aSaveFields = array_intersect(
-            ['billing_state_id', 'billing_state', 'billing_address_1', 'billing_address_2', 'billing_email', 'billing_city', 'billing_phone', 'billing_first_name', 'billing_last_name'],
+            ['billing_state_id', 'billing_state', 'billing_address_1', 'billing_address_2', 'billing_address_3', 'billing_email', 'billing_city', 'billing_phone', 'billing_first_name', 'billing_last_name'],
             array_keys($aPostData)
         )
         ) {
@@ -1054,7 +1111,7 @@ function custom_woocommerce_after_calculate_totals($el) {
 
 add_filter('woocommerce_checkout_get_value', 'custom_woocommerce_checkout_get_value', 10, 2);
 function custom_woocommerce_checkout_get_value($val, $input) {
-    if (in_array($input, ['billing_state_id', 'billing_state', 'billing_address_1', 'billing_address_2', 'billing_email', 'billing_city', 'billing_phone', 'billing_first_name', 'billing_last_name'])) {
+    if (in_array($input, ['billing_state_id', 'billing_state', 'billing_address_1', 'billing_address_2', 'billing_address_3', 'billing_email', 'billing_city', 'billing_phone', 'billing_first_name', 'billing_last_name'])) {
         if (is_user_logged_in()) {
             $val = get_user_meta('', $input, true);
         } else {
@@ -1116,6 +1173,7 @@ function custom_woocommerce_order_actions($actions) {
 
 add_action('woocommerce_order_action_export_to_cdek', 'custom_woocommerce_order_action_export_to_cdek');
 function custom_woocommerce_order_action_export_to_cdek($order) {
+    
     if (is_numeric($order)) {
         $order = new WC_Order($order);
     }
@@ -1133,6 +1191,7 @@ function custom_woocommerce_order_action_export_to_cdek($order) {
         require_once __DIR__ . '/cdek_integrator/class.cdek_integrator.php';
         $api_cdek = new cdek_integrator();
 
+        $DeclaredSum = $DeliveryPayment = 0;
         $aSettingsEdostavka = get_option('woocommerce_edostavka_settings');
         if (isset($aSettingsEdostavka['login']) && $aSettingsEdostavka['login'] && isset($aSettingsEdostavka['password']) && $aSettingsEdostavka['password']) {
             //Авторизационные данные
@@ -1140,7 +1199,7 @@ function custom_woocommerce_order_action_export_to_cdek($order) {
 
             //Формируем список товаров заказа для выгрузки
             $component = $api_cdek->loadComponent('orders');
-            error_log(print_r($component, 0));
+            //error_log(print_r($component, 0));
 
             //Задаем номер выгрузки
             $component->setNumber('shop_' . date('Ymd', strtotime($order->order_date)) . '_' . str_pad($order->id, 10, 0, STR_PAD_LEFT));
@@ -1149,7 +1208,11 @@ function custom_woocommerce_order_action_export_to_cdek($order) {
             $aMetaDataOrder = get_post_meta($order->id);
             //Meta Delivery 
             $aDeliveryMethod = $order->get_shipping_methods();
+            
+            //Стоимость доставки
+            $DeliveryPayment = $aMetaDataOrder['_order_shipping'][0];
 
+            
             //Массив данных для передачи на выгрузку
             $aDataExport = [];
 
@@ -1173,11 +1236,12 @@ function custom_woocommerce_order_action_export_to_cdek($order) {
             $aDataExport['currency'] = $aMetaDataOrder['_order_currency'][0];
 
             //Адрес получателя
-            //$aDataExport['address']['street']       = $aMetaDataOrder['_billing_address_1'][0];
-            //$aDataExport['address']['house']        = $aMetaDataOrder['_billing_address_2'][0];
-
-            $aDataExport['address']['address'] = $aMetaDataOrder['_billing_address_1'][0] . ' ' . $aMetaDataOrder['_billing_address_2'][0];
-
+            $aDataExport['address']['street']      = trim($aMetaDataOrder['_billing_address_1'][0]);
+            $aDataExport['address']['house']       = trim($aMetaDataOrder['_billing_address_2'][0]);
+            $aDataExport['address']['flat']        = trim($aMetaDataOrder['_billing_address_3'][0]);
+            
+            //$aDataExport['address']['address'] = trim($aMetaDataOrder['_billing_address_1'][0] . ' ' . $aMetaDataOrder['_billing_address_2'][0]);
+            
             //ИД пункта выдачи
             if (!empty($aMetaDataOrder['_billing_delivery_point'][0])) {
                 $aDataExport['address']['pvz_code'] = $aMetaDataOrder['_billing_delivery_point'][0];
@@ -1190,6 +1254,7 @@ function custom_woocommerce_order_action_export_to_cdek($order) {
             $aDataPackageExport['size_c'] = 0;
             $aDataPackageExport['weight'] = 0;
 
+            $aProductItems = array();
             //Товары в заказе
             $order_items = $order->get_items();
             foreach ($order_items as $item_id => $item_data) {
@@ -1199,6 +1264,8 @@ function custom_woocommerce_order_action_export_to_cdek($order) {
                     $sSku = $oProduct->get_sku();
                     $iCost = $item_data['line_total'] / $item_data['qty'];
 
+                    $DeclaredSum += $item_data['line_total'];
+                                     
                     $_weight = wc_get_weight(str_replace(',', '.', $oProduct->weight), 'kg');
                     if (!$_weight) {
                         $_weight = $aSettingsEdostavka['minimum_weight'];
@@ -1233,35 +1300,192 @@ function custom_woocommerce_order_action_export_to_cdek($order) {
                     }
 
                     //Вес всех товаров
-                    $aDataPackageExport['size_a'] += $_height * $item_data['qty'];
-                    $aDataPackageExport['size_b'] += $_width * $item_data['qty'];
-                    $aDataPackageExport['size_c'] += $_length * $item_data['qty'];
-                    $aDataPackageExport['weight'] += $_weight * $item_data['qty'];
+                    $aDataPackageExport['size_a'] += ($_height/* * $item_data['qty']*/);
+                    $aDataPackageExport['size_b'] += ($_width/* * $item_data['qty']*/);
+                    $aDataPackageExport['size_c'] += ($_length/* * $item_data['qty']*/);
+                    $aDataPackageExport['weight'] += ($_weight/* * $item_data['qty']*/);
+                    
+                    //Продукты для выгрузки в FullFillmment
+                    $aProductItems[] = array(
+                        'id'            => $oProduct->get_id(),
+                        'sku'           => $sSku ? $sSku : 'пустой',
+                        'name'          => $item_data['name'],
+                        'price'         => $iCost,
+                        'qty'           => $item_data['qty'],
+                        'unit_code'     => $item_data['unit_code']
+                    );
                 }
             }
 
             $aDataPackageExport['pack'] = TRUE;
 
             $aDataExport['package'][1] = $aDataPackageExport;
-            (new WC_Logger())->add('cdek_integration', 'INFO: order_to_cdek|' . print_r($aDataExport, 0));
+            //(new WC_Logger())->add('cdek_integration', 'INFO: order_to_cdek|'.$order->id.'|' . print_r($aDataExport, 0));
             //Добавляем данные в выгрузку
             $component->setOrders([$aDataExport]);
             //Отправляем данные на сервер сдэк
+           
             $response = $api_cdek->sendData($component);
-            (new WC_Logger())->add('cdek_integration', 'INFO: order_to_cdek|' . print_r($response, 0));
+            //(new WC_Logger())->add('cdek_integration', 'INFO: order_to_cdek|'.$order->id.'|' . print_r($response, 0));
             $aOrderResponse = (array)$response->Order[0];
 
+            //die(var_dump($aOrderResponse,$component->getData()));
+            
             if (!isset($aOrderResponse["@attributes"]["ErrorCode"])) {
-                $order->update_status('wc-export_to_cdek');
+                
             }
 
             if (class_exists('WC_Logger')) {
                 $logger = new WC_Logger();
 
-                if (isset($aOrderResponse["@attributes"]["ErrorCode"])) {
-                    $logger->add('cdek_integration', 'ERROR: order_to_cdek|' . implode('|', $aOrderResponse["@attributes"]));
+                if (isset($aOrderResponse["@attributes"]["ErrorCode"]) && $aOrderResponse["@attributes"]["ErrorCode"]) {
+                    $logger->add('cdek_integration', 'ERROR: order_to_cdek|'.$order->id.'|' . implode('|', $aOrderResponse["@attributes"]));
                 } else {
-                    $logger->add('cdek_integration', 'OK: order_to_cdek|' . implode('|', $aOrderResponse["@attributes"]));
+                    $logger->add('cdek_integration', 'OK: order_to_cdek|'.$order->id.'|' . implode('|', $aOrderResponse["@attributes"]));
+                }
+            }
+            
+            
+            //Если заказ выгружен в СДЭК, то выгружаем в FFillment
+            if ($aProductItems && ( ! isset($aOrderResponse["@attributes"]["ErrorCode"]) || $aOrderResponse["@attributes"]["ErrorCode"] == 'ERR_ORDER_DUBL_EXISTS')) {
+                
+                //Дополняем нужными полями
+                /*foreach ($aProductItems as $iKey => $aItem){
+                    //$FF_SkuExternalCode = get_field( "FF_SkuExternalCode", $aItem['id'] );
+                    $FF_Article = get_field( "FF_Article", $aItem['id'] );
+                    //$FF_UnitCode = get_field( "FF_UnitCode", $aItem['id'] );
+                    
+                    if ( ! $FF_Article){
+                        if (class_exists('WC_Logger')) {
+                            $logger = new WC_Logger();
+
+                            $logger->add('ffillment_integration', 'ERROR: EMPTY_FF_FIELD_FOR_PRODUCT|'.$aItem['id'].'|'.$order->id);
+                        }
+                        
+                        return FALSE;
+                        break;
+                    }
+                    
+                    //$aProductItems[$iKey]['SkuExternalCode'] = $FF_SkuExternalCode;
+                    $aProductItems[$iKey]['Article'] = $FF_Article;
+                    //$aProductItems[$iKey]['UnitCode'] = $FF_UnitCode;
+                }*/
+                
+                $xml_post_string = '<?xml version="1.0" encoding="utf-8"?>
+                    <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+                            <soap:Body>
+                                    <ClientOrder_RequestDelivery xmlns="http://lkff.cdek.ru">
+                                            <sid>24D1A468-A368-40DB-BB1F-BA47DE1A9D69</sid>
+                                            <Sender></Sender>
+                                            <OrderDate>'.date('Y-m-d').'</OrderDate>
+                                            <OrderCode>'.$aDataExport['order_id'].'</OrderCode>
+                                            <OrderRPO></OrderRPO>
+                                            <DeliveryType>9</DeliveryType>
+                                            <DeliveryDate></DeliveryDate>
+                                            <DeliveryHours></DeliveryHours>
+                                            <DeliveryTariff>'.($aDataExport['tariff_id']).'</DeliveryTariff>
+                                            <DeliveryMode>0</DeliveryMode>
+                                            <WarehouseCode>32</WarehouseCode>
+                                            <CountryCode></CountryCode>
+                                            <POD>'.(isset($aMetaDataOrder['_billing_delivery_point'][0]) ? $aMetaDataOrder['_billing_delivery_point'][0] : '').'</POD>
+                                            <ShipmentAddress>'.($aDataExport['address']['street'] ? trim(trim($aDataExport['address']['street'] .', '. $aDataExport['address']['house'] .', '. $aDataExport['address']['flat']),',') : '').'</ShipmentAddress>
+                                            <Phones>'.$aDataExport['recipient_telephone'].'</Phones>
+                                            <Receiver>'.$aDataExport['recipient_name'].'</Receiver>
+                                            <AOGUID></AOGUID>
+                                            <ZipCode></ZipCode>
+                                            <Subject></Subject>
+                                            <CityCode>'.$aDataExport['recipient_city_id'].'</CityCode>
+                                            <City>'.$aMetaDataOrder['_billing_state'][0].'</City>
+                                            <Region></Region>
+                                            <Town></Town>
+                                            <Street>'.$aDataExport['address']['street'].'</Street>
+                                            <House>'.$aDataExport['address']['house'].'</House>
+                                            <DeclaredSum>'.(/*$DeclaredSum*/'0').'</DeclaredSum>
+                                            <DeliveryPayment>'.(/*$DeliveryPayment*/'0').'</DeliveryPayment>
+                                            <SumToPay>0</SumToPay>
+                                            <tblcount>'.count($aProductItems).'</tblcount>
+                                            <Goods>';
+                
+                                            foreach ($aProductItems as $aItem){
+                                                $xml_post_string .= '<Goods>
+                                                    <Life>0</Life>
+                                                    <ExternalCode></ExternalCode>
+                                                    <SkuExternalCode>p'.$aItem['id'].'</SkuExternalCode>
+                                                    <Article>'.$aItem['sku'].'</Article>
+                                                    <FullName>'.$aItem['name'].'</FullName>
+                                                    <Color></Color>
+                                                    <Size></Size>
+                                                    <Variant></Variant>
+                                                    <Season></Season>
+                                                    <Price>'.$aItem['price'].'</Price>
+                                                    <MinQty>1</MinQty>
+                                                    <PackQty>1</PackQty>
+                                                    <BoxQty>1</BoxQty>
+                                                    <SkuGroupName></SkuGroupName>
+                                                    <Barcode></Barcode>
+                                                    <Brand></Brand>
+                                                    <Weight>0</Weight>
+                                                    <Volume>0</Volume>
+                                                    <Length>0</Length>
+                                                    <Width>0</Width>
+                                                    <Height>0</Height>
+                                                    <UnitCode>784</UnitCode>
+                                                    <Qty>'.$aItem['qty'].'</Qty>
+                                                    <SerialNumber></SerialNumber>
+                                                </Goods>';
+                                            }
+
+                                            $xml_post_string .= '
+                                            </Goods>
+                                    </ClientOrder_RequestDelivery>
+                            </soap:Body>
+                    </soap:Envelope>';
+
+                $headers = array(
+                        "Content-type: text/xml;charset=\"utf-8\"",
+                        "Accept: text/xml",
+                        "Cache-Control: no-cache",
+                        "Pragma: no-cache",
+                        "SOAPAction: http://lkff.cdek.ru/ClientOrder_RequestDelivery", 
+                        "Content-length: ".strlen($xml_post_string),
+                ); 
+
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, 'http://lkff.cdek.ru:8080/cdekfullfillment.asmx?op=ClientOrder_RequestDelivery');
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                //curl_setopt($ch, CURLOPT_HEADER, TRUE);
+                curl_setopt($ch, CURLOPT_TIMEOUT, 20);
+
+                if (!empty($xml_post_string)) {
+                        curl_setopt($ch, CURLOPT_POST, 1);
+                        curl_setopt($ch, CURLOPT_POSTFIELDS, /*array('xml_request' => */$xml_post_string/*)*/);
+                }
+                curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+                $your_xml_response = curl_exec($ch);
+                curl_close($ch);
+
+                //Разбираем ответ
+                $clean_xml = str_ireplace(['SOAP-ENV:', 'SOAP:'], '', $your_xml_response);
+                $xml = simplexml_load_string($clean_xml);
+
+                $iOrderID = '';
+                if (isset($xml->Body->ClientOrder_RequestDeliveryResponse->ClientOrder_RequestDeliveryResult->OrderID) && (string)$xml->Body->ClientOrder_RequestDeliveryResponse->ClientOrder_RequestDeliveryResult->OrderID){
+                    $iOrderID = (string)$xml->Body->ClientOrder_RequestDeliveryResponse->ClientOrder_RequestDeliveryResult->OrderID;
+                }
+                
+                if (class_exists('WC_Logger')) {
+                    $logger = new WC_Logger();
+
+                    if (isset($xml->Body->ClientOrder_RequestDeliveryResponse->ClientOrder_RequestDeliveryResult->ErrorCode) && (string)$xml->Body->ClientOrder_RequestDeliveryResponse->ClientOrder_RequestDeliveryResult->ErrorCode) {
+                        $logger->add('ffillment_integration', 'ERROR: '.$order->id.'|' . (string)$xml->Body->ClientOrder_RequestDeliveryResponse->ClientOrder_RequestDeliveryResult->ErrorCode);
+                    } else {
+                        $logger->add('ffillment_integration', 'OK: '.$order->id.'|' . $iOrderID);
+                    }
+                }
+                
+                if ($iOrderID){
+                    $order->update_status('wc-export_to_cdek');
                 }
             }
         }
@@ -1304,7 +1528,7 @@ function custom_woocommerce_order_action_delete_from_cdek($order) {
             $logger->add('cdek_integration', 'OK: order_delete_from_cdek|' . $iOrderIdCDEK . '|' . implode('|', $aOrderResponse["@attributes"]) . "\r\n");
         }
     }
-
+    
     return true;
 }
 
@@ -1429,6 +1653,7 @@ function woo_remove_billing_checkout_fields($fields) {
         unset($fields['billing']['billing_state']);
         unset($fields['billing']['billing_address_1']);
         unset($fields['billing']['billing_address_2']);
+        unset($fields['billing']['billing_address_3']);
         unset($fields['billing']['billing_city']);
         unset($fields['billing']['billing_delivery_point']);
         //unset($fields['shipping']);
@@ -1553,7 +1778,7 @@ function getWebinarId($product_id) {
 
 add_action('template_redirect', 'wpse12535_redirect_sample');
 function wpse12535_redirect_sample() {
-    if (!is_admin()) {
+    if ( ! is_admin()) {
         $aData = parse_url($_SERVER['REQUEST_URI']);
         if (trim($aData['path'], '/') == 'current-webinar' && $_REQUEST['id'] && getWebinarId($_REQUEST['id'])) {
             exit(wp_redirect(get_post_permalink($_REQUEST['id'])));
@@ -1562,7 +1787,8 @@ function wpse12535_redirect_sample() {
                 global $wpdb;
 
                 if ($user_id = get_current_user_id()) {
-                    if (getAccessToProduct($_REQUEST['pid']) === true) {
+                    //if (getAccessToProduct($_REQUEST['pid']) === true) {
+                    if (getAccessToProduct($_REQUEST['pid'])) {   
                         //Ищем оплаченный заказ с текущим товаром
                         $sql = "SELECT SUM(M2.`meta_value`) as cnt 
 					FROM wp_woocommerce_order_items I 
@@ -1572,7 +1798,7 @@ function wpse12535_redirect_sample() {
 					INNER JOIN wp_posts P ON (P.`ID` = I.`order_id`)
 					WHERE PM.meta_key = '_customer_user' && PM.meta_value = '{$user_id}' && M.`meta_key`= '_product_id' && M.`meta_value` = '{$_REQUEST['pid']}' && P.`post_type` = 'shop_order' && P.`post_status` = 'wc-completed' && M2.meta_key = '_qty'";
 
-                        if (!$wpdb->get_var($sql) && get_product($_REQUEST['pid'])) {
+                        if ( ! $wpdb->get_var($sql) && get_product($_REQUEST['pid'])) {
                             $current_user = wp_get_current_user();
 
                             $address = [
@@ -1582,11 +1808,15 @@ function wpse12535_redirect_sample() {
                             ];
 
                             $order = wc_create_order(['customer_id' => $current_user->ID]);
-                            $order->add_product(get_product($_REQUEST['pid']), 1); //(get_product with id and next is for quantity)
-                            $order->set_address($address, 'billing');
-                            $order->set_address($address, 'shipping');
-                            $order->calculate_totals();
-                            $order->update_status('wc-completed');
+                            
+                            //Если заказ создан
+                            if ($order->id){                            
+                                $order->add_product(get_product($_REQUEST['pid']), 1); //(get_product with id and next is for quantity)
+                                $order->set_address($address, 'billing');
+                                $order->set_address($address, 'shipping');
+                                $order->calculate_totals();
+                                $order->update_status('wc-completed');
+                            }
                         }
                     }
                 }
@@ -1752,11 +1982,14 @@ function custom_woocommerce_get_price_html($price, $product) {
     return $price;
 }
 
+//Файлы к бесплатным товарам даже на которые нет заказов
 remove_all_filters('tanhit_free_download_products');
 add_action('tanhit_free_download_products', 'custom_tanhit_free_download_products');
 function custom_tanhit_free_download_products() {
 
     global $tanhit_customer_products;
+
+    //Для данных файлов, показывать ссылку на скачивание а не онлайн просмотр
 
     $disable_file_online_show = ['.zip', '.rar', '.pdf'];
 
@@ -1782,25 +2015,12 @@ function custom_tanhit_free_download_products() {
 
         $product_date_start = strtotime(get_post_meta($product->ID, 'product_date_start', true));
 
-        //if ( $product_date_start >= strtotime( $now ) ) { // @TODO remove after test
-        /**
-         * Don't add future product
-         */
-        //continue;
-        //}
-
         $pr = wc_get_product($product->ID);
 
         if ($pr->get_price() > 0) {
-            /**
-             * Don't add product with price > 0
-             */
             continue;
         }
 
-        /**
-         * Don't add a product that was bought
-         */
         $product_bought = false;
         foreach ($tanhit_customer_products as $customer_product) {
             if ($customer_product['order']->post_status == 'wc-completed' && $product->ID == $customer_product['product_id']) {
@@ -1815,70 +2035,58 @@ function custom_tanhit_free_download_products() {
         $free_products[] = $pr;
     }
 
-    foreach ($free_products as $product) :
+    foreach ($free_products as $product){
 
         $downloads = $product->get_files();
 
         /**
          * for download @see 'init' action in tanhit-functions.php
          */
-        foreach ($downloads as $key => $download) :
-            ?>
+        foreach ($downloads as $key => $download){?>
           <li data-product="<?php echo $product->id; ?>">
             <span class="item-preview"
                   style="display: inline-block; overflow: hidden"><?php echo $product->get_image(); ?></span>
             <a href="<?php echo get_the_permalink($product->id); ?>"
                class="item-link vid-link" target="_blank"><?php echo $product->post->post_title; ?></a>
             <span class="file-name"><?php echo $download['name']; ?></span>
-              <?php
-              /**
-               * @see class-wc-download-handler.php for query string handle
-               */
+            
+            <?php
+            
+            $youtube = false;
+            if (getYotubeDownLink($download['file'])) {
+                $youtube = $download['file'];
+            }
 
-              $youtube = false;
-              if (getYotubeDownLink($download['file'])) {
-                  $youtube = $download['file'];
-              }
-
-              if (!$youtube) {
-                  ?>
-                <a href="<?php echo home_url() . '/?tanhit_download=true&product=' . $product->id . '&key=' . $key; ?>"
-                   class="btn-download"><?php pll_e('Скачать', 'tanhit'); ?>
-                </a>
-              <?
-              } ?>
-
-              <?php
-              if (!empty($download['file']) && !$youtube) :
-                  /**
-                   * Check for disabled file for online show
-                   */
-                  $disabled = false;
-                  foreach ($disable_file_online_show as $piece) {
-                      if (false !== strpos($download['file'], $piece)) {
-                          $disabled = true;
-                          break;
-                      }
-                  }
-                  if (!$disabled) {
-                      $link = getVideoFileByKey($product->id, $key);
-                      ?>
+            if (!empty($download['file']) && !$youtube){
+                /**
+                 * Check for disabled file for online show
+                 */
+                $disabled = false;
+                foreach ($disable_file_online_show as $piece) {
+                    if (false !== strpos($download['file'], $piece)) {
+                        $disabled = true;
+                        break;
+                    }
+                }
+                if (!$disabled) {
+                    $link = getVideoFileByKey($product->id, $key);
+                    ?>
+            
                     <a href="#vid<?php echo $product->id . "-" . $key; ?>" class="show-video btn-show">
                         <?php pll_e('Онлайн-просмотр', 'tanhit'); ?>
                     </a>
 
-                    <div style="display:none;" class="show_vid" id="vid<?php echo $product->id . "-" . $key; ?>"
-                         data-src="<?= $link; ?>">
-                      <div class="vid_player vid_player2">2
-                          <?php /* echo do_shortcode("[wpm_video video=".getVideoFileByKey($product->id, $key)." ratio=16by9 autoplay=off]"); */ ?>
-                          <?= (getPlayerForm($link)) ?>
-                      </div>
+                    <div style="display:none;" class="show_vid" id="vid<?php echo $product->id . "-" . $key; ?>" data-src="<?= $link; ?>">
+                        <div class="vid_player vid_player2">2
+                            <?= (getPlayerForm($link)) ?>
+                        </div>
                     </div>
-
-                      <?php
-                  } ?>
-
-              <?php elseif ($youtube): ?>
+                <?}else{?>
+                    <a href="<?php echo home_url() . '/?tanhit_download=true&product=' . $product->id . '&key=' . $key; ?>"
+                        class="btn-download"><?php pll_e('Скачать', 'tanhit'); ?>
+                     </a>
+                <?}?>
+              <?}elseif ($youtube){?>
                 <a href="#vid<?php echo $product->id . "-" . $key; ?>" class="show-video btn-show">
                     <?php pll_e('Онлайн-просмотр', 'tanhit'); ?>
                 </a>
@@ -1889,14 +2097,13 @@ function custom_tanhit_free_download_products() {
                       <?= (getPlayerForm($youtube)) ?>
                   </div>
                 </div>
-              <?php endif; ?>
+              <?}?>
           </li>
-            <?php
-        endforeach;
-
-    endforeach;
+        <?}
+    }
 }
 
+//Файлы к товарам которые заказаны
 remove_all_filters('woocommerce_available_download_start');
 add_action('woocommerce_available_download_start', 'custom_woocommerce_available_download_start');
 function custom_woocommerce_available_download_start($download) {
@@ -1912,6 +2119,7 @@ function custom_woocommerce_available_download_start($download) {
         }
     }
 
+    //Для данных файлов, показывать ссылку на скачивание а не онлайн просмотр
     $disable_file_online_show = ['.zip', '.rar', '.pdf'];
 
     $youtube = false;
@@ -1920,77 +2128,54 @@ function custom_woocommerce_available_download_start($download) {
     }
     ?>
 
-  <span class="item-preview" style=""><?php echo tanhit_get_product_thumbnail($download['product_id']); ?></span>
+    <span class="item-preview" style=""><?php echo tanhit_get_product_thumbnail($download['product_id']); ?></span>
 
-  <a href="<?php echo $product[$download['product_id']]['permalink']; ?>"
-     class="item-link vid-link" target="_blank"><?php echo $product[$download['product_id']]['product_name']; ?></a>
+    <a href="<?php echo $product[$download['product_id']]['permalink']; ?>" class="item-link vid-link" target="_blank">
+        <?php echo $product[$download['product_id']]['product_name']; ?>
+    </a>
 
-  <span class="file-name"><?php /* pll_e( 'Файл:', 'tanhit' );*/
-      echo $download['file']['name']; ?></span>
-
-    <? if (!$youtube) {
-        ?>
-    <a href="<?php echo esc_url($download['download_url']); ?>"
-       class="btn-download"><?php pll_e('Скачать', 'tanhit'); ?></a>
-    <?
-    } ?>
+    <span class="file-name"><?php /* pll_e( 'Файл:', 'tanhit' );*/echo $download['file']['name']; ?></span>
 
     <?php
-
-    if (empty($download['file']['file'])) : ?>
-        <?php /* <a href="#" class="btn-show"><?php pll_e( 'Онлайн-просмотр', 'tanhit' ); ?></a>	*/ ?><?php
-    else:
-        if ($youtube) {
+    if ( ! empty($download['file']['file']) && ! $youtube){
+        $disabled = false;
+        foreach ($disable_file_online_show as $piece) {
+            if (false !== strpos($download['file']['file'], $piece)) {
+                $disabled = true;
+                break;
+            }
+        }
+        if (!$disabled) {
+            $link = getVideoFile($download['file']['file']);
             ?>
           <a href="#vid<?php echo md5($download['file']['file']); ?>" class="show-video btn-show">
               <?php pll_e('Онлайн-просмотр', 'tanhit'); ?>
           </a>
 
+
           <div style="display:none;" class="show_vid" id="vid<?php echo md5($download['file']['file']); ?>"
-               data-src="<?= $youtube; ?>">
+               data-src="<?= $link; ?>">
+            <div class="vid_player vid_player2">
+                <?php/* echo do_shortcode("[wpm_video video=".getVideoFile($download['file']['file'])." ratio=16by9 autoplay=off]"); */ ?>
+                <?= (getPlayerForm($link)) ?>
+            </div>
+          </div>
+        <?}else{?>
+            <a href="<?php echo esc_url($download['download_url']); ?>"
+                class="btn-download"><?php pll_e('Скачать', 'tanhit'); ?>
+            </a>
+        <?}
+    }elseif ($youtube) {?>
+        <a href="#vid<?php echo md5($download['file']['file']); ?>" class="show-video btn-show">
+            <?php pll_e('Онлайн-просмотр', 'tanhit'); ?>
+        </a>
+
+        <div style="display:none;" class="show_vid" id="vid<?php echo md5($download['file']['file']); ?>" data-src="<?= $youtube; ?>">
             <div class="vid_player vid_player2">
                 <?= (getPlayerForm($youtube)) ?>
             </div>
-          </div>
-        <?
-        } else {
-            /**
-             * @todo remove line below after real video will be loaded to server for check
-             */
-            //$download[ 'file' ][ 'file' ] = 'http://media.jilion.com/videos/demo/midnight_sun_sv1_720p.mp4';
-
-            /**
-             * Check for disabled file for online show
-             */
-            $disabled = false;
-            foreach ($disable_file_online_show as $piece) {
-                if (false !== strpos($download['file']['file'], $piece)) {
-                    $disabled = true;
-                    break;
-                }
-            }
-            if (!$disabled) {
-                $link = getVideoFile($download['file']['file']);
-                ?>
-              <a href="#vid<?php echo md5($download['file']['file']); ?>" class="show-video btn-show">
-                  <?php pll_e('Онлайн-просмотр', 'tanhit'); ?>
-              </a>
-
-
-              <div style="display:none;" class="show_vid" id="vid<?php echo md5($download['file']['file']); ?>"
-                   data-src="<?= $link; ?>">
-                <div class="vid_player vid_player2">
-                    <?php/* echo do_shortcode("[wpm_video video=".getVideoFile($download['file']['file'])." ratio=16by9 autoplay=off]"); */ ?>
-                    <?= (getPlayerForm($link)) ?>
-                </div>
-              </div>
-
-            <?
-            } ?>
-        <?
-        } ?>
-        <?php
-    endif;
+        </div>
+    <?}
 }
 
 //Фильтруем ссылки в письме, выполненного заказа
@@ -2148,11 +2333,11 @@ function custom_updated_post_meta( $meta_id, $object_id, $meta_key, $meta_value 
     }
 }
 
+
 function woocommerce_checkout_thankyou_shortcode(){
     echo '<div class="woocommerce"><p class="woocommerce-message">Спасибо за покупку! Сейчас вы будете перенаправлены в свой личный кабинет!</p>
         <script >window.onload = function(){setTimeout(\'location="/my-account"\', 4000);}</script></div>';
 }
-
 add_shortcode('woocommerce_checkout_thankyou', 'woocommerce_checkout_thankyou_shortcode');
 
 add_action('display_pincodes', 'display_pincodes');
