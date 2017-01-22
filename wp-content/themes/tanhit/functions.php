@@ -1308,6 +1308,7 @@ function custom_woocommerce_order_action_export_to_cdek($order) {
                     //Продукты для выгрузки в FullFillmment
                     $aProductItems[] = array(
                         'id'            => $oProduct->get_id(),
+                        'sku'           => $sSku ? $sSku : 'пустой',
                         'name'          => $item_data['name'],
                         'price'         => $iCost,
                         'qty'           => $item_data['qty'],
@@ -1349,12 +1350,12 @@ function custom_woocommerce_order_action_export_to_cdek($order) {
             if ($aProductItems && ( ! isset($aOrderResponse["@attributes"]["ErrorCode"]) || $aOrderResponse["@attributes"]["ErrorCode"] == 'ERR_ORDER_DUBL_EXISTS')) {
                 
                 //Дополняем нужными полями
-                foreach ($aProductItems as $iKey => $aItem){
-                    $FF_SkuExternalCode = get_field( "FF_SkuExternalCode", $aItem['id'] );
+                /*foreach ($aProductItems as $iKey => $aItem){
+                    //$FF_SkuExternalCode = get_field( "FF_SkuExternalCode", $aItem['id'] );
                     $FF_Article = get_field( "FF_Article", $aItem['id'] );
-                    $FF_UnitCode = get_field( "FF_UnitCode", $aItem['id'] );
+                    //$FF_UnitCode = get_field( "FF_UnitCode", $aItem['id'] );
                     
-                    if ( ! $FF_SkuExternalCode || ! $FF_Article || ! $FF_UnitCode){
+                    if ( ! $FF_Article){
                         if (class_exists('WC_Logger')) {
                             $logger = new WC_Logger();
 
@@ -1365,10 +1366,10 @@ function custom_woocommerce_order_action_export_to_cdek($order) {
                         break;
                     }
                     
-                    $aProductItems[$iKey]['SkuExternalCode'] = $FF_SkuExternalCode;
+                    //$aProductItems[$iKey]['SkuExternalCode'] = $FF_SkuExternalCode;
                     $aProductItems[$iKey]['Article'] = $FF_Article;
-                    $aProductItems[$iKey]['UnitCode'] = $FF_UnitCode;
-                }
+                    //$aProductItems[$iKey]['UnitCode'] = $FF_UnitCode;
+                }*/
                 
                 $xml_post_string = '<?xml version="1.0" encoding="utf-8"?>
                     <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
@@ -1408,9 +1409,9 @@ function custom_woocommerce_order_action_export_to_cdek($order) {
                                             foreach ($aProductItems as $aItem){
                                                 $xml_post_string .= '<Goods>
                                                     <Life>0</Life>
-                                                    <ExternalCode>'.$aItem['id'].'</ExternalCode>
-                                                    <SkuExternalCode>'.$aItem['SkuExternalCode'].'</SkuExternalCode>
-                                                    <Article>'.$aItem['Article'].'</Article>
+                                                    <ExternalCode></ExternalCode>
+                                                    <SkuExternalCode>p'.$aItem['id'].'</SkuExternalCode>
+                                                    <Article>'.$aItem['sku'].'</Article>
                                                     <FullName>'.$aItem['name'].'</FullName>
                                                     <Color></Color>
                                                     <Size></Size>
@@ -1428,7 +1429,7 @@ function custom_woocommerce_order_action_export_to_cdek($order) {
                                                     <Length>0</Length>
                                                     <Width>0</Width>
                                                     <Height>0</Height>
-                                                    <UnitCode>'.$aItem['UnitCode'].'</UnitCode>
+                                                    <UnitCode>784</UnitCode>
                                                     <Qty>'.$aItem['qty'].'</Qty>
                                                     <SerialNumber></SerialNumber>
                                                 </Goods>';
@@ -1777,7 +1778,7 @@ function getWebinarId($product_id) {
 
 add_action('template_redirect', 'wpse12535_redirect_sample');
 function wpse12535_redirect_sample() {
-    if (!is_admin()) {
+    if ( ! is_admin()) {
         $aData = parse_url($_SERVER['REQUEST_URI']);
         if (trim($aData['path'], '/') == 'current-webinar' && $_REQUEST['id'] && getWebinarId($_REQUEST['id'])) {
             exit(wp_redirect(get_post_permalink($_REQUEST['id'])));
@@ -1786,7 +1787,8 @@ function wpse12535_redirect_sample() {
                 global $wpdb;
 
                 if ($user_id = get_current_user_id()) {
-                    if (getAccessToProduct($_REQUEST['pid']) === true) {
+                    //if (getAccessToProduct($_REQUEST['pid']) === true) {
+                    if (getAccessToProduct($_REQUEST['pid'])) {   
                         //Ищем оплаченный заказ с текущим товаром
                         $sql = "SELECT SUM(M2.`meta_value`) as cnt 
 					FROM wp_woocommerce_order_items I 
@@ -1796,7 +1798,7 @@ function wpse12535_redirect_sample() {
 					INNER JOIN wp_posts P ON (P.`ID` = I.`order_id`)
 					WHERE PM.meta_key = '_customer_user' && PM.meta_value = '{$user_id}' && M.`meta_key`= '_product_id' && M.`meta_value` = '{$_REQUEST['pid']}' && P.`post_type` = 'shop_order' && P.`post_status` = 'wc-completed' && M2.meta_key = '_qty'";
 
-                        if (!$wpdb->get_var($sql) && get_product($_REQUEST['pid'])) {
+                        if ( ! $wpdb->get_var($sql) && get_product($_REQUEST['pid'])) {
                             $current_user = wp_get_current_user();
 
                             $address = [
@@ -1806,11 +1808,15 @@ function wpse12535_redirect_sample() {
                             ];
 
                             $order = wc_create_order(['customer_id' => $current_user->ID]);
-                            $order->add_product(get_product($_REQUEST['pid']), 1); //(get_product with id and next is for quantity)
-                            $order->set_address($address, 'billing');
-                            $order->set_address($address, 'shipping');
-                            $order->calculate_totals();
-                            $order->update_status('wc-completed');
+                            
+                            //Если заказ создан
+                            if ($order->id){                            
+                                $order->add_product(get_product($_REQUEST['pid']), 1); //(get_product with id and next is for quantity)
+                                $order->set_address($address, 'billing');
+                                $order->set_address($address, 'shipping');
+                                $order->calculate_totals();
+                                $order->update_status('wc-completed');
+                            }
                         }
                     }
                 }
@@ -2326,9 +2332,8 @@ function custom_updated_post_meta( $meta_id, $object_id, $meta_key, $meta_value 
     }
 }
 
+add_shortcode('woocommerce_checkout_thankyou', 'woocommerce_checkout_thankyou_shortcode');
 function woocommerce_checkout_thankyou_shortcode(){
     echo '<div class="woocommerce"><p class="woocommerce-message">Спасибо за покупку! Сейчас вы будете перенаправлены в свой личный кабинет!</p>
         <script >window.onload = function(){setTimeout(\'location="/my-account"\', 4000);}</script></div>';
 }
-
-add_shortcode('woocommerce_checkout_thankyou', 'woocommerce_checkout_thankyou_shortcode');
