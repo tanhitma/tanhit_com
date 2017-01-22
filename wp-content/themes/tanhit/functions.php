@@ -1758,7 +1758,7 @@ function custom_tanhit_free_download_products() {
 
     global $tanhit_customer_products;
 
-    $disable_file_online_show = ['.zip', '.rar'];
+    $disable_file_online_show = ['.zip', '.rar', '.pdf'];
 
     $args = [
         'post_type'      => 'product',
@@ -1912,7 +1912,7 @@ function custom_woocommerce_available_download_start($download) {
         }
     }
 
-    $disable_file_online_show = ['.zip', '.rar'];
+    $disable_file_online_show = ['.zip', '.rar', '.pdf'];
 
     $youtube = false;
     if (getYotubeDownLink($download['file']['file'])) {
@@ -2154,3 +2154,31 @@ function woocommerce_checkout_thankyou_shortcode(){
 }
 
 add_shortcode('woocommerce_checkout_thankyou', 'woocommerce_checkout_thankyou_shortcode');
+
+add_action('display_pincodes', 'display_pincodes');
+function display_pincodes(){
+  $customer_orders = get_posts( apply_filters( 'woocommerce_my_account_my_orders_query', array(
+	'numberposts' => 100,
+	'meta_key'    => '_customer_user',
+	'meta_value'  => get_current_user_id(),
+	'post_type'   => 'shop_order',
+	'post_status' => 'wc-completed'
+) ) );
+
+  echo '<h2>Мои пин-коды</h2>';
+  $no_pins = true;
+  if(!empty($customer_orders)){
+      $WC_LD_Codes = new WC_LD_Code_Assignment();
+      foreach ($customer_orders as $order){
+        $table = $WC_LD_Codes->get_assigned_codes($order->ID);
+        if ($table){
+          $no_pins = false;
+          echo $table;
+        }
+      }
+  }
+
+  if ($no_pins) {
+    echo 'У вас ещё нет пин-кодов.';
+  }
+}

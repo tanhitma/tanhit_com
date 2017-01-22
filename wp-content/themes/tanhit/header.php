@@ -155,7 +155,7 @@
                                 ?>
                             </a>
                             <?php if ( is_user_logged_in() ) { ?>
-                              <a href="/my-account/edit-account"class="up-login"><span class="glyphicon glyphicon-user"></span><?= pll_e('профиль', 'tanhit'); ?></a>
+                              <a href="<?= wc_customer_edit_account_url(); ?>" class="up-login"><span class="glyphicon glyphicon-user"></span><?= pll_e('профиль', 'tanhit'); ?></a>
                                 <span class="up-logout">/
                                     <a href="/my-account/customer-logout/"><?php
                                         pll_e('выход', 'tanhit');

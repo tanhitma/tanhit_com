@@ -1,0 +1,7 @@
+tr.sold-highlight td, tr.sold-highlight th {
+    background-color: #FBEAEA;
+}
+
+tr.unsold-highlight td, tr.unsold-highlight th {
+    background-color: #F1FFF2;
+}

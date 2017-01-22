@@ -1,0 +1,530 @@
+# Copyright (C) 2016 HighThemes
+msgid ""
+msgstr ""
+"Project-Id-Version: WooCommerce License Delivery\n"
+"POT-Creation-Date: 2016-04-30 13:56+0330\n"
+"PO-Revision-Date: 2016-04-30 13:56+0330\n"
+"Last-Translator: Mehran <m.effati@gmail.com>\n"
+"Language-Team: HighThemes <hello@highthemes.com>\n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.7.6\n"
+"X-Poedit-Basepath: .\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: _e;__;esc_attr_e;esc_html_e\\r;esc_attr__;esc_html__\n"
+"X-Poedit-SearchPath-0: ..\n"
+
+#: ../classes/class-wc-ld-activator.php:51
+msgid "View WooCommerce License Delivery Settings"
+msgstr ""
+
+#: ../classes/class-wc-ld-activator.php:51
+msgid "Settings"
+msgstr ""
+
+#: ../classes/class-wc-ld-admin-general.php:35
+#: ../classes/class-wc-ld-codes-list.php:17
+#: ../classes/class-wc-ld-license-codes-pages.php:81
+#: ../classes/class-wc-ld-license-codes-pages.php:82
+#: ../classes/class-wc-ld-license-codes-pages.php:141
+msgid "License Codes"
+msgstr ""
+
+#: ../classes/class-wc-ld-admin-general.php:43
+msgid "[+] View License"
+msgstr ""
+
+#: ../classes/class-wc-ld-admin-general.php:43
+msgid "Not Assigned"
+msgstr ""
+
+#: ../classes/class-wc-ld-code-assignment.php:152
+#, php-format
+msgid "Item %s variation #%s stock reduced from %s to %s."
+msgstr ""
+
+#: ../classes/class-wc-ld-code-assignment.php:155
+#, php-format
+msgid "Item %s stock reduced from %s to %s."
+msgstr ""
+
+#: ../classes/class-wc-ld-code-assignment.php:164
+#, php-format
+msgid "Not enough license code available for product <strong>%s</strong>."
+msgstr ""
+
+#: ../classes/class-wc-ld-codes-list.php:16
+#: ../classes/class-wc-ld-codes-list.php:118
+#: ../classes/class-wc-ld-product.php:74
+msgid "License Code"
+msgstr ""
+
+#: ../classes/class-wc-ld-codes-list.php:25
+msgid "No  license code avaliable."
+msgstr ""
+
+#: ../classes/class-wc-ld-codes-list.php:49
+msgid "Order #"
+msgstr ""
+
+#: ../classes/class-wc-ld-codes-list.php:60
+msgid "You are about to delete this item permanently, are you sure?"
+msgstr ""
+
+#: ../classes/class-wc-ld-codes-list.php:66
+msgid "This code has been assigned to order #"
+msgstr ""
+
+#: ../classes/class-wc-ld-codes-list.php:73
+#: ../classes/class-wc-ld-license-codes-pages.php:291
+msgid "Edit"
+msgstr ""
+
+#: ../classes/class-wc-ld-codes-list.php:76
+msgid "Delete"
+msgstr ""
+
+#: ../classes/class-wc-ld-codes-list.php:119
+msgid "Creation Date"
+msgstr ""
+
+#: ../classes/class-wc-ld-codes-list.php:120
+msgid "Sold Date"
+msgstr ""
+
+#: ../classes/class-wc-ld-codes-list.php:121
+msgid "Status"
+msgstr ""
+
+#: ../classes/class-wc-ld-codes-list.php:122
+msgid "Order ID"
+msgstr ""
+
+#: ../classes/class-wc-ld-codes-list.php:123
+#: ../classes/class-wc-ld-csv-export.php:192
+#: ../classes/class-wc-ld-license-codes-pages.php:344
+msgid "Product"
+msgstr ""
+
+#: ../classes/class-wc-ld-codes-list.php:190
+#: ../classes/class-wc-ld-codes-list.php:224
+msgid ""
+"It's not possible to delete a code that is assigned to an existing order. "
+"You need to delete the order before removing the license code."
+msgstr ""
+
+#: ../classes/class-wc-ld-codes-list.php:194
+#, php-format
+msgid "Items deleted: %d"
+msgstr ""
+
+#: ../classes/class-wc-ld-codes-list.php:228
+msgid "Items deleted: "
+msgstr ""
+
+#: ../classes/class-wc-ld-codes-list.php:248
+msgid "Filter by Product"
+msgstr ""
+
+#: ../classes/class-wc-ld-codes-list.php:259
+msgid "Filter"
+msgstr ""
+
+#: ../classes/class-wc-ld-csv-export.php:60
+#: ../classes/class-wc-ld-csv-export.php:61
+msgid "Export Data"
+msgstr ""
+
+#: ../classes/class-wc-ld-csv-export.php:99
+msgid "Export"
+msgstr ""
+
+#: ../classes/class-wc-ld-csv-export.php:151
+msgid "Export Data to CSV"
+msgstr ""
+
+#: ../classes/class-wc-ld-csv-export.php:153
+msgid "Back to code list"
+msgstr ""
+
+#: ../classes/class-wc-ld-csv-export.php:165
+msgid "Download the license codes in CSV format"
+msgstr ""
+
+#: ../classes/class-wc-ld-csv-export.php:166
+msgid ""
+"Here you can download all the license codes in csv file format. It is used "
+"for backup purposes. The csv file is a whole backup of the codes table based "
+"on your desire options."
+msgstr ""
+
+#: ../classes/class-wc-ld-csv-export.php:173
+msgid "Download CSV File"
+msgstr ""
+
+#: ../classes/class-wc-ld-csv-export.php:204
+msgid "All Products"
+msgstr ""
+
+#: ../classes/class-wc-ld-csv-export.php:216
+msgid "Exclude Sold Licenses"
+msgstr ""
+
+#: ../classes/class-wc-ld-csv-import.php:43
+#: ../classes/class-wc-ld-csv-import.php:44
+msgid "CSV Upload"
+msgstr ""
+
+#: ../classes/class-wc-ld-csv-import.php:81
+msgid "Upload a CSV file"
+msgstr ""
+
+#: ../classes/class-wc-ld-csv-import.php:136
+msgid "from"
+msgstr ""
+
+#: ../classes/class-wc-ld-csv-import.php:137
+msgid "inserted successfully"
+msgstr ""
+
+#: ../classes/class-wc-ld-csv-import.php:141
+msgid "Database Error, Please contact the administrator."
+msgstr ""
+
+#: ../classes/class-wc-ld-csv-import.php:146
+msgid "Please check the data file, and try again."
+msgstr ""
+
+#: ../classes/class-wc-ld-csv-import.php:188
+msgid "Only CSV files are allowed!"
+msgstr ""
+
+#: ../classes/class-wc-ld-csv-import.php:193
+msgid "Please select a product."
+msgstr ""
+
+#: ../classes/class-wc-ld-csv-import.php:202
+msgid "Upload CSV File"
+msgstr ""
+
+#: ../classes/class-wc-ld-csv-import.php:222
+msgid "Insert License Codes to Database"
+msgstr ""
+
+#: ../classes/class-wc-ld-csv-import.php:236
+msgid "Batch Upload "
+msgstr ""
+
+#: ../classes/class-wc-ld-csv-import.php:237
+msgid "Here you can upload your license codes in bulk using csv format."
+msgstr ""
+
+#: ../classes/class-wc-ld-csv-import.php:238
+msgid ""
+"As each product license code can contain up to 4 fields, you must provide at "
+"least 1 and maximum\n"
+"\t\t\t\t\t\t\t4 columns of data in each row. The first column must be always "
+"filled with data."
+msgstr ""
+
+#: ../classes/class-wc-ld-csv-import.php:240
+msgid "Download Sample CSV File"
+msgstr ""
+
+#: ../classes/class-wc-ld-csv-import.php:241
+msgid "Click here to download a sample file"
+msgstr ""
+
+#: ../classes/class-wc-ld-csv-import.php:248
+msgid "Upload File and Preview"
+msgstr ""
+
+#: ../classes/class-wc-ld-csv-import.php:265
+#, php-format
+msgid ""
+"There are <strong>%d</strong> items that can be inserted. You are viewing up "
+"to 10 items for verification of data."
+msgstr ""
+
+#: ../classes/class-wc-ld-csv-import.php:272
+msgid "Selected Product :"
+msgstr ""
+
+#: ../classes/class-wc-ld-csv-import.php:278
+msgid "Field #1"
+msgstr ""
+
+#: ../classes/class-wc-ld-csv-import.php:279
+msgid "Field #2"
+msgstr ""
+
+#: ../classes/class-wc-ld-csv-import.php:280
+msgid "Field #3"
+msgstr ""
+
+#: ../classes/class-wc-ld-csv-import.php:281
+msgid "Field #4"
+msgstr ""
+
+#: ../classes/class-wc-ld-csv-import.php:316
+msgid "Product ID"
+msgstr ""
+
+#: ../classes/class-wc-ld-csv-import.php:329
+#: ../classes/class-wc-ld-license-codes-pages.php:359
+msgid "Select a product"
+msgstr ""
+
+#: ../classes/class-wc-ld-csv-import.php:341
+msgid "CSV File"
+msgstr ""
+
+#: ../classes/class-wc-ld-csv-import.php:346
+#, php-format
+msgid "Maximum size: %s"
+msgstr ""
+
+#: ../classes/class-wc-ld-license-codes-pages.php:53
+msgid "Number of License Codes per page"
+msgstr ""
+
+#: ../classes/class-wc-ld-license-codes-pages.php:92
+#: ../classes/class-wc-ld-license-codes-pages.php:93
+msgid "Add new"
+msgstr ""
+
+#: ../classes/class-wc-ld-license-codes-pages.php:132
+msgid "License(s)"
+msgstr ""
+
+#: ../classes/class-wc-ld-license-codes-pages.php:144
+#: ../classes/class-wc-ld-license-codes-pages.php:293
+msgid "Add New"
+msgstr ""
+
+#: ../classes/class-wc-ld-license-codes-pages.php:234
+msgid "Data inserted successfully"
+msgstr ""
+
+#: ../classes/class-wc-ld-license-codes-pages.php:237
+msgid "There was an error while saving data."
+msgstr ""
+
+#: ../classes/class-wc-ld-license-codes-pages.php:258
+msgid "Item was successfully updated"
+msgstr ""
+
+#: ../classes/class-wc-ld-license-codes-pages.php:262
+msgid "No Update"
+msgstr ""
+
+#: ../classes/class-wc-ld-license-codes-pages.php:282
+msgid "Item not found"
+msgstr ""
+
+#: ../classes/class-wc-ld-license-codes-pages.php:295
+msgid " License Code"
+msgstr ""
+
+#: ../classes/class-wc-ld-license-codes-pages.php:300
+msgid ""
+"You can insert up to 5 license codes in a single submit by filling this "
+"form. The first field of each license code is required."
+msgstr ""
+
+#: ../classes/class-wc-ld-license-codes-pages.php:326
+msgid "Save Data"
+msgstr ""
+
+#: ../classes/class-wc-ld-license-codes-pages.php:366
+msgid "Select the product that the license code(s) blong to."
+msgstr ""
+
+#: ../classes/class-wc-ld-license-codes-pages.php:372
+msgid "License Code #1"
+msgstr ""
+
+#: ../classes/class-wc-ld-license-codes-pages.php:378
+#: ../classes/class-wc-ld-license-codes-pages.php:383
+#: ../classes/class-wc-ld-license-codes-pages.php:444
+#: ../classes/class-wc-ld-license-codes-pages.php:448
+#: ../classes/class-wc-ld-license-codes-pages.php:485
+#: ../classes/class-wc-ld-license-codes-pages.php:489
+#: ../classes/class-wc-ld-license-codes-pages.php:526
+#: ../classes/class-wc-ld-license-codes-pages.php:530
+#: ../classes/class-wc-ld-license-codes-pages.php:567
+#: ../classes/class-wc-ld-license-codes-pages.php:571
+msgid "Main Field"
+msgstr ""
+
+#: ../classes/class-wc-ld-license-codes-pages.php:388
+#: ../classes/class-wc-ld-license-codes-pages.php:393
+#: ../classes/class-wc-ld-license-codes-pages.php:453
+#: ../classes/class-wc-ld-license-codes-pages.php:457
+#: ../classes/class-wc-ld-license-codes-pages.php:494
+#: ../classes/class-wc-ld-license-codes-pages.php:498
+#: ../classes/class-wc-ld-license-codes-pages.php:535
+#: ../classes/class-wc-ld-license-codes-pages.php:539
+#: ../classes/class-wc-ld-license-codes-pages.php:576
+#: ../classes/class-wc-ld-license-codes-pages.php:580
+msgid "Field 2"
+msgstr ""
+
+#: ../classes/class-wc-ld-license-codes-pages.php:398
+#: ../classes/class-wc-ld-license-codes-pages.php:403
+#: ../classes/class-wc-ld-license-codes-pages.php:462
+#: ../classes/class-wc-ld-license-codes-pages.php:466
+#: ../classes/class-wc-ld-license-codes-pages.php:503
+#: ../classes/class-wc-ld-license-codes-pages.php:507
+#: ../classes/class-wc-ld-license-codes-pages.php:544
+#: ../classes/class-wc-ld-license-codes-pages.php:548
+#: ../classes/class-wc-ld-license-codes-pages.php:585
+#: ../classes/class-wc-ld-license-codes-pages.php:589
+msgid "Field 3"
+msgstr ""
+
+#: ../classes/class-wc-ld-license-codes-pages.php:408
+#: ../classes/class-wc-ld-license-codes-pages.php:413
+#: ../classes/class-wc-ld-license-codes-pages.php:471
+#: ../classes/class-wc-ld-license-codes-pages.php:475
+#: ../classes/class-wc-ld-license-codes-pages.php:512
+#: ../classes/class-wc-ld-license-codes-pages.php:516
+#: ../classes/class-wc-ld-license-codes-pages.php:553
+#: ../classes/class-wc-ld-license-codes-pages.php:557
+#: ../classes/class-wc-ld-license-codes-pages.php:594
+#: ../classes/class-wc-ld-license-codes-pages.php:598
+msgid "Field 4"
+msgstr ""
+
+#: ../classes/class-wc-ld-license-codes-pages.php:419
+msgid "License Status"
+msgstr ""
+
+#: ../classes/class-wc-ld-license-codes-pages.php:439
+msgid "License Code #2"
+msgstr ""
+
+#: ../classes/class-wc-ld-license-codes-pages.php:480
+msgid "License Code #3"
+msgstr ""
+
+#: ../classes/class-wc-ld-license-codes-pages.php:521
+msgid "License Code #4"
+msgstr ""
+
+#: ../classes/class-wc-ld-license-codes-pages.php:562
+msgid "License Code #5"
+msgstr ""
+
+#: ../classes/class-wc-ld-license-codes-pages.php:614
+msgid "You must fill the first field of each code"
+msgstr ""
+
+#: ../classes/class-wc-ld-license-codes-pages.php:617
+msgid "Please select a valid Product"
+msgstr ""
+
+#: ../classes/class-wc-ld-meta-boxes.php:23
+msgid "Product License Code Description"
+msgstr ""
+
+#: ../classes/class-wc-ld-product-metabox.php:27
+msgid ""
+"This short description is sent to the user's email after his/her order "
+"completed. Usually used for special usage instruction for using the license "
+"codes."
+msgstr ""
+
+#: ../classes/class-wc-ld-product-metabox.php:31
+msgid "Custom Titles"
+msgstr ""
+
+#: ../classes/class-wc-ld-product-metabox.php:33
+msgid ""
+"Each license code can have up to 4 different fields. You can define custom "
+"field titles for each product here. <br>i.e. license, expire date, owner "
+"name, etc."
+msgstr ""
+
+#: ../classes/class-wc-ld-product-metabox.php:37
+msgid "License Main Field Title"
+msgstr ""
+
+#: ../classes/class-wc-ld-product-metabox.php:39
+msgid ""
+"Enter a custom title for the first filed. It is the main field. you can "
+"ignore the other ones if you do not need them."
+msgstr ""
+
+#: ../classes/class-wc-ld-product-metabox.php:44
+msgid "Field 2 Title"
+msgstr ""
+
+#: ../classes/class-wc-ld-product-metabox.php:46
+msgid "Enter a custom title for the second field"
+msgstr ""
+
+#: ../classes/class-wc-ld-product-metabox.php:51
+msgid "Field 3 Title"
+msgstr ""
+
+#: ../classes/class-wc-ld-product-metabox.php:53
+msgid "Enter a custom title for the third field"
+msgstr ""
+
+#: ../classes/class-wc-ld-product-metabox.php:58
+msgid "Filed 4 Title"
+msgstr ""
+
+#: ../classes/class-wc-ld-product-metabox.php:60
+msgid "Enter a custom title for the fourth field"
+msgstr ""
+
+#: ../classes/class-wc-ld-product.php:75
+msgid "If you product is a deliverable pin code or license, check this box."
+msgstr ""
+
+#: ../classes/class-wc-ld-settings-tab.php:18
+msgid "License Code Delivery"
+msgstr ""
+
+#: ../classes/class-wc-ld-settings-tab.php:34
+msgid "Options"
+msgstr ""
+
+#: ../classes/class-wc-ld-settings-tab.php:42
+msgid "Delivery Order Status"
+msgstr ""
+
+#: ../classes/class-wc-ld-settings-tab.php:45
+msgid "Select the order status in which the license codes should be delivered."
+msgstr ""
+
+#: ../classes/class-wc-ld-settings-tab.php:48
+msgid "Completed"
+msgstr ""
+
+#: ../classes/class-wc-ld-settings-tab.php:49
+msgid "Processing"
+msgstr ""
+
+#: ../classes/class-wc-ld-settings-tab.php:54
+msgid "Remove All Data"
+msgstr ""
+
+#: ../classes/class-wc-ld-settings-tab.php:55
+msgid ""
+"This tool will remove all WooCommerce License Delivery data "
+"(<strong>including all license codes table</strong>) when using the \"Delete"
+"\" link on the plugins screen. It will also remove all setting/option."
+msgstr ""
+
+#: ../classes/class-woocommerce-license-delivery.php:128
+#, php-format
+msgid ""
+"Please install and activate %sWooCommerce%s in order for the WooCommerce "
+"License Delivery extension to work!"
+msgstr ""

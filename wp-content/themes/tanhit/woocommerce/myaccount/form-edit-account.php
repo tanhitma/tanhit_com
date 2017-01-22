@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 
 <?php wc_print_notices(); ?>
-<h1><?php _e( 'Профиль', 'woocommerce' ); ?></h1>
+<h2><?php _e( 'Профиль', 'woocommerce' ); ?></h2>
 <form class="edit-account" action="" method="post" id="tanhit-edit-account">
 
 	<?php do_action( 'woocommerce_edit_account_form_start' ); ?>

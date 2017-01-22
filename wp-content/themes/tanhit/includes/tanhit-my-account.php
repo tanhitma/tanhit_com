@@ -26,7 +26,7 @@ function _tanhit_before_my_account_last_news() {
 	}    
 	if ( ! empty( $news ) ) {
 		?>
-			<span class="my-account-news"><h3><a href="/category/%D0%BD%D0%BE%D0%B2%D0%BE%D1%81%D1%82%D0%B8"><?php pll_e( 'Новости', 'tanhit' ); ?></a></h3></span>
+			<span class="my-account-news"><h2><a href="/category/news"><?php pll_e( 'Новости', 'tanhit' ); ?></a></h2></span>
 		<?php
 		foreach( $news as $item ) { ?>
 			<div class="last-news">

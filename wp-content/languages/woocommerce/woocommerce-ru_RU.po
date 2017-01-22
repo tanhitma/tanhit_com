@@ -8356,7 +8356,7 @@ msgstr "Сохранить"
 
 #: templates/myaccount/my-account.php:19
 msgid "Hello <strong>%1$s</strong> (not %1$s? <a href=\"%2$s\">Sign out</a>)."
-msgstr "Здравствуйте, <strong>%1$s</strong>"
+msgstr "Здравствуйте, <strong>%1$s</strong>!"
 
 #: templates/myaccount/my-account.php:24
 msgid ""

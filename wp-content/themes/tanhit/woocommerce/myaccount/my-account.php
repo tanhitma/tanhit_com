@@ -21,24 +21,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 wc_print_notices(); ?>
 
-<p class="myaccount_user">
+<div class="myaccount_user" style="margin-bottom: 20px;">
 	<?php
-	printf(
-		__( 'Hello <strong>%1$s</strong> (not %1$s? <a href="%2$s">Sign out</a>).', 'woocommerce' ) . ' ',
-		$current_user->display_name,
-		wc_get_endpoint_url( 'customer-logout', '', wc_get_page_permalink( 'myaccount' ) )
-	);
-
-	echo "<br><br>";
-
-	printf( __( 'From your account dashboard you can view your recent orders, manage your shipping and billing addresses and <a href="%s">edit your password and account details</a>.', 'woocommerce' ),
-		wc_customer_edit_account_url()
-	);
+	printf('Здравствуйте, <strong>%s</strong>! Выберите, пожалуйста, раздел.',
+		$current_user->display_name);
 	
 	/**
 	 * check for MailPoet Newsletters plugin
 	 */	
-	if ( defined( 'WYSIJA_SIDE' ) && 'front' == WYSIJA_SIDE ) {
+	/*if ( defined( 'WYSIJA_SIDE' ) && 'front' == WYSIJA_SIDE ) {
 		$mail_poet_link = '';
 		if ( class_exists( 'Tanhit_Site_Manager' ) ) {
 			$mail_poet_link = Tanhit_Site_Manager::get_options( 'mail_poet_link' );	
@@ -55,22 +46,39 @@ wc_print_notices(); ?>
 				$mail_poet_link 
 			);			
 		}	
-	}	
+	}	*/
 	?>
-</p>
+</div>
 
-<?php do_action( 'woocommerce_before_my_account' ); ?>
+<ul class="nav nav-tabs" role="tablist">
+  <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Главная</a></li>
+  <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Профиль</a></li>
+  <li role="presentation"><a href="#webinars" aria-controls="webinars" role="tab" data-toggle="tab">Вебинары и практики</a></li>
+  <li role="presentation"><a href="#orders" aria-controls="orders" role="tab" data-toggle="tab">Заказы</a></li>
+  <li role="presentation"><a href="#pins" aria-controls="pins" role="tab" data-toggle="tab">Пин-коды</a></li>
+</ul>
 
-<?php wc_get_template( 'myaccount/my-downloads.php' ); ?>
+<div class="tab-content">
+  <div role="tabpanel" class="tab-pane active" id="home">
+      <?php do_action( 'woocommerce_before_my_account' ); ?>
+      <?php do_action( 'tanhit_my_account' ); ?>
+      <?php do_action( 'woocommerce_after_my_account' ); ?>
+  </div>
+  <div role="tabpanel" class="tab-pane fade in" id="profile">
+      <?php wc_get_template( 'myaccount/form-edit-account.php', array( 'user' => get_user_by( 'id', get_current_user_id() ) ) );?>
+  </div>
+  <div role="tabpanel" class="tab-pane fade" id="webinars">
+      <?php wc_get_template( 'myaccount/my-downloads.php' ); ?>
+  </div>
+  <div role="tabpanel" class="tab-pane fade" id="orders">
+      <?php wc_get_template( 'myaccount/my-orders.php', array( 'order_count' => $order_count ) ); ?>
+  </div>
+  <div role="tabpanel" class="tab-pane fade" id="pins">
+      <?php do_action('display_pincodes'); ?>
+  </div>
+</div>
 
-<?php do_action( 'tanhit_my_account' ); ?>
-
-<?php 
-/**
+<?php /**
  * don't load my-address at my-account page
  */
 // wc_get_template( 'myaccount/my-address.php' ); ?>
-
-<?php wc_get_template( 'myaccount/my-orders.php', array( 'order_count' => $order_count ) ); ?>
-
-<?php do_action( 'woocommerce_after_my_account' ); ?>
