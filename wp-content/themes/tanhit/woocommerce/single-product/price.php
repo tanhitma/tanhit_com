@@ -18,10 +18,6 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
-
-
-
-
 ?>
 <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
 

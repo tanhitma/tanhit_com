@@ -68,7 +68,7 @@ function tanhit_woocommerce_before_single_product() {
 	) {
 		$tanhit_add_button_enter_to_webinar = 'download_in_myaccount'; // Button [Download in my account]
 	}
-	
+
 	/*
 
 	if ( empty( $product_meta[ 'date_start' ] ) && $product->sale_price == 0 ) {

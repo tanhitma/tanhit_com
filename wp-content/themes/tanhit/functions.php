@@ -1778,29 +1778,20 @@ function getWebinarId($product_id) {
 
 add_action('template_redirect', 'wpse12535_redirect_sample');
 function wpse12535_redirect_sample() {
-    if ( ! is_admin()) {
+    if (!is_admin()) {
         $aData = parse_url($_SERVER['REQUEST_URI']);
+        $product_id = isset($_REQUEST['pid']) ? (int)$_REQUEST['pid'] : null;
         if (trim($aData['path'], '/') == 'current-webinar' && $_REQUEST['id'] && getWebinarId($_REQUEST['id'])) {
             exit(wp_redirect(get_post_permalink($_REQUEST['id'])));
-        } else
-            if (trim($aData['path'], '/') == 'my-account' && $_REQUEST['pid']) {
-                global $wpdb;
+        } else if (trim($aData['path'], '/') == 'my-account' && $product_id) {
+            $current_user = wp_get_current_user();
 
-                if ($user_id = get_current_user_id()) {
-                    //if (getAccessToProduct($_REQUEST['pid']) === true) {
-                    if (getAccessToProduct($_REQUEST['pid'])) {   
-                        //Ищем оплаченный заказ с текущим товаром
-                        $sql = "SELECT SUM(M2.`meta_value`) as cnt 
-					FROM wp_woocommerce_order_items I 
-					INNER JOIN wp_woocommerce_order_itemmeta M ON (M.`order_item_id` = I.`order_item_id`)
-					INNER JOIN wp_woocommerce_order_itemmeta M2 ON (M2.`order_item_id` = I.`order_item_id`)
-					INNER JOIN wp_postmeta PM ON (PM.post_id = I.`order_id`)
-					INNER JOIN wp_posts P ON (P.`ID` = I.`order_id`)
-					WHERE PM.meta_key = '_customer_user' && PM.meta_value = '{$user_id}' && M.`meta_key`= '_product_id' && M.`meta_value` = '{$_REQUEST['pid']}' && P.`post_type` = 'shop_order' && P.`post_status` = 'wc-completed' && M2.meta_key = '_qty'";
-
-                        if ( ! $wpdb->get_var($sql) && get_product($_REQUEST['pid'])) {
-                            $current_user = wp_get_current_user();
-
+            if ((int)$current_user->ID > 0) {
+                $product = wc_get_product($product_id);
+                if ($product && $product->post->post_type == 'product') {
+                    $access = getAccessToProduct($product_id);
+                    if ($access === true) { //Not payed access!
+                        if (!wc_customer_bought_product($current_user->user_email, $current_user->ID, $product_id)) { //Check order exist
                             $address = [
                                 'first_name' => $current_user->user_firstname,
                                 'last_name'  => $current_user->user_lastname,
@@ -1808,21 +1799,60 @@ function wpse12535_redirect_sample() {
                             ];
 
                             $order = wc_create_order(['customer_id' => $current_user->ID]);
-                            
-                            //Если заказ создан
-                            if ($order->id){                            
-                                $order->add_product(get_product($_REQUEST['pid']), 1); //(get_product with id and next is for quantity)
+                            if ($order->id) {
+                                $order->add_product($product, 1);
                                 $order->set_address($address, 'billing');
                                 $order->set_address($address, 'shipping');
                                 $order->calculate_totals();
                                 $order->update_status('wc-completed');
+                                wc_downloadable_product_permissions($order->id);
                             }
+                        } else {
+                            grant_permission_to_payed_files($current_user, $product);
                         }
+                    } elseif ($access) { //Payed access
+                        grant_permission_to_payed_files($current_user, $product);
                     }
                 }
-
-                exit(wp_redirect('/my-account'));
             }
+            exit(wp_redirect('/my-account'));
+        }
+    }
+}
+
+function grant_permission_to_payed_files($user, $product){
+    $customer_available_downloads = wc_get_customer_available_downloads($user->ID);
+    $downloadable_product_files = array_keys($product->get_files());
+    foreach ($customer_available_downloads as $download_info){
+        if(($key = array_search($download_info['download_id'], $downloadable_product_files)) !== false) {
+            unset($downloadable_product_files[$key]);
+        }
+    }
+
+    if(!empty($downloadable_product_files)){
+        global $wpdb;
+        $sql = "SELECT DISTINCT order_id FROM {$wpdb->prefix}woocommerce_order_items oi
+                LEFT JOIN {$wpdb->prefix}woocommerce_order_itemmeta im ON im.order_item_id = oi.order_item_id
+                LEFT JOIN {$wpdb->posts} p ON p.ID = oi.order_id
+                LEFT JOIN {$wpdb->postmeta} pm ON oi.order_id = pm.post_id
+                WHERE p.post_status IN ('wc-completed', 'wc-processing')
+                AND im.meta_key = '_product_id' AND im.meta_value = {$product->id}
+                AND im.meta_value != 0
+                AND pm.meta_key IN ('_billing_email', '_customer_user' )
+                AND pm.meta_value IN ('" . implode( "','", [$user->user_email] ) . "')
+                GROUP BY order_id";
+
+        $result = $wpdb->get_row($sql);
+        $order = wc_get_order($result->order_id);
+        $order_products = $order->get_items();
+        foreach($order_products as $order_product){
+          if($order_product['product_id'] == $product->id){
+              foreach ($downloadable_product_files as $download_id){
+                  wc_downloadable_file_permission($download_id, $order_product['variation_id'] > 0 ? $order_product['variation_id'] : $product->id, $order, $order_product['qty'] );
+              }
+              break;
+          }
+        }
     }
 }
 

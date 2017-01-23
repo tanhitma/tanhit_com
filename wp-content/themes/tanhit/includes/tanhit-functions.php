@@ -191,7 +191,7 @@ function tanhit_customer_bought_product( $product = null, $user = null ) {
 	 */
 	if( empty( $product->id ) ){
 		$wc_pf = new WC_Product_Factory();
-		$product = $wc_pf->get_product( $id );
+		$product = $wc_pf->get_product( $product->ID );
 	}
 	
 	/** 
