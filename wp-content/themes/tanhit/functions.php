@@ -1839,7 +1839,7 @@ function grant_permission_to_payed_files($user, $product){
                 AND im.meta_key = '_product_id' AND im.meta_value = {$product->id}
                 AND im.meta_value != 0
                 AND pm.meta_key IN ('_billing_email', '_customer_user' )
-                AND pm.meta_value IN ('" . implode( "','", [$user->user_email] ) . "')
+                AND pm.meta_value IN ('" . implode( "','", [$user->user_email, $user->ID] ) . "')
                 GROUP BY order_id";
 
         $result = $wpdb->get_row($sql);
