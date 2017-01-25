@@ -1865,31 +1865,33 @@ function grant_permission_to_payed_files($user, $product, $order_id) {
         }
     } elseif ($order_id) {
         $order = wc_get_order($order_id);
-        $order_products = $order->get_items();
-        if (sizeof($order_products) > 0) {
-            foreach ($order_products as $order_product) {
-                $product = $order->get_product_from_item($order_product);
+        if (in_array($order->get_status(), ['completed', 'processing'])) {
+            $order_products = $order->get_items();
+            if (sizeof($order_products) > 0) {
+                foreach ($order_products as $order_product) {
+                    $product = $order->get_product_from_item($order_product);
 
-                if ($product && $product->exists() && $product->is_downloadable()) {
-                    $downloadable_product_files = array_keys($product->get_files());
+                    if ($product && $product->exists() && $product->is_downloadable()) {
+                        $downloadable_product_files = array_keys($product->get_files());
 
-                    foreach ($customer_available_downloads as $download_info) {
-                        if (($key = array_search($download_info['download_id'], $downloadable_product_files)) !== false) {
-                            unset($downloadable_product_files[$key]);
+                        foreach ($customer_available_downloads as $download_info) {
+                            if (($key = array_search($download_info['download_id'], $downloadable_product_files)) !== false) {
+                                unset($downloadable_product_files[$key]);
+                            }
                         }
-                    }
-                    if (!empty($downloadable_product_files)) {
-                        foreach ($downloadable_product_files as $download_id) {
-                            wc_downloadable_file_permission($download_id, $order_product['variation_id'] > 0 ? $order_product['variation_id'] : $order_product['product_id'], $order, $order_product['qty']);
+                        if (!empty($downloadable_product_files)) {
+                            foreach ($downloadable_product_files as $download_id) {
+                                wc_downloadable_file_permission($download_id, $order_product['variation_id'] > 0 ? $order_product['variation_id'] : $order_product['product_id'], $order, $order_product['qty']);
+                            }
+                            $added_flag = true;
                         }
-                        $added_flag = true;
                     }
                 }
             }
         }
     }
     $message = $added_flag ? 'Новые файлы добавлены в ваш ЛК!' : 'Новых файлов пока нет!';
-    wc_add_notice($message, $notice_type = $added_flag ? 'success' : 'notice');
+    wc_add_notice($message, $added_flag ? 'success' : 'notice');
 }
 
 add_filter('woocommerce_loop_add_to_cart_link', 'custom_woocommerce_loop_add_to_cart_link', 10, 2);
