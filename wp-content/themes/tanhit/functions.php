@@ -1781,38 +1781,43 @@ function wpse12535_redirect_sample() {
     if (!is_admin()) {
         $aData = parse_url($_SERVER['REQUEST_URI']);
         $product_id = isset($_REQUEST['pid']) ? (int)$_REQUEST['pid'] : null;
+        $order_id = isset($_REQUEST['oid']) ? (int)$_REQUEST['oid'] : null;
         if (trim($aData['path'], '/') == 'current-webinar' && $_REQUEST['id'] && getWebinarId($_REQUEST['id'])) {
             exit(wp_redirect(get_post_permalink($_REQUEST['id'])));
-        } else if (trim($aData['path'], '/') == 'my-account' && $product_id) {
+        } else if (trim($aData['path'], '/') == 'my-account' && ($product_id || $order_id)) {
             $current_user = wp_get_current_user();
 
             if ((int)$current_user->ID > 0) {
-                $product = wc_get_product($product_id);
-                if ($product && $product->post->post_type == 'product') {
-                    $access = getAccessToProduct($product_id);
-                    if ($access === true) { //Not payed access!
-                        if (!wc_customer_bought_product($current_user->user_email, $current_user->ID, $product_id)) { //Check order exist
-                            $address = [
-                                'first_name' => $current_user->user_firstname,
-                                'last_name'  => $current_user->user_lastname,
-                                'email'      => $current_user->user_email,
-                            ];
+                if ($product_id) {
+                    $product = wc_get_product($product_id);
+                    if ($product && $product->post->post_type == 'product') {
+                        $access = getAccessToProduct($product_id);
+                        if ($access === true) { //Not payed access!
+                            if (!wc_customer_bought_product($current_user->user_email, $current_user->ID, $product_id)) { //Check order exist
+                                $address = [
+                                    'first_name' => $current_user->user_firstname,
+                                    'last_name'  => $current_user->user_lastname,
+                                    'email'      => $current_user->user_email,
+                                ];
 
-                            $order = wc_create_order(['customer_id' => $current_user->ID]);
-                            if ($order->id) {
-                                $order->add_product($product, 1);
-                                $order->set_address($address, 'billing');
-                                $order->set_address($address, 'shipping');
-                                $order->calculate_totals();
-                                $order->update_status('wc-completed');
-                                wc_downloadable_product_permissions($order->id);
+                                $order = wc_create_order(['customer_id' => $current_user->ID]);
+                                if ($order->id) {
+                                    $order->add_product($product, 1);
+                                    $order->set_address($address, 'billing');
+                                    $order->set_address($address, 'shipping');
+                                    $order->calculate_totals();
+                                    $order->update_status('wc-completed');
+                                    wc_downloadable_product_permissions($order->id);
+                                }
+                            } else {
+                                grant_permission_to_payed_files($current_user, $product, null);
                             }
-                        } else {
-                            grant_permission_to_payed_files($current_user, $product);
+                        } elseif ($access) { //Payed access
+                            grant_permission_to_payed_files($current_user, $product, null);
                         }
-                    } elseif ($access) { //Payed access
-                        grant_permission_to_payed_files($current_user, $product);
                     }
+                } elseif ($order_id) {
+                    grant_permission_to_payed_files($current_user, null, $order_id);
                 }
             }
             exit(wp_redirect('/my-account'));
@@ -1820,18 +1825,20 @@ function wpse12535_redirect_sample() {
     }
 }
 
-function grant_permission_to_payed_files($user, $product){
+function grant_permission_to_payed_files($user, $product, $order_id) {
+    $added_flag = false;
     $customer_available_downloads = wc_get_customer_available_downloads($user->ID);
-    $downloadable_product_files = array_keys($product->get_files());
-    foreach ($customer_available_downloads as $download_info){
-        if(($key = array_search($download_info['download_id'], $downloadable_product_files)) !== false) {
-            unset($downloadable_product_files[$key]);
+    if ($product) {
+        $downloadable_product_files = array_keys($product->get_files());
+        foreach ($customer_available_downloads as $download_info) {
+            if (($key = array_search($download_info['download_id'], $downloadable_product_files)) !== false) {
+                unset($downloadable_product_files[$key]);
+            }
         }
-    }
 
-    if(!empty($downloadable_product_files)){
-        global $wpdb;
-        $sql = "SELECT DISTINCT order_id FROM {$wpdb->prefix}woocommerce_order_items oi
+        if (!empty($downloadable_product_files)) {
+            global $wpdb;
+            $sql = "SELECT DISTINCT order_id FROM {$wpdb->prefix}woocommerce_order_items oi
                 LEFT JOIN {$wpdb->prefix}woocommerce_order_itemmeta im ON im.order_item_id = oi.order_item_id
                 LEFT JOIN {$wpdb->posts} p ON p.ID = oi.order_id
                 LEFT JOIN {$wpdb->postmeta} pm ON oi.order_id = pm.post_id
@@ -1839,21 +1846,50 @@ function grant_permission_to_payed_files($user, $product){
                 AND im.meta_key = '_product_id' AND im.meta_value = {$product->id}
                 AND im.meta_value != 0
                 AND pm.meta_key IN ('_billing_email', '_customer_user' )
-                AND pm.meta_value IN ('" . implode( "','", [$user->user_email, $user->ID] ) . "')
+                AND pm.meta_value IN ('" . implode("','", [$user->user_email, $user->ID]) . "')
                 GROUP BY order_id";
 
-        $result = $wpdb->get_row($sql);
-        $order = wc_get_order($result->order_id);
+            $result = $wpdb->get_row($sql);
+            $order = wc_get_order($result->order_id);
+            $order_products = $order->get_items();
+
+            foreach ($order_products as $order_product) {
+                if ($order_product['product_id'] == $product->id) {
+                    foreach ($downloadable_product_files as $download_id) {
+                        wc_downloadable_file_permission($download_id, $order_product['variation_id'] > 0 ? $order_product['variation_id'] : $product->id, $order, $order_product['qty']);
+                    }
+                    $added_flag = true;
+                    break;
+                }
+            }
+        }
+    } elseif ($order_id) {
+        $order = wc_get_order($order_id);
         $order_products = $order->get_items();
-        foreach($order_products as $order_product){
-          if($order_product['product_id'] == $product->id){
-              foreach ($downloadable_product_files as $download_id){
-                  wc_downloadable_file_permission($download_id, $order_product['variation_id'] > 0 ? $order_product['variation_id'] : $product->id, $order, $order_product['qty'] );
-              }
-              break;
-          }
+        if (sizeof($order_products) > 0) {
+            foreach ($order_products as $order_product) {
+                $product = $order->get_product_from_item($order_product);
+
+                if ($product && $product->exists() && $product->is_downloadable()) {
+                    $downloadable_product_files = array_keys($product->get_files());
+
+                    foreach ($customer_available_downloads as $download_info) {
+                        if (($key = array_search($download_info['download_id'], $downloadable_product_files)) !== false) {
+                            unset($downloadable_product_files[$key]);
+                        }
+                    }
+                    if (!empty($downloadable_product_files)) {
+                        foreach ($downloadable_product_files as $download_id) {
+                            wc_downloadable_file_permission($download_id, $order_product['variation_id'] > 0 ? $order_product['variation_id'] : $order_product['product_id'], $order, $order_product['qty']);
+                        }
+                        $added_flag = true;
+                    }
+                }
+            }
         }
     }
+    $message = $added_flag ? 'Новые файлы добавлены в ваш ЛК!' : 'Новых файлов пока нет!';
+    wc_add_notice($message, $notice_type = $added_flag ? 'success' : 'notice');
 }
 
 add_filter('woocommerce_loop_add_to_cart_link', 'custom_woocommerce_loop_add_to_cart_link', 10, 2);

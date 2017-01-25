@@ -43,7 +43,11 @@ function tanhit_my_account_my_orders_column_order_actions( $order ) {
 		'cancel' => array(
 			'url'  => $order->get_cancel_order_url( wc_get_page_permalink( 'myaccount' ) ),
 			'name' => __( 'Cancel', 'woocommerce' )
-		)
+		),
+    'reload_permission' => array(
+        'url'  => wc_get_page_permalink( 'myaccount' ) . "?oid={$order->get_order_number()}",
+        'name' => __( 'Проверить файлы', 'woocommerce' )
+    )
 	);
 
 	if ( ! $order->needs_payment() ) {
