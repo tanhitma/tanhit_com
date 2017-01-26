@@ -1951,7 +1951,8 @@ function getLinkAutologinToRoom($product_id, $qty = 1) {
             case 1:
                 $client->conferenceAutologinHash($webinar_room_id, [
                     'email'    => $current_user->user_email,
-                    'nickname' => $current_user->user_login,
+                    //'nickname' => $current_user->user_login,
+                    'nickname' => trim($current_user->user_firstname.' '.$current_user->user_lastname),
                     'role'     => 'listener'
                 ]);
 
@@ -1987,11 +1988,12 @@ function getLinkAutologinToRoom($product_id, $qty = 1) {
                     $aTokensResult = ($client->generateConferenceTokens($webinar_room_id, ['how_many' => $qty]));
                     if ($aTokensResult->access_tokens) {
                         foreach ($aTokensResult->access_tokens as $key => $oToken) {
-                            $sPrefix = ($qtyOld > 1 || ($key != 0 && !count($aLinksOld))) ? ((count($aLinksOld)) + $key + 1) . '_' : '';
+                            $sPostfix = ($qtyOld > 1 || ($key != 0 && !count($aLinksOld))) ? '_' . ((count($aLinksOld)) + $key + 1) : '';
 
                             $oAutoLogin = $client->conferenceAutologinHash($webinar_room_id, [
                                 'email'    => $current_user->user_email,
-                                'nickname' => $sPrefix . $current_user->user_login,
+                                //'nickname' => $sPrefix . $current_user->user_login,
+                                'nickname' => trim($current_user->user_firstname.' '.$current_user->user_lastname) . $sPostfix,
                                 //'role' 		=> 'listener',
                                 'token'    => $oToken->token
                             ]);
