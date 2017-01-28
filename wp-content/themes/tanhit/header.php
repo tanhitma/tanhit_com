@@ -123,14 +123,11 @@
 			padding: 0 4.6% 9% 4.3%;
 		}
 	</style>
-		
-	<!--script type="text/javascript" src="/wp-content/plugins/member-luxe/js/jwplayer/jwplayer.js"></script>
-	<script>jwplayer.key="OcQXu3Cx/pgNE/bx3qqXx0piOJ0qudFU1CgBzQ==";</script-->
 
-  <link href="/wp-content/plugins/member-luxe/js/videojs/video-js.min.css?7" rel="stylesheet">
-  <script type="text/javascript" src="/wp-content/plugins/member-luxe/js/videojs/video.min.js"></script>
-  <script type="text/javascript" src="/wp-content/plugins/member-luxe/js/videojs/youtube.min.js?2"></script>
-	<script type="text/javascript" src="/wp-content/plugins/member-luxe/js/video.js"></script>
+  <link href="/wp-content/themes/tanhit/js/videojs/video-js.min.css" rel="stylesheet">
+  <script type="text/javascript" src="/wp-content/themes/tanhit/js/videojs/video.min.js"></script>
+  <script type="text/javascript" src="/wp-content/themes/tanhit/js/videojs/youtube.min.js"></script>
+	<script type="text/javascript" src="/wp-content/themes/tanhit/js/videojs/video_init.js"></script>
 </head>
 <body <?php body_class(); ?>>
 <div class="bgout"><div class="bg"></div></div>
