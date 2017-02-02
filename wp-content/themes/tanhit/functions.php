@@ -5,7 +5,6 @@
 /**
  * Theme: tanhit
  */
-
 /**
  * Define theme version
  */
@@ -39,7 +38,7 @@ require_once TM_DIR . '/lib/wp_bootstrap_navwalker.php';
 load_theme_textdomain('tanhit', get_template_directory() . '/languages');
 
 if (is_admin()) :
-    /** */
+/** */
 else :
     require_once TM_DIR . '/includes/shortcodes.php';
 endif;
@@ -65,6 +64,7 @@ if (class_exists('WooCommerce')) :
     remove_action('woocommerce_after_main_content', 'woocommerce_output_content_wrapper_end', 10);
 
     add_action('after_setup_theme', 'woocommerce_support');
+
     function woocommerce_support() {
         add_theme_support('woocommerce');
     }
@@ -73,6 +73,7 @@ if (class_exists('WooCommerce')) :
      * Remove or overwrite product description heading in tab
      */
     add_filter('woocommerce_product_description_heading', 'tanhit_product_description_heading');
+
     function tanhit_product_description_heading($heading) {
         /**
          * We can use own text for heading
@@ -86,6 +87,7 @@ if (class_exists('WooCommerce')) :
      * @see 'comment_reply_link_args' filter
      */
     add_filter('comment_reply_link_args', 'tanhit_comment_reply_link_args', 10, 3);
+
     function tanhit_comment_reply_link_args($args, $comment, $post) {
         /**
          * Reset login text for unregistered users
@@ -188,15 +190,19 @@ else
     add_filter('loop_shop_columns', 'custom_loop_shop_columns');
 
 if (!function_exists('custom_loop_category_columns')) {
+
     function custom_loop_category_columns() {
         return 5; // 5 products per row for category page
     }
+
 }
 
 if (!function_exists('custom_loop_shop_columns')) {
+
     function custom_loop_shop_columns() {
         return 5; // 5 products per row for shop page
     }
+
 }
 
 function tanhit_add_style() {
@@ -211,24 +217,15 @@ function tanhit_add_script() {
      * @todo remove
      */
     //wp_enqueue_script( 'jq', 'https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js', array(), '1');
-
     //wp_enqueue_script( 'my-bootstrap-extension', get_template_directory_uri() . '/js/bootstrap.min.js', array(), '1');
     wp_register_script(
-        'my-bootstrap-extension',
-        get_template_directory_uri() . '/js/bootstrap.min.js',
-        ['jquery'],
-        TANHIT_VERSION,
-        true
+            'my-bootstrap-extension', get_template_directory_uri() . '/js/bootstrap.min.js', ['jquery'], TANHIT_VERSION, true
     );
     wp_enqueue_script('my-bootstrap-extension');
 
     //wp_enqueue_script( 'fotorama-js', get_template_directory_uri() . '/js/fotorama.js', array(), '1');
     wp_register_script(
-        'fotorama-js',
-        get_template_directory_uri() . '/js/fotorama.js',
-        ['jquery'],
-        TANHIT_VERSION,
-        true
+            'fotorama-js', get_template_directory_uri() . '/js/fotorama.js', ['jquery'], TANHIT_VERSION, true
     );
     wp_enqueue_script('fotorama-js');
 
@@ -237,26 +234,20 @@ function tanhit_add_script() {
      * @scope front
      */
     wp_register_script(
-        'frontend-script',
-        TM_URL . '/js/script.js',
-        ['jquery'],
-        TANHIT_VERSION,
-        true
+            'frontend-script', TM_URL . '/js/script.js', ['jquery'], TANHIT_VERSION, true
     );
     wp_enqueue_script('frontend-script');
     wp_localize_script(
-        'frontend-script',
-        'TanhitFrontManager',
-        [
-            'version'        => TANHIT_VERSION,
-            'ajaxurl'        => admin_url('admin-ajax.php'),
-            'process_ajax'   => 'Tanhit_Ajax_process_ajax',
-            'cart'           => tanhit_get_cart(),
-            'post_id'        => tanhit_get_post_id(),
-            'duplKey'        => tanhit_get_duplicate(),
-            'pathname_redir' => tanhit_get_redirect_page(),
-            'timerValue'     => tanhit_get_redirect_timer()
-        ]
+            'frontend-script', 'TanhitFrontManager', [
+        'version' => TANHIT_VERSION,
+        'ajaxurl' => admin_url('admin-ajax.php'),
+        'process_ajax' => 'Tanhit_Ajax_process_ajax',
+        'cart' => tanhit_get_cart(),
+        'post_id' => tanhit_get_post_id(),
+        'duplKey' => tanhit_get_duplicate(),
+        'pathname_redir' => tanhit_get_redirect_page(),
+        'timerValue' => tanhit_get_redirect_timer()
+            ]
     );
 }
 
@@ -338,40 +329,24 @@ function tanhit_add_admin_script() {
      * @todo remove
      */
     // wp_enqueue_script( 'jquery', get_template_directory_uri() . '/js/jquery-2.1.3.min.js', array(), '1');
-
     //wp_enqueue_script( 'moment', get_template_directory_uri() . '/js/bower_components/moment/min/moment.min.js', array(), '1');
     wp_enqueue_script(
-        'moment',
-        get_template_directory_uri() . '/js/bower_components/moment/min/moment.min.js',
-        [],
-        TANHIT_VERSION,
-        true
+            'moment', get_template_directory_uri() . '/js/bower_components/moment/min/moment.min.js', [], TANHIT_VERSION, true
     );
 
     //wp_enqueue_script( 'datetimepicker', get_template_directory_uri() . '/js/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js', array(), '1');
     wp_enqueue_script(
-        'datetimepicker',
-        get_template_directory_uri() . '/js/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js',
-        ['jquery', 'moment'],
-        TANHIT_VERSION,
-        true
+            'datetimepicker', get_template_directory_uri() . '/js/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js', ['jquery', 'moment'], TANHIT_VERSION, true
     );
 
     //wp_enqueue_script('admin',get_template_directory_uri() . '/js/admin.js', array(), '1');
     wp_enqueue_script(
-        'admin',
-        get_template_directory_uri() . '/js/admin.js',
-        ['jquery', 'datetimepicker'],
-        TANHIT_VERSION,
-        true
+            'admin', get_template_directory_uri() . '/js/admin.js', ['jquery', 'datetimepicker'], TANHIT_VERSION, true
     );
 
     //wp_enqueue_style( 'my-bootstrap-extension-admin', get_template_directory_uri() . '/css/bootstrap.min.css', array(), '1');
     wp_enqueue_style(
-        'my-bootstrap-extension-admin',
-        get_template_directory_uri() . '/css/bootstrap.min.css',
-        [],
-        TANHIT_VERSION
+            'my-bootstrap-extension-admin', get_template_directory_uri() . '/css/bootstrap.min.css', [], TANHIT_VERSION
     );
 
     /**
@@ -398,10 +373,10 @@ function my_pagenavi() {
     $big = 999999999; // уникальное число для замены
 
     $args = [
-        'base'      => str_replace($big, '%#%', get_pagenum_link($big))
-        , 'format'  => ''
+        'base' => str_replace($big, '%#%', get_pagenum_link($big))
+        , 'format' => ''
         , 'current' => max(1, get_query_var('paged'))
-        , 'total'   => $wp_query->max_num_pages
+        , 'total' => $wp_query->max_num_pages
     ];
 
     $result = paginate_links($args);
@@ -431,21 +406,21 @@ function my_remove_schedule_delete() {
  */
 //add_action( 'init', 'my_remove_schedule_delete' );
 
-/*--------------------------------------------- МЕНЮ НАВИГАЦИИ -------------------------------------------------------*/
+/* --------------------------------------------- МЕНЮ НАВИГАЦИИ ------------------------------------------------------- */
 
 function theme_register_nav_menu() {
     register_nav_menus([
         'primary' => 'Меню',
-
     ]);
     //register_nav_menu( 'primary', 'Главное меню' );
 }
 
 add_action('after_setup_theme', 'theme_register_nav_menu');
 
-/*-------------------------------------------- КОНЕЦ МЕНЮ НАВИГАЦИИ --------------------------------------------------*/
+/* -------------------------------------------- КОНЕЦ МЕНЮ НАВИГАЦИИ -------------------------------------------------- */
 
-/*--------------------------------------------------- ТОВАРЫ ---------------------------------------------------------*/
+/* --------------------------------------------------- ТОВАРЫ --------------------------------------------------------- */
+
 // Review Post type
 /**
  * @todo remove action
@@ -454,31 +429,31 @@ add_action('after_setup_theme', 'theme_register_nav_menu');
 function product_register() {
 
     $labels = [
-        'name'               => _x('Товары', 'post type general name'),
-        'singular_name'      => _x('Товар', 'post type singular name'),
-        'add_new'            => _x('Добавить товар', 'review'),
-        'add_new_item'       => __('Добавить новый товар'),
-        'edit_item'          => __('Редактировать товар'),
-        'new_item'           => __('Новый товар'),
-        'view_item'          => __('Посмотреть товар'),
-        'search_items'       => __('Найти товар'),
-        'not_found'          => __('Ничего не найдено'),
+        'name' => _x('Товары', 'post type general name'),
+        'singular_name' => _x('Товар', 'post type singular name'),
+        'add_new' => _x('Добавить товар', 'review'),
+        'add_new_item' => __('Добавить новый товар'),
+        'edit_item' => __('Редактировать товар'),
+        'new_item' => __('Новый товар'),
+        'view_item' => __('Посмотреть товар'),
+        'search_items' => __('Найти товар'),
+        'not_found' => __('Ничего не найдено'),
         'not_found_in_trash' => __('В корзине пусто'),
-        'parent_item_colon'  => ''
+        'parent_item_colon' => ''
     ];
 
     $args = [
-        'labels'             => $labels,
-        'public'             => true,
+        'labels' => $labels,
+        'public' => true,
         'publicly_queryable' => true,
-        'show_ui'            => true,
-        'query_var'          => true,
-        'menu_icon'          => null,
-        'rewrite'            => true,
-        'capability_type'    => 'post',
-        'hierarchical'       => false,
-        'menu_position'      => null,
-        'supports'           => ['title', 'editor', 'thumbnail']
+        'show_ui' => true,
+        'query_var' => true,
+        'menu_icon' => null,
+        'rewrite' => true,
+        'capability_type' => 'post',
+        'hierarchical' => false,
+        'menu_position' => null,
+        'supports' => ['title', 'editor', 'thumbnail']
     ];
 
     register_post_type('product', $args);
@@ -490,24 +465,23 @@ function add_type_taxonomies() {
         // Hierarchical taxonomy (like categories)
         'hierarchical' => true,
         // This array of options controls the labels displayed in the WordPress Admin UI
-        'labels'       => [
-            'name'              => _x('Типы товаров', 'taxonomy general name'),
-            'singular_name'     => _x('Типы товаров', 'taxonomy singular name'),
-            'search_items'      => __('Поиск типов'),
-            'all_items'         => __('Все типы'),
-            'parent_item'       => __('Родитель'),
+        'labels' => [
+            'name' => _x('Типы товаров', 'taxonomy general name'),
+            'singular_name' => _x('Типы товаров', 'taxonomy singular name'),
+            'search_items' => __('Поиск типов'),
+            'all_items' => __('Все типы'),
+            'parent_item' => __('Родитель'),
             'parent_item_colon' => __('Родитель:'),
-            'edit_item'         => __('Редактировать тип'),
-            'update_item'       => __('Обновить тип'),
-            'add_new_item'      => __('Добавить новый тип'),
-            'new_item_name'     => __('Новое название типа'),
-            'menu_name'         => __('Типы товаров'),
+            'edit_item' => __('Редактировать тип'),
+            'update_item' => __('Обновить тип'),
+            'add_new_item' => __('Добавить новый тип'),
+            'new_item_name' => __('Новое название типа'),
+            'menu_name' => __('Типы товаров'),
         ],
-
         // Control the slugs used for this taxonomy
-        'rewrite'      => [
-            'slug'         => 'type', // This controls the base slug that will display before each term
-            'with_front'   => false, // Don't display the category base before "/locations/"
+        'rewrite' => [
+            'slug' => 'type', // This controls the base slug that will display before each term
+            'with_front' => false, // Don't display the category base before "/locations/"
             'hierarchical' => true // This will allow URL's like "/locations/boston/cambridge/"
         ],
     ]);
@@ -523,24 +497,23 @@ function add_section_taxonomies() {
         // Hierarchical taxonomy (like categories)
         'hierarchical' => true,
         // This array of options controls the labels displayed in the WordPress Admin UI
-        'labels'       => [
-            'name'              => _x('Разделы', 'taxonomy general name'),
-            'singular_name'     => _x('Разделы', 'taxonomy singular name'),
-            'search_items'      => __('Поиск разделов'),
-            'all_items'         => __('Все разделы'),
-            'parent_item'       => __('Родитель'),
+        'labels' => [
+            'name' => _x('Разделы', 'taxonomy general name'),
+            'singular_name' => _x('Разделы', 'taxonomy singular name'),
+            'search_items' => __('Поиск разделов'),
+            'all_items' => __('Все разделы'),
+            'parent_item' => __('Родитель'),
             'parent_item_colon' => __('Родитель:'),
-            'edit_item'         => __('Редактировать раздел'),
-            'update_item'       => __('Обновить раздел'),
-            'add_new_item'      => __('Добавить новый раздел'),
-            'new_item_name'     => __('Новое название раздела'),
-            'menu_name'         => __('Разделы'),
+            'edit_item' => __('Редактировать раздел'),
+            'update_item' => __('Обновить раздел'),
+            'add_new_item' => __('Добавить новый раздел'),
+            'new_item_name' => __('Новое название раздела'),
+            'menu_name' => __('Разделы'),
         ],
-
         // Control the slugs used for this taxonomy
-        'rewrite'      => [
-            'slug'         => 'section', // This controls the base slug that will display before each term
-            'with_front'   => false, // Don't display the category base before "/locations/"
+        'rewrite' => [
+            'slug' => 'section', // This controls the base slug that will display before each term
+            'with_front' => false, // Don't display the category base before "/locations/"
             'hierarchical' => true // This will allow URL's like "/locations/boston/cambridge/"
         ],
     ]);
@@ -558,108 +531,108 @@ function add_section_taxonomies() {
 //add_action( 'init', 'custom_post_status' );
 function custom_post_status() {
     register_post_status(
-        'created',
-        [
-            'label'                     => _x('Создан', 'post'),
-            'public'                    => true,
-            'exclude_from_search'       => false,
-            'show_in_admin_all_list'    => true,
-            'show_in_admin_status_list' => true,
-            'label_count'               => _n_noop('Unread <span class="count">(%s)</span>', 'Unread <span class="count">(%s)</span>'),
-        ]
+            'created', [
+        'label' => _x('Создан', 'post'),
+        'public' => true,
+        'exclude_from_search' => false,
+        'show_in_admin_all_list' => true,
+        'show_in_admin_status_list' => true,
+        'label_count' => _n_noop('Unread <span class="count">(%s)</span>', 'Unread <span class="count">(%s)</span>'),
+            ]
     );
 }
 
 /*
-//product teaser custom field
-function productTeaser($post)
-{
-    ?>
-    <p>
-        <span>Embed-cсылка на тизер: </span>
-        <input type="text" name='extra[teaser]' value="<?php echo get_post_meta($post->ID, "teaser", 1); ?>">
-    </p>
-    <?php
-}
-//product mark custom field
-function productMark($post)
-{
-    ?>
-    <p>
-        <span>Признак(новинка): </span>
+  //product teaser custom field
+  function productTeaser($post)
+  {
+  ?>
+  <p>
+  <span>Embed-cсылка на тизер: </span>
+  <input type="text" name='extra[teaser]' value="<?php echo get_post_meta($post->ID, "teaser", 1); ?>">
+  </p>
+  <?php
+  }
+  //product mark custom field
+  function productMark($post)
+  {
+  ?>
+  <p>
+  <span>Признак(новинка): </span>
 
-        <input type="checkbox" <?php if(get_post_meta($post->ID, "mark", 1)){
-            echo "checked";
-        } ?> name='extra[mark]' value="1">
-    </p>
-    <?php
-}
-//product price custom field
-function productPrice($post)
-{
-    ?>
-    <p>
-        <span>Цена: </span>
-        <input type="text" name='extra[price]' value="<?php echo get_post_meta($post->ID, "price", 1); ?>">
-    </p>
-    <?php
-}
-//product date custom field
-function productDate($post)
-{
-    ?>
-    <div>
-        <span>Дата проведения: </span>
-        <div class="form-group">
-            <div class='input-group date' id='datetimepicker'>
-                <input type='text' name='extra[date]' value="<?php echo get_post_meta($post->ID, "date", 1); ?>" class="form-control" />
-                <span class="input-group-addon">
-                    <span class="glyphicon glyphicon-calendar"></span>
-                </span>
-            </div>
-        </div>
-    </div>
-    <?php
-}
-//product set custom field
-function productSet($post)
-{
-    ?>
-    <p>
-        <span>Массив ID, входящих в набор: </span>
-        <input type="text" name='extra[set]' value="<?php echo get_post_meta($post->ID, "set", 1); ?>">
-    </p>
-    <?php
-}
-//product recommended custom field
-function productRecommended($post)
-{
-    ?>
-    <p>
-        <span>Массив ID рекомендованых товаров: </span>
-        <input type="text" name='extra[recommend]' value="<?php echo get_post_meta($post->ID, "recommend", 1); ?>">
-    </p>
-    <?php
-}
-//register custom fields
-function registerCustomFields()
-{
-    add_meta_box('extra_teaser', 'Тизер', 'productTeaser', 'product', 'normal', 'high');
-    add_meta_box('extra_mark', 'Признак', 'productMark', 'product', 'normal', 'high');
-    add_meta_box('extra_price', 'Цена', 'productPrice', 'product', 'normal', 'high');
-    add_meta_box('extra_date', 'Дата проведения', 'productDate', 'product', 'normal', 'high');
-    add_meta_box('extra_set', 'Массив ID, входящих в набор', 'productSet', 'product', 'normal', 'high');
-    add_meta_box('extra_recommend', 'Массив ID рекомендованых товаров', 'productRecommended', 'product', 'normal', 'high');
-}
-*/
+  <input type="checkbox" <?php if(get_post_meta($post->ID, "mark", 1)){
+  echo "checked";
+  } ?> name='extra[mark]' value="1">
+  </p>
+  <?php
+  }
+  //product price custom field
+  function productPrice($post)
+  {
+  ?>
+  <p>
+  <span>Цена: </span>
+  <input type="text" name='extra[price]' value="<?php echo get_post_meta($post->ID, "price", 1); ?>">
+  </p>
+  <?php
+  }
+  //product date custom field
+  function productDate($post)
+  {
+  ?>
+  <div>
+  <span>Дата проведения: </span>
+  <div class="form-group">
+  <div class='input-group date' id='datetimepicker'>
+  <input type='text' name='extra[date]' value="<?php echo get_post_meta($post->ID, "date", 1); ?>" class="form-control" />
+  <span class="input-group-addon">
+  <span class="glyphicon glyphicon-calendar"></span>
+  </span>
+  </div>
+  </div>
+  </div>
+  <?php
+  }
+  //product set custom field
+  function productSet($post)
+  {
+  ?>
+  <p>
+  <span>Массив ID, входящих в набор: </span>
+  <input type="text" name='extra[set]' value="<?php echo get_post_meta($post->ID, "set", 1); ?>">
+  </p>
+  <?php
+  }
+  //product recommended custom field
+  function productRecommended($post)
+  {
+  ?>
+  <p>
+  <span>Массив ID рекомендованых товаров: </span>
+  <input type="text" name='extra[recommend]' value="<?php echo get_post_meta($post->ID, "recommend", 1); ?>">
+  </p>
+  <?php
+  }
+  //register custom fields
+  function registerCustomFields()
+  {
+  add_meta_box('extra_teaser', 'Тизер', 'productTeaser', 'product', 'normal', 'high');
+  add_meta_box('extra_mark', 'Признак', 'productMark', 'product', 'normal', 'high');
+  add_meta_box('extra_price', 'Цена', 'productPrice', 'product', 'normal', 'high');
+  add_meta_box('extra_date', 'Дата проведения', 'productDate', 'product', 'normal', 'high');
+  add_meta_box('extra_set', 'Массив ID, входящих в набор', 'productSet', 'product', 'normal', 'high');
+  add_meta_box('extra_recommend', 'Массив ID рекомендованых товаров', 'productRecommended', 'product', 'normal', 'high');
+  }
+ */
 
 /**
  * @todo remove action
  */
 //add_action('add_meta_boxes', 'registerCustomFields', 1);
-/* Сохраняем данные, при сохранении поста*/
+/* Сохраняем данные, при сохранении поста */
 function updateCustomFields($post_id) {
-    if (!isset($_POST['extra'])) return false;
+    if (!isset($_POST['extra']))
+        return false;
     foreach ($_POST['extra'] as $key => $value) {
         if (empty($value)) {
             delete_post_meta($post_id, $key); // удаляем поле если значение пустое
@@ -680,59 +653,47 @@ function updateCustomFields($post_id) {
 function my_attachments($attachments) {
     $fields = [
         [
-            'name'    => 'title',                         // unique field name
-            'type'    => 'text',                          // registered field type
-            'label'   => __('Заголовок', 'attachments'),    // label to display
-            'default' => 'title',                         // default value upon selection
+            'name' => 'title', // unique field name
+            'type' => 'text', // registered field type
+            'label' => __('Заголовок', 'attachments'), // label to display
+            'default' => 'title', // default value upon selection
         ]
     ];
 
     $args = [
 
         // title of the meta box (string)
-        'label'       => 'Прикрепленные файлы',
-
+        'label' => 'Прикрепленные файлы',
         // all post types to utilize (string|array)
-        'post_type'   => ['product'],
-
+        'post_type' => ['product'],
         // meta box position (string) (normal, side or advanced)
-        'position'    => 'normal',
-
+        'position' => 'normal',
         // meta box priority (string) (high, default, low, core)
-        'priority'    => 'high',
-
+        'priority' => 'high',
         // allowed file type(s) (array) (image|video|text|audio|application)
-        'filetype'    => null,  // no filetype limit
-
+        'filetype' => null, // no filetype limit
         // include a note within the meta box (string)
-        'note'        => 'прикрепите файлы здесь!',
-
+        'note' => 'прикрепите файлы здесь!',
         // by default new Attachments will be appended to the list
         // but you can have then prepend if you set this to false
-        'append'      => true,
-
+        'append' => true,
         // text for 'Attach' button in meta box (string)
         'button_text' => __('Добавить файлы', 'attachments'),
-
         // text for modal 'Attach' button (string)
-        'modal_text'  => __('Добавить', 'attachments'),
-
+        'modal_text' => __('Добавить', 'attachments'),
         // which tab should be the default in the modal (string) (browse|upload)
-        'router'      => 'browse',
-
+        'router' => 'browse',
         // whether Attachments should set 'Uploaded to' (if not already set)
         'post_parent' => false,
-
         // fields array
-        'fields'      => $fields,
-
+        'fields' => $fields,
     ];
 
     $attachments->register('my_attachments', $args); // unique instance name
 }
 
 add_action('attachments_register', 'my_attachments');
-/*------------------------------------------------ КОНЕЦ ТОВАРОВ -----------------------------------------------------*/
+/* ------------------------------------------------ КОНЕЦ ТОВАРОВ ----------------------------------------------------- */
 
 /*
  * Auto complete virtual orders
@@ -743,7 +704,7 @@ function virtual_order_payment_complete_order_status($order_status, $order_id) {
     $order = new WC_Order($order_id);
 
     if ('processing' == $order_status &&
-        ('on-hold' == $order->status || 'pending' == $order->status || 'failed' == $order->status)
+            ('on-hold' == $order->status || 'pending' == $order->status || 'failed' == $order->status)
     ) {
 
         $virtual_order = null;
@@ -782,6 +743,7 @@ function virtual_order_payment_complete_order_status($order_status, $order_id) {
  */
 
 add_action('template_redirect', 'wc_custom_redirect_after_purchase');
+
 function wc_custom_redirect_after_purchase() {
     global $wp;
 
@@ -806,7 +768,6 @@ function wc_custom_redirect_after_purchase() {
  * @hooked woocommerce_template_single_meta - 40
  * @hooked woocommerce_template_single_sharing - 50
  */
-
 /**
  * woocommerce_after_single_product_summary hook.
  *
@@ -814,14 +775,13 @@ function wc_custom_redirect_after_purchase() {
  * @hooked woocommerce_upsell_display - 15
  * @hooked woocommerce_output_related_products - 20
  */
-
 remove_action('woocommerce_after_single_product_summary', 'woocommerce_output_product_data_tabs', 10);
 add_action('woocommerce_single_product_summary_tabs', 'woocommerce_output_product_data_tabs', 10);
 
 // Add cat seminar warning
 function tanhit_cart_warning() {
     ?>
-  <div class="cart-warning"><?php
+    <div class="cart-warning"><?php
     pll_e('Внимание! Указаная стоимость семинаров - это предоплата! Подробнее в описании к семинарам.', 'tanhit');
     ?> </div><?php
 }
@@ -862,21 +822,21 @@ function tanhit_widgets_init() {
 
     if (function_exists('register_sidebar')) {
         register_sidebar([
-            'name'          => 'Blog Sidebar',
-            'id'            => 'blog_sidebar',
+            'name' => 'Blog Sidebar',
+            'id' => 'blog_sidebar',
             'before_widget' => '',
-            'after_widget'  => '',
-            'before_title'  => '<h3>',
-            'after_title'   => '</h3>',
+            'after_widget' => '',
+            'before_title' => '<h3>',
+            'after_title' => '</h3>',
         ]);
 
         register_sidebar([
-            'name'          => 'Mainpage subscribe',
-            'id'            => 'main_subscribe',
+            'name' => 'Mainpage subscribe',
+            'id' => 'main_subscribe',
             'before_widget' => '',
-            'after_widget'  => '',
-            'before_title'  => '',
-            'after_title'   => '',
+            'after_widget' => '',
+            'before_title' => '',
+            'after_title' => '',
         ]);
     }
 }
@@ -899,6 +859,7 @@ add_filter('request', 'remove_page_from_query_string');
 // Интеграция WooCommerce в Google Analytics
 add_filter('woocommerce_order_formatted_shipping_address', 'custom_woocommerce_order_formatted_shipping_address');
 add_filter('woocommerce_order_formatted_billing_address', 'custom_woocommerce_order_formatted_shipping_address');
+
 function custom_woocommerce_order_formatted_shipping_address($fields) {
     unset($fields['city']);
 
@@ -906,65 +867,67 @@ function custom_woocommerce_order_formatted_shipping_address($fields) {
 }
 
 add_filter('woocommerce_admin_billing_fields', 'custom_woocommerce_admin_billing_fields');
+
 function custom_woocommerce_admin_billing_fields($fields) {
-    
+
     $fields = array(
         'first_name' => array(
-                'label' => __( 'First Name', 'woocommerce' ),
-                'show'  => false
+            'label' => __('First Name', 'woocommerce'),
+            'show' => false
         ),
         'last_name' => array(
-                'label' => __( 'Last Name', 'woocommerce' ),
-                'show'  => false
+            'label' => __('Last Name', 'woocommerce'),
+            'show' => false
         ),
         'company' => array(
-                'label' => __( 'Company', 'woocommerce' ),
-                'show'  => false
+            'label' => __('Company', 'woocommerce'),
+            'show' => false
         ),
         'address_1' => array(
-                'label' => 'Улица',
-                'show'  => false
+            'label' => 'Улица',
+            'show' => false
         ),
         'address_2' => array(
-                'label' => 'Номер дома',
-                'show'  => false
+            'label' => 'Номер дома',
+            'show' => false
         ),
         'address_3' => array(
-                'label' => 'Номер квартиры',
-                'show'  => false
+            'label' => 'Номер квартиры',
+            'show' => false
         ),
-        /*'city' => array(
-                'label' => __( 'City', 'woocommerce' ),
-                'show'  => false
-        ),*/
+        /* 'city' => array(
+          'label' => __( 'City', 'woocommerce' ),
+          'show'  => false
+          ), */
         'postcode' => array(
-                'label' => __( 'Postcode', 'woocommerce' ),
-                'show'  => false
+            'label' => __('Postcode', 'woocommerce'),
+            'show' => false
         ),
         'country' => array(
-                'label'   => __( 'Country', 'woocommerce' ),
-                'show'    => false,
-                'class'   => 'js_field-country select short',
-                'type'    => 'select',
-                'options' => array( '' => __( 'Select a country&hellip;', 'woocommerce' ) ) + WC()->countries->get_allowed_countries()
+            'label' => __('Country', 'woocommerce'),
+            'show' => false,
+            'class' => 'js_field-country select short',
+            'type' => 'select',
+            'options' => array('' => __('Select a country&hellip;', 'woocommerce')) + WC()->countries->get_allowed_countries()
         ),
         'state' => array(
-                'label' => __( 'State/County', 'woocommerce' ),
-                'class'   => 'js_field-state select short',
-                'show'  => false
+            'label' => __('State/County', 'woocommerce'),
+            'class' => 'js_field-state select short',
+            'show' => false
         ),
         'email' => array(
-                'label' => __( 'Email', 'woocommerce' ),
+            'label' => __('Email', 'woocommerce'),
         ),
         'phone' => array(
-                'label' => __( 'Phone', 'woocommerce' ),
+            'label' => __('Phone', 'woocommerce'),
         ),
     );
-    
+
     return $fields;
 }
 
 add_filter('woocommerce_admin_shipping_fields', 'custom_woocommerce_admin_shipping_fields');
+
 function custom_woocommerce_admin_shipping_fields($fields) {
     if ($fields) {
         foreach ($fields as $iKey => $aItem) {
@@ -978,6 +941,7 @@ function custom_woocommerce_admin_shipping_fields($fields) {
 }
 
 add_action('admin_head', 'my_custom_css');
+
 function my_custom_css() {
     echo '<style>
     #order_data .order_data_column ._billing_state_field{width:100%;}
@@ -987,32 +951,33 @@ function my_custom_css() {
 }
 
 add_filter('woocommerce_checkout_fields', 'custom_woocommerce_checkout_fields');
+
 function custom_woocommerce_checkout_fields($fields) {
     //unset($fields['billing']['billing_city']);
 
     $fields['billing']['billing_state'] = [
-        'type'     => 'text',
-        'label'    => 'Город',
+        'type' => 'text',
+        'label' => 'Город',
         'required' => true,
     ];
     $fields['billing']['billing_address_1'] = [
-        'type'     => 'text',
-        'label'    => 'Улица',
+        'type' => 'text',
+        'label' => 'Улица',
         'required' => (isset($_REQUEST['billing_delivery_point']) && $_REQUEST['billing_delivery_point'] ? false : true),
     ];
     $fields['billing']['billing_address_2'] = [
-        'type'     => 'text',
-        'label'    => 'Номер дома',
+        'type' => 'text',
+        'label' => 'Номер дома',
         'required' => (isset($_REQUEST['billing_delivery_point']) && $_REQUEST['billing_delivery_point'] ? false : true),
     ];
     $fields['billing']['billing_address_3'] = [
-        'type'     => 'text',
-        'label'    => 'Номер квартиры',
+        'type' => 'text',
+        'label' => 'Номер квартиры',
         'required' => false,
     ];
 
     $fields['billing']['billing_state_id'] = [
-        'type'     => 'hidden',
+        'type' => 'hidden',
         'required' => true
     ];
 
@@ -1020,6 +985,7 @@ function custom_woocommerce_checkout_fields($fields) {
 }
 
 add_action('woocommerce_checkout_update_order_review', 'custom_woocommerce_checkout_update_order_review');
+
 function custom_woocommerce_checkout_update_order_review() {
 
     $aPostData = [];
@@ -1033,9 +999,8 @@ function custom_woocommerce_checkout_update_order_review() {
 
     if ($aPostData) {
         if ($aSaveFields = array_intersect(
-            ['billing_state_id', 'billing_state', 'billing_address_1', 'billing_address_2', 'billing_address_3', 'billing_email', 'billing_city', 'billing_phone', 'billing_first_name', 'billing_last_name'],
-            array_keys($aPostData)
-        )
+                ['billing_state_id', 'billing_state', 'billing_address_1', 'billing_address_2', 'billing_address_3', 'billing_email', 'billing_city', 'billing_phone', 'billing_first_name', 'billing_last_name'], array_keys($aPostData)
+                )
         ) {
             if (is_user_logged_in()) {
                 foreach ($aSaveFields as $iFieldKey) {
@@ -1088,12 +1053,12 @@ function custom_woocommerce_after_calculate_totals($el) {
 
                     if (!$iRates) {
                         $data = [
-                            'result'    => 'success',
-                            'messages'  => '',
-                            'reload'    => 'false',
+                            'result' => 'success',
+                            'messages' => '',
+                            'reload' => 'false',
                             'fragments' => apply_filters('woocommerce_update_order_review_fragments', [
                                 '.woocommerce-checkout-review-order-table' => '<div class="woocommerce-checkout-review-order-table"><div style="padding-top:10px;margin-top:10px;border-top:1px solid;">' . wpautop('К сожалению, в данный город отгрузка идет в ручном режиме, для согласования способов оплаты / доставки, просим связаться с нами.') . '</div></div>',
-                                '.woocommerce-checkout-payment'            => '<div class="woocommerce-checkout-payment"></div>'
+                                '.woocommerce-checkout-payment' => '<div class="woocommerce-checkout-payment"></div>'
                             ])
                         ];
 
@@ -1110,6 +1075,7 @@ function custom_woocommerce_after_calculate_totals($el) {
 }
 
 add_filter('woocommerce_checkout_get_value', 'custom_woocommerce_checkout_get_value', 10, 2);
+
 function custom_woocommerce_checkout_get_value($val, $input) {
     if (in_array($input, ['billing_state_id', 'billing_state', 'billing_address_1', 'billing_address_2', 'billing_address_3', 'billing_email', 'billing_city', 'billing_phone', 'billing_first_name', 'billing_last_name'])) {
         if (is_user_logged_in()) {
@@ -1123,9 +1089,9 @@ function custom_woocommerce_checkout_get_value($val, $input) {
 
             $val = $aSettingsEdostavka['city_origin'];
         } else
-            if (!$val && in_array($input, ['billing_state'])) {
-                $val = 'Москва';
-            }
+        if (!$val && in_array($input, ['billing_state'])) {
+            $val = 'Москва';
+        }
     }
 
     return $val;
@@ -1133,6 +1099,7 @@ function custom_woocommerce_checkout_get_value($val, $input) {
 
 //Добавляем свой статус заказа
 add_filter('wc_order_statuses', 'custom_wc_order_statuses');
+
 function custom_wc_order_statuses($order_statuses) {
     $order_statuses['wc-export_to_cdek'] = 'Заказ выгружен в СДЭК';
     $order_statuses['wc-delete_from_cdek'] = 'Заказ удален из СДЭК';
@@ -1142,28 +1109,30 @@ function custom_wc_order_statuses($order_statuses) {
 
 //Добавляем свой статус заказа для вывода в списке
 add_action('init', 'register_order_status_export_to_cdek');
+
 function register_order_status_export_to_cdek() {
     register_post_status('wc-export_to_cdek', [
-        'label'                     => 'Заказ выгружен в СДЭК',
-        'public'                    => true,
-        'exclude_from_search'       => false,
-        'show_in_admin_all_list'    => true,
+        'label' => 'Заказ выгружен в СДЭК',
+        'public' => true,
+        'exclude_from_search' => false,
+        'show_in_admin_all_list' => true,
         'show_in_admin_status_list' => true,
-        'label_count'               => _n_noop('Выгружен в СДЭК <span class="count">(%s)</span>', 'Выгружены в СДЭК <span class="count">(%s)</span>')
+        'label_count' => _n_noop('Выгружен в СДЭК <span class="count">(%s)</span>', 'Выгружены в СДЭК <span class="count">(%s)</span>')
     ]);
 
     register_post_status('wc-delete_from_cdek', [
-        'label'                     => 'Заказ удален из СДЭК',
-        'public'                    => true,
-        'exclude_from_search'       => false,
-        'show_in_admin_all_list'    => true,
+        'label' => 'Заказ удален из СДЭК',
+        'public' => true,
+        'exclude_from_search' => false,
+        'show_in_admin_all_list' => true,
         'show_in_admin_status_list' => true,
-        'label_count'               => _n_noop('Удален из СДЭК <span class="count">(%s)</span>', 'Удалены из СДЭК <span class="count">(%s)</span>')
+        'label_count' => _n_noop('Удален из СДЭК <span class="count">(%s)</span>', 'Удалены из СДЭК <span class="count">(%s)</span>')
     ]);
 }
 
 //Добавляем действие в карточку заказа
 add_filter('woocommerce_order_actions', 'custom_woocommerce_order_actions');
+
 function custom_woocommerce_order_actions($actions) {
     $actions['export_to_cdek'] = 'Выгрузить в СДЭК';
     $actions['delete_from_cdek'] = 'Удалить заказ из СДЭК';
@@ -1172,8 +1141,9 @@ function custom_woocommerce_order_actions($actions) {
 }
 
 add_action('woocommerce_order_action_export_to_cdek', 'custom_woocommerce_order_action_export_to_cdek');
+
 function custom_woocommerce_order_action_export_to_cdek($order) {
-    
+
     if (is_numeric($order)) {
         $order = new WC_Order($order);
     }
@@ -1181,7 +1151,6 @@ function custom_woocommerce_order_action_export_to_cdek($order) {
     $aDeliveryMethod = $order->get_shipping_methods();
     $aDeliveryMethod = $aDeliveryMethod ? array_shift($aDeliveryMethod) : [];
     $iDeliveryMethod = isset($aDeliveryMethod['method_id']) ? explode('_', $aDeliveryMethod['method_id']) : ''; //['edostavka', 137]
-
     //error_log(print_r($aDeliveryMethod, 1));
     //error_log($order);
     //Выгрузка заказа в СДЭК
@@ -1200,7 +1169,6 @@ function custom_woocommerce_order_action_export_to_cdek($order) {
             //Формируем список товаров заказа для выгрузки
             $component = $api_cdek->loadComponent('orders');
             //error_log(print_r($component, 0));
-
             //Задаем номер выгрузки
             $component->setNumber('shop_' . date('Ymd', strtotime($order->order_date)) . '_' . str_pad($order->id, 10, 0, STR_PAD_LEFT));
 
@@ -1208,11 +1176,11 @@ function custom_woocommerce_order_action_export_to_cdek($order) {
             $aMetaDataOrder = get_post_meta($order->id);
             //Meta Delivery 
             $aDeliveryMethod = $order->get_shipping_methods();
-            
+
             //Стоимость доставки
             $DeliveryPayment = $aMetaDataOrder['_order_shipping'][0];
 
-            
+
             //Массив данных для передачи на выгрузку
             $aDataExport = [];
 
@@ -1236,12 +1204,11 @@ function custom_woocommerce_order_action_export_to_cdek($order) {
             $aDataExport['currency'] = $aMetaDataOrder['_order_currency'][0];
 
             //Адрес получателя
-            $aDataExport['address']['street']      = trim($aMetaDataOrder['_billing_address_1'][0]);
-            $aDataExport['address']['house']       = trim($aMetaDataOrder['_billing_address_2'][0]);
-            $aDataExport['address']['flat']        = trim($aMetaDataOrder['_billing_address_3'][0]);
-            
+            $aDataExport['address']['street'] = trim($aMetaDataOrder['_billing_address_1'][0]);
+            $aDataExport['address']['house'] = trim($aMetaDataOrder['_billing_address_2'][0]);
+            $aDataExport['address']['flat'] = trim($aMetaDataOrder['_billing_address_3'][0]);
+
             //$aDataExport['address']['address'] = trim($aMetaDataOrder['_billing_address_1'][0] . ' ' . $aMetaDataOrder['_billing_address_2'][0]);
-            
             //ИД пункта выдачи
             if (!empty($aMetaDataOrder['_billing_delivery_point'][0])) {
                 $aDataExport['address']['pvz_code'] = $aMetaDataOrder['_billing_delivery_point'][0];
@@ -1265,7 +1232,7 @@ function custom_woocommerce_order_action_export_to_cdek($order) {
                     $iCost = $item_data['line_total'] / $item_data['qty'];
 
                     $DeclaredSum += $item_data['line_total'];
-                                     
+
                     $_weight = wc_get_weight(str_replace(',', '.', $oProduct->weight), 'kg');
                     if (!$_weight) {
                         $_weight = $aSettingsEdostavka['minimum_weight'];
@@ -1276,12 +1243,12 @@ function custom_woocommerce_order_action_export_to_cdek($order) {
 
                     //Параметры отдельного товара
                     $aDataPackageExport['item'][] = [
-                        'comment'  => $item_data['name'],
+                        'comment' => $item_data['name'],
                         'ware_key' => $sSku ? $sSku : $oProduct->get_id(),
-                        'cost'     => $iCost,
-                        'payment'  => 0,//$iCost,
-                        'weight'   => $_weight,
-                        'amount'   => $item_data['qty']
+                        'cost' => $iCost,
+                        'payment' => 0, //$iCost,
+                        'weight' => $_weight,
+                        'amount' => $item_data['qty']
                     ];
 
                     //Габариты коробки
@@ -1300,19 +1267,19 @@ function custom_woocommerce_order_action_export_to_cdek($order) {
                     }
 
                     //Вес всех товаров
-                    $aDataPackageExport['size_a'] += ($_height/* * $item_data['qty']*/);
-                    $aDataPackageExport['size_b'] += ($_width/* * $item_data['qty']*/);
-                    $aDataPackageExport['size_c'] += ($_length/* * $item_data['qty']*/);
-                    $aDataPackageExport['weight'] += ($_weight/* * $item_data['qty']*/);
-                    
+                    $aDataPackageExport['size_a'] += ($_height/*                             * $item_data['qty'] */);
+                    $aDataPackageExport['size_b'] += ($_width/*                             * $item_data['qty'] */);
+                    $aDataPackageExport['size_c'] += ($_length/*                             * $item_data['qty'] */);
+                    $aDataPackageExport['weight'] += ($_weight/*                             * $item_data['qty'] */);
+
                     //Продукты для выгрузки в FullFillmment
                     $aProductItems[] = array(
-                        'id'            => $oProduct->get_id(),
-                        'sku'           => $sSku ? $sSku : 'пустой',
-                        'name'          => $item_data['name'],
-                        'price'         => $iCost,
-                        'qty'           => $item_data['qty'],
-                        'unit_code'     => $item_data['unit_code']
+                        'id' => $oProduct->get_id(),
+                        'sku' => $sSku ? $sSku : 'пустой',
+                        'name' => $item_data['name'],
+                        'price' => $iCost,
+                        'qty' => $item_data['qty'],
+                        'unit_code' => $item_data['unit_code']
                     );
                 }
             }
@@ -1324,13 +1291,13 @@ function custom_woocommerce_order_action_export_to_cdek($order) {
             //Добавляем данные в выгрузку
             $component->setOrders([$aDataExport]);
             //Отправляем данные на сервер сдэк
-           
+
             $response = $api_cdek->sendData($component);
             //(new WC_Logger())->add('cdek_integration', 'INFO: order_to_cdek|'.$order->id.'|' . print_r($response, 0));
-            $aOrderResponse = (array)$response->Order[0];
+            $aOrderResponse = (array) $response->Order[0];
 
             //die(var_dump($aOrderResponse,$component->getData()));
-            
+
             if (!isset($aOrderResponse["@attributes"]["ErrorCode"])) {
                 
             }
@@ -1339,85 +1306,85 @@ function custom_woocommerce_order_action_export_to_cdek($order) {
                 $logger = new WC_Logger();
 
                 if (isset($aOrderResponse["@attributes"]["ErrorCode"]) && $aOrderResponse["@attributes"]["ErrorCode"]) {
-                    $logger->add('cdek_integration', 'ERROR: order_to_cdek|'.$order->id.'|' . implode('|', $aOrderResponse["@attributes"]));
+                    $logger->add('cdek_integration', 'ERROR: order_to_cdek|' . $order->id . '|' . implode('|', $aOrderResponse["@attributes"]));
                 } else {
-                    $logger->add('cdek_integration', 'OK: order_to_cdek|'.$order->id.'|' . implode('|', $aOrderResponse["@attributes"]));
+                    $logger->add('cdek_integration', 'OK: order_to_cdek|' . $order->id . '|' . implode('|', $aOrderResponse["@attributes"]));
                 }
             }
-            
-            
-            //Если заказ выгружен в СДЭК, то выгружаем в FFillment
-            if ($aProductItems && ( ! isset($aOrderResponse["@attributes"]["ErrorCode"]) || $aOrderResponse["@attributes"]["ErrorCode"] == 'ERR_ORDER_DUBL_EXISTS')) {
-                
-                //Дополняем нужными полями
-                /*foreach ($aProductItems as $iKey => $aItem){
-                    //$FF_SkuExternalCode = get_field( "FF_SkuExternalCode", $aItem['id'] );
-                    $FF_Article = get_field( "FF_Article", $aItem['id'] );
-                    //$FF_UnitCode = get_field( "FF_UnitCode", $aItem['id'] );
-                    
-                    if ( ! $FF_Article){
-                        if (class_exists('WC_Logger')) {
-                            $logger = new WC_Logger();
 
-                            $logger->add('ffillment_integration', 'ERROR: EMPTY_FF_FIELD_FOR_PRODUCT|'.$aItem['id'].'|'.$order->id);
-                        }
-                        
-                        return FALSE;
-                        break;
-                    }
-                    
-                    //$aProductItems[$iKey]['SkuExternalCode'] = $FF_SkuExternalCode;
-                    $aProductItems[$iKey]['Article'] = $FF_Article;
-                    //$aProductItems[$iKey]['UnitCode'] = $FF_UnitCode;
-                }*/
-                
+
+            //Если заказ выгружен в СДЭК, то выгружаем в FFillment
+            if ($aProductItems && (!isset($aOrderResponse["@attributes"]["ErrorCode"]) || $aOrderResponse["@attributes"]["ErrorCode"] == 'ERR_ORDER_DUBL_EXISTS')) {
+
+                //Дополняем нужными полями
+                /* foreach ($aProductItems as $iKey => $aItem){
+                  //$FF_SkuExternalCode = get_field( "FF_SkuExternalCode", $aItem['id'] );
+                  $FF_Article = get_field( "FF_Article", $aItem['id'] );
+                  //$FF_UnitCode = get_field( "FF_UnitCode", $aItem['id'] );
+
+                  if ( ! $FF_Article){
+                  if (class_exists('WC_Logger')) {
+                  $logger = new WC_Logger();
+
+                  $logger->add('ffillment_integration', 'ERROR: EMPTY_FF_FIELD_FOR_PRODUCT|'.$aItem['id'].'|'.$order->id);
+                  }
+
+                  return FALSE;
+                  break;
+                  }
+
+                  //$aProductItems[$iKey]['SkuExternalCode'] = $FF_SkuExternalCode;
+                  $aProductItems[$iKey]['Article'] = $FF_Article;
+                  //$aProductItems[$iKey]['UnitCode'] = $FF_UnitCode;
+                  } */
+
                 $xml_post_string = '<?xml version="1.0" encoding="utf-8"?>
                     <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
                             <soap:Body>
                                     <ClientOrder_RequestDelivery xmlns="http://lkff.cdek.ru">
                                             <sid>24D1A468-A368-40DB-BB1F-BA47DE1A9D69</sid>
                                             <Sender></Sender>
-                                            <OrderDate>'.date('Y-m-d').'</OrderDate>
-                                            <OrderCode>'.$aDataExport['order_id'].'</OrderCode>
+                                            <OrderDate>' . date('Y-m-d') . '</OrderDate>
+                                            <OrderCode>' . $aDataExport['order_id'] . '</OrderCode>
                                             <OrderRPO></OrderRPO>
                                             <DeliveryType>9</DeliveryType>
                                             <DeliveryDate></DeliveryDate>
                                             <DeliveryHours></DeliveryHours>
-                                            <DeliveryTariff>'.($aDataExport['tariff_id']).'</DeliveryTariff>
+                                            <DeliveryTariff>' . ($aDataExport['tariff_id']) . '</DeliveryTariff>
                                             <DeliveryMode>0</DeliveryMode>
                                             <WarehouseCode>32</WarehouseCode>
                                             <CountryCode></CountryCode>
-                                            <POD>'.(isset($aMetaDataOrder['_billing_delivery_point'][0]) ? $aMetaDataOrder['_billing_delivery_point'][0] : '').'</POD>
-                                            <ShipmentAddress>'.($aDataExport['address']['street'] ? trim(trim($aDataExport['address']['street'] .', '. $aDataExport['address']['house'] .', '. $aDataExport['address']['flat']),',') : '').'</ShipmentAddress>
-                                            <Phones>'.$aDataExport['recipient_telephone'].'</Phones>
-                                            <Receiver>'.$aDataExport['recipient_name'].'</Receiver>
+                                            <POD>' . (isset($aMetaDataOrder['_billing_delivery_point'][0]) ? $aMetaDataOrder['_billing_delivery_point'][0] : '') . '</POD>
+                                            <ShipmentAddress>' . ($aDataExport['address']['street'] ? trim(trim($aDataExport['address']['street'] . ', ' . $aDataExport['address']['house'] . ', ' . $aDataExport['address']['flat']), ',') : '') . '</ShipmentAddress>
+                                            <Phones>' . $aDataExport['recipient_telephone'] . '</Phones>
+                                            <Receiver>' . $aDataExport['recipient_name'] . '</Receiver>
                                             <AOGUID></AOGUID>
                                             <ZipCode></ZipCode>
                                             <Subject></Subject>
-                                            <CityCode>'.$aDataExport['recipient_city_id'].'</CityCode>
-                                            <City>'.$aMetaDataOrder['_billing_state'][0].'</City>
+                                            <CityCode>' . $aDataExport['recipient_city_id'] . '</CityCode>
+                                            <City>' . $aMetaDataOrder['_billing_state'][0] . '</City>
                                             <Region></Region>
                                             <Town></Town>
-                                            <Street>'.$aDataExport['address']['street'].'</Street>
-                                            <House>'.$aDataExport['address']['house'].'</House>
-                                            <DeclaredSum>'.(/*$DeclaredSum*/'0').'</DeclaredSum>
-                                            <DeliveryPayment>'.(/*$DeliveryPayment*/'0').'</DeliveryPayment>
+                                            <Street>' . $aDataExport['address']['street'] . '</Street>
+                                            <House>' . $aDataExport['address']['house'] . '</House>
+                                            <DeclaredSum>' . (/* $DeclaredSum */'0') . '</DeclaredSum>
+                                            <DeliveryPayment>' . (/* $DeliveryPayment */'0') . '</DeliveryPayment>
                                             <SumToPay>0</SumToPay>
-                                            <tblcount>'.count($aProductItems).'</tblcount>
+                                            <tblcount>' . count($aProductItems) . '</tblcount>
                                             <Goods>';
-                
-                                            foreach ($aProductItems as $aItem){
-                                                $xml_post_string .= '<Goods>
+
+                foreach ($aProductItems as $aItem) {
+                    $xml_post_string .= '<Goods>
                                                     <Life>0</Life>
                                                     <ExternalCode></ExternalCode>
-                                                    <SkuExternalCode>p'.$aItem['id'].'</SkuExternalCode>
-                                                    <Article>'.$aItem['sku'].'</Article>
-                                                    <FullName>'.$aItem['name'].'</FullName>
+                                                    <SkuExternalCode>p' . $aItem['id'] . '</SkuExternalCode>
+                                                    <Article>' . $aItem['sku'] . '</Article>
+                                                    <FullName>' . $aItem['name'] . '</FullName>
                                                     <Color></Color>
                                                     <Size></Size>
                                                     <Variant></Variant>
                                                     <Season></Season>
-                                                    <Price>'.$aItem['price'].'</Price>
+                                                    <Price>' . $aItem['price'] . '</Price>
                                                     <MinQty>1</MinQty>
                                                     <PackQty>1</PackQty>
                                                     <BoxQty>1</BoxQty>
@@ -1430,25 +1397,25 @@ function custom_woocommerce_order_action_export_to_cdek($order) {
                                                     <Width>0</Width>
                                                     <Height>0</Height>
                                                     <UnitCode>784</UnitCode>
-                                                    <Qty>'.$aItem['qty'].'</Qty>
+                                                    <Qty>' . $aItem['qty'] . '</Qty>
                                                     <SerialNumber></SerialNumber>
                                                 </Goods>';
-                                            }
+                }
 
-                                            $xml_post_string .= '
+                $xml_post_string .= '
                                             </Goods>
                                     </ClientOrder_RequestDelivery>
                             </soap:Body>
                     </soap:Envelope>';
 
                 $headers = array(
-                        "Content-type: text/xml;charset=\"utf-8\"",
-                        "Accept: text/xml",
-                        "Cache-Control: no-cache",
-                        "Pragma: no-cache",
-                        "SOAPAction: http://lkff.cdek.ru/ClientOrder_RequestDelivery", 
-                        "Content-length: ".strlen($xml_post_string),
-                ); 
+                    "Content-type: text/xml;charset=\"utf-8\"",
+                    "Accept: text/xml",
+                    "Cache-Control: no-cache",
+                    "Pragma: no-cache",
+                    "SOAPAction: http://lkff.cdek.ru/ClientOrder_RequestDelivery",
+                    "Content-length: " . strlen($xml_post_string),
+                );
 
                 $ch = curl_init();
                 curl_setopt($ch, CURLOPT_URL, 'http://lkff.cdek.ru:8080/cdekfullfillment.asmx?op=ClientOrder_RequestDelivery');
@@ -1457,8 +1424,8 @@ function custom_woocommerce_order_action_export_to_cdek($order) {
                 curl_setopt($ch, CURLOPT_TIMEOUT, 20);
 
                 if (!empty($xml_post_string)) {
-                        curl_setopt($ch, CURLOPT_POST, 1);
-                        curl_setopt($ch, CURLOPT_POSTFIELDS, /*array('xml_request' => */$xml_post_string/*)*/);
+                    curl_setopt($ch, CURLOPT_POST, 1);
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, /* array('xml_request' => */ $xml_post_string/* ) */);
                 }
                 curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
@@ -1470,21 +1437,21 @@ function custom_woocommerce_order_action_export_to_cdek($order) {
                 $xml = simplexml_load_string($clean_xml);
 
                 $iOrderID = '';
-                if (isset($xml->Body->ClientOrder_RequestDeliveryResponse->ClientOrder_RequestDeliveryResult->OrderID) && (string)$xml->Body->ClientOrder_RequestDeliveryResponse->ClientOrder_RequestDeliveryResult->OrderID){
-                    $iOrderID = (string)$xml->Body->ClientOrder_RequestDeliveryResponse->ClientOrder_RequestDeliveryResult->OrderID;
+                if (isset($xml->Body->ClientOrder_RequestDeliveryResponse->ClientOrder_RequestDeliveryResult->OrderID) && (string) $xml->Body->ClientOrder_RequestDeliveryResponse->ClientOrder_RequestDeliveryResult->OrderID) {
+                    $iOrderID = (string) $xml->Body->ClientOrder_RequestDeliveryResponse->ClientOrder_RequestDeliveryResult->OrderID;
                 }
-                
+
                 if (class_exists('WC_Logger')) {
                     $logger = new WC_Logger();
 
-                    if (isset($xml->Body->ClientOrder_RequestDeliveryResponse->ClientOrder_RequestDeliveryResult->ErrorCode) && (string)$xml->Body->ClientOrder_RequestDeliveryResponse->ClientOrder_RequestDeliveryResult->ErrorCode) {
-                        $logger->add('ffillment_integration', 'ERROR: '.$order->id.'|' . (string)$xml->Body->ClientOrder_RequestDeliveryResponse->ClientOrder_RequestDeliveryResult->ErrorCode);
+                    if (isset($xml->Body->ClientOrder_RequestDeliveryResponse->ClientOrder_RequestDeliveryResult->ErrorCode) && (string) $xml->Body->ClientOrder_RequestDeliveryResponse->ClientOrder_RequestDeliveryResult->ErrorCode) {
+                        $logger->add('ffillment_integration', 'ERROR: ' . $order->id . '|' . (string) $xml->Body->ClientOrder_RequestDeliveryResponse->ClientOrder_RequestDeliveryResult->ErrorCode);
                     } else {
-                        $logger->add('ffillment_integration', 'OK: '.$order->id.'|' . $iOrderID);
+                        $logger->add('ffillment_integration', 'OK: ' . $order->id . '|' . $iOrderID);
                     }
                 }
-                
-                if ($iOrderID){
+
+                if ($iOrderID) {
                     $order->update_status('wc-export_to_cdek');
                 }
             }
@@ -1495,6 +1462,7 @@ function custom_woocommerce_order_action_export_to_cdek($order) {
 }
 
 add_action('woocommerce_order_action_delete_from_cdek', 'custom_woocommerce_order_action_delete_from_cdek');
+
 function custom_woocommerce_order_action_delete_from_cdek($order) {
     if (is_numeric($order)) {
         $order = new WC_Order($order);
@@ -1513,7 +1481,7 @@ function custom_woocommerce_order_action_delete_from_cdek($order) {
 
     //Отправляем данные на сервер сдэк
     $response = $api_cdek->sendData($component);
-    $aOrderResponse = (array)$response->Order[0];
+    $aOrderResponse = (array) $response->Order[0];
 
     if (!isset($aOrderResponse["@attributes"]["ErrorCode"])) {
         $order->update_status('wc-delete_from_cdek');
@@ -1528,28 +1496,30 @@ function custom_woocommerce_order_action_delete_from_cdek($order) {
             $logger->add('cdek_integration', 'OK: order_delete_from_cdek|' . $iOrderIdCDEK . '|' . implode('|', $aOrderResponse["@attributes"]) . "\r\n");
         }
     }
-    
+
     return true;
 }
 
 //Добавляем действие в список заказов
 add_action('admin_footer-edit.php', 'custom_bulk_admin_footer');
+
 function custom_bulk_admin_footer() {
 
     global $post_type;
 
     if ($post_type == 'shop_order') {
         ?>
-      <script type="text/javascript">
-		  jQuery(document).ready(function () {
-			  jQuery('<option>').val('export_to_cdek').text('Выгрузить в СДЭК').appendTo("select[name='action']");
-		  });
-      </script>
+        <script type="text/javascript">
+            jQuery(document).ready(function () {
+                jQuery('<option>').val('export_to_cdek').text('Выгрузить в СДЭК').appendTo("select[name='action']");
+            });
+        </script>
         <?php
     }
 }
 
 add_action('load-edit.php', 'custom_bulk_action');
+
 function custom_bulk_action() {
 
     $post_ids = $_REQUEST['post'];
@@ -1577,11 +1547,12 @@ function custom_bulk_action() {
 
 //Добавляем действие в список как кнопку в действиях у заказа
 add_filter('woocommerce_admin_order_actions', 'custom_woocommerce_admin_order_actions', 10, 2);
+
 function custom_woocommerce_admin_order_actions($actions, $the_order) {
     if (!$the_order->has_status(['export_to_cdek', 'completed', 'cancelled', 'refunded', 'failed'])) {
         $actions['export_to_cdek'] = [
-            'url'    => admin_url('admin-ajax.php?action=export_to_cdek&paged=' . (int)$_REQUEST['paged'] . '&order_id=' . $the_order->id),
-            'name'   => 'В СДЭК',
+            'url' => admin_url('admin-ajax.php?action=export_to_cdek&paged=' . (int) $_REQUEST['paged'] . '&order_id=' . $the_order->id),
+            'name' => 'В СДЭК',
             'action' => "export_to_cdek"
         ];
     }
@@ -1592,16 +1563,17 @@ function custom_woocommerce_admin_order_actions($actions, $the_order) {
 //Обработка нажатия кнопки
 add_action('wp_ajax_export_to_cdek', 'ajax_export_to_cdek');
 add_action('wp_ajax_nopriv_export_to_cdek', 'ajax_export_to_cdek');
+
 function ajax_export_to_cdek() {
     if (isset($_REQUEST['order_id']) && $_REQUEST['order_id']) {
-        $paged = (int)$_REQUEST['paged'];
+        $paged = (int) $_REQUEST['paged'];
         if (!$paged) {
             $paged = 1;
         }
 
         custom_woocommerce_order_action_export_to_cdek($_REQUEST['order_id']);
 
-        wp_redirect(admin_url('edit.php?post_type=shop_order&paged=' . (int)$_REQUEST['paged']));
+        wp_redirect(admin_url('edit.php?post_type=shop_order&paged=' . (int) $_REQUEST['paged']));
         exit;
     }
 }
@@ -1628,6 +1600,7 @@ function woo_cart_total_no_virtual_product() {
 
 //Добавить надбавки к стоимости заказа
 add_action('woocommerce_cart_calculate_fees', 'woocommerce_custom_surcharge');
+
 function woocommerce_custom_surcharge() {
     global $woocommerce;
 
@@ -1647,6 +1620,7 @@ function woocommerce_custom_surcharge() {
 
 //скрыть поля если в корзине только вирт товары
 add_filter('woocommerce_checkout_fields', 'woo_remove_billing_checkout_fields', 100, 1);
+
 function woo_remove_billing_checkout_fields($fields) {
     if (woo_cart_has_virtual_product() == true) {
         unset($fields['billing']['billing_state_id']);
@@ -1715,9 +1689,9 @@ function getAccessToProduct($product_id) {
 
     $result = false;
 
-    /*if (is_super_admin()){
+    /* if (is_super_admin()){
       $result = true;
-    }*/
+      } */
 
     //Продукт не доступен для покупки и просмотра текущему типо пользователя
     if (!$result) {
@@ -1777,17 +1751,18 @@ function getWebinarId($product_id) {
 }
 
 add_action('template_redirect', 'wpse12535_redirect_sample');
+
 function wpse12535_redirect_sample() {
     if (!is_admin()) {
         $aData = parse_url($_SERVER['REQUEST_URI']);
-        $product_id = isset($_REQUEST['pid']) ? (int)$_REQUEST['pid'] : null;
-        $order_id = isset($_REQUEST['oid']) ? (int)$_REQUEST['oid'] : null;
+        $product_id = isset($_REQUEST['pid']) ? (int) $_REQUEST['pid'] : null;
+        $order_id = isset($_REQUEST['oid']) ? (int) $_REQUEST['oid'] : null;
         if (trim($aData['path'], '/') == 'current-webinar' && $_REQUEST['id'] && getWebinarId($_REQUEST['id'])) {
             exit(wp_redirect(get_post_permalink($_REQUEST['id'])));
         } else if (trim($aData['path'], '/') == 'my-account' && ($product_id || $order_id)) {
             $current_user = wp_get_current_user();
 
-            if ((int)$current_user->ID > 0) {
+            if ((int) $current_user->ID > 0) {
                 if ($product_id) {
                     $product = wc_get_product($product_id);
                     if ($product && $product->post->post_type == 'product') {
@@ -1796,8 +1771,8 @@ function wpse12535_redirect_sample() {
                             if (!wc_customer_bought_product($current_user->user_email, $current_user->ID, $product_id)) { //Check order exist
                                 $address = [
                                     'first_name' => $current_user->user_firstname,
-                                    'last_name'  => $current_user->user_lastname,
-                                    'email'      => $current_user->user_email,
+                                    'last_name' => $current_user->user_lastname,
+                                    'email' => $current_user->user_email,
                                 ];
 
                                 $order = wc_create_order(['customer_id' => $current_user->ID]);
@@ -1895,30 +1870,26 @@ function grant_permission_to_payed_files($user, $product, $order_id) {
 }
 
 add_filter('woocommerce_loop_add_to_cart_link', 'custom_woocommerce_loop_add_to_cart_link', 10, 2);
+
 function custom_woocommerce_loop_add_to_cart_link($val, $product) {
 
     $access = getAccessToProduct($product->id);
 
     $user_access = get_post_meta($product->id, 'access', TRUE);
-    if (($access) || (!$product->price) || (current_user_can('vip') && in_array($user_access, [1, 3]))/* || (is_super_admin())*/) {
-        return sprintf('<a rel="nofollow" href="%s" class="%s">Смотреть</a>',
-            esc_url(get_the_permalink($product->id)),
-            esc_attr(isset($class) ? $class : 'button'),
-            esc_html($product->add_to_cart_text())
-        );
-    } else
-        if ($access === 0) {
-            return 'доступно только для Ближний Круг';
+    if (($access) || (!$product->price) || (current_user_can('vip') && in_array($user_access, [1, 3]))/* || (is_super_admin()) */) {
+        if (!$product->is_virtual()) {
+            return $val;
         } else {
-            return sprintf('<a rel="nofollow" href="%s" data-quantity="%s" data-product_id="%s" data-product_sku="%s" class="%s">%s</a>',
-                esc_url($product->add_to_cart_url()),
-                esc_attr(isset($quantity) ? $quantity : 1),
-                esc_attr($product->id),
-                esc_attr($product->get_sku()),
-                esc_attr(isset($class) ? $class : 'button'),
-                esc_html($product->add_to_cart_text())
+            return sprintf('<a rel="nofollow" href="%s" class="%s">Смотреть</a>', esc_url(get_the_permalink($product->id)), esc_attr(isset($class) ? $class : 'button'), esc_html($product->add_to_cart_text())
             );
         }
+    } else
+    if ($access === 0) {
+        return 'доступно только для Ближний Круг';
+    } else {
+        return sprintf('<a rel="nofollow" href="%s" data-quantity="%s" data-product_id="%s" data-product_sku="%s" class="%s">%s</a>', esc_url($product->add_to_cart_url()), esc_attr(isset($quantity) ? $quantity : 1), esc_attr($product->id), esc_attr($product->get_sku()), esc_attr(isset($class) ? $class : 'button'), esc_html($product->add_to_cart_text())
+        );
+    }
 }
 
 function getLinkAutologinToRoom($product_id, $qty = 1) {
@@ -1928,7 +1899,7 @@ function getLinkAutologinToRoom($product_id, $qty = 1) {
         return false;
     }
 
-    $qty = (int)$qty;
+    $qty = (int) $qty;
 
     $oProduct = wc_get_product($product_id);
     $webinar_room_id = get_post_meta($product_id, 'webinar_room_id', TRUE);
@@ -1950,37 +1921,37 @@ function getLinkAutologinToRoom($product_id, $qty = 1) {
             //бесплатный
             case 1:
                 $client->conferenceAutologinHash($webinar_room_id, [
-                    'email'    => $current_user->user_email,
+                    'email' => $current_user->user_email,
                     //'nickname' => $current_user->user_login,
-                    'nickname' => trim($current_user->user_firstname.' '.$current_user->user_lastname),
-                    'role'     => 'listener'
+                    'nickname' => trim($current_user->user_firstname . ' ' . $current_user->user_lastname),
+                    'role' => 'listener'
                 ]);
 
                 $aLinks[] = $room_url . $oAutoLogin->autologin_hash;
                 break;
 
             //с паролем
-            /*case 2:
+            /* case 2:
               $client->conferenceAutologinHash($webinar_room_id, array(
-                'email' 	=> 'test@mail.ru',
-                'nickname' 	=> 'pavel',
-                'role' 		=> 'listener'
+              'email' 	=> 'test@mail.ru',
+              'nickname' 	=> 'pavel',
+              'role' 		=> 'listener'
               ));
 
               $aLinks[] = $room_url . $oAutoLogin->autologin_hash;
-            break;*/
+              break; */
 
             //с токеном
             case 3:
                 $aLinksOld = $aLinks = array();
-                
-                $iRevisionPost = (int)get_post_meta($product_id, 'webinar_room_id_rev', true);
-                $iRevisionUser = (int)get_user_meta($current_user->ID, "post_{$product_id}_webinar_room_id_rev", true);
-                
-                if ($iRevisionPost == $iRevisionUser){
+
+                $iRevisionPost = (int) get_post_meta($product_id, 'webinar_room_id_rev', true);
+                $iRevisionUser = (int) get_user_meta($current_user->ID, "post_{$product_id}_webinar_room_id_rev", true);
+
+                if ($iRevisionPost == $iRevisionUser) {
                     $aLinksOld = $aLinks = get_user_meta($current_user->ID, 'webinar_links_' . $product_id, true);
                 }
-                
+
                 $qtyOld = $qty;
 
                 $qty -= is_array($aLinks) ? count($aLinks) : 0;
@@ -1991,11 +1962,11 @@ function getLinkAutologinToRoom($product_id, $qty = 1) {
                             $sPostfix = ($qtyOld > 1 || ($key != 0 && !count($aLinksOld))) ? '_' . ((count($aLinksOld)) + $key + 1) : '';
 
                             $oAutoLogin = $client->conferenceAutologinHash($webinar_room_id, [
-                                'email'    => $current_user->user_email,
+                                'email' => $current_user->user_email,
                                 //'nickname' => $sPrefix . $current_user->user_login,
-                                'nickname' => trim($current_user->user_firstname.' '.$current_user->user_lastname) . $sPostfix,
-                                //'role' 		=> 'listener',
-                                'token'    => $oToken->token
+                                'nickname' => trim($current_user->user_firstname . ' ' . $current_user->user_lastname) . $sPostfix,
+                                //'role'    => 'listener',
+                                'token' => $oToken->token
                             ]);
 
                             $aLinks[] = $room_url . $oAutoLogin->autologin_hash;
@@ -2010,11 +1981,11 @@ function getLinkAutologinToRoom($product_id, $qty = 1) {
                 if ($aLinks) {
                     $aLinks = array_slice($aLinks, 0, $qtyOld);
                 }
-                
-                if ($iRevisionPost != $iRevisionUser){
-                    update_user_meta( $current_user->ID, "post_{$product_id}_webinar_room_id_rev", $iRevisionPost );
+
+                if ($iRevisionPost != $iRevisionUser) {
+                    update_user_meta($current_user->ID, "post_{$product_id}_webinar_room_id_rev", $iRevisionPost);
                 }
-                
+
                 break;
         }
     } catch (Exception $e) {
@@ -2025,11 +1996,12 @@ function getLinkAutologinToRoom($product_id, $qty = 1) {
 }
 
 add_filter('woocommerce_is_purchasable', 'custom_woocommerce_is_purchasable', 10, 2);
+
 function custom_woocommerce_is_purchasable($purchasable, $product) {
     if (!is_admin()) {
         $access = getAccessToProduct($product->get_id());
         $user_access = get_post_meta($product->get_id(), 'access', TRUE);
-        if (($access === 0) || (current_user_can('vip') && in_array($user_access, [1, 3]))/* || (is_super_admin())*/) {
+        if (($access === 0) || (current_user_can('vip') && in_array($user_access, [1, 3]))/* || (is_super_admin()) */) {
             $purchasable = false;
         }
     }
@@ -2038,12 +2010,13 @@ function custom_woocommerce_is_purchasable($purchasable, $product) {
 }
 
 add_filter('woocommerce_get_price_html', 'custom_woocommerce_get_price_html', 10, 2);
+
 function custom_woocommerce_get_price_html($price, $product) {
     if (!is_admin()) {
         $access = getAccessToProduct($product->get_id());
         $user_access = get_post_meta($product->get_id(), 'access', TRUE);
-        if (/*($user_access === 0) || */
-        (current_user_can('vip') && in_array($user_access, [1, 3]))/* || (is_super_admin())*/
+        if (/* ($user_access === 0) || */
+                (current_user_can('vip') && in_array($user_access, [1, 3]))/* || (is_super_admin()) */
         ) {
             $price = __('Free!', 'woocommerce');
         }
@@ -2055,6 +2028,7 @@ function custom_woocommerce_get_price_html($price, $product) {
 //Файлы к бесплатным товарам даже на которые нет заказов
 remove_all_filters('tanhit_free_download_products');
 add_action('tanhit_free_download_products', 'custom_tanhit_free_download_products');
+
 function custom_tanhit_free_download_products() {
 
     global $tanhit_customer_products;
@@ -2064,14 +2038,14 @@ function custom_tanhit_free_download_products() {
     $disable_file_online_show = ['.zip', '.rar', '.pdf'];
 
     $args = [
-        'post_type'      => 'product',
+        'post_type' => 'product',
         'posts_per_page' => -1,
-        'post_status'    => 'publish',
-        'tax_query'      => [
+        'post_status' => 'publish',
+        'tax_query' => [
             [
                 'taxonomy' => 'product_cat',
-                'field'    => 'slug',
-                'terms'    => ['webinar', 'practice'],
+                'field' => 'slug',
+                'terms' => ['webinar', 'practice'],
             ]
         ],
     ];
@@ -2105,29 +2079,29 @@ function custom_tanhit_free_download_products() {
         $free_products[] = $pr;
     }
 
-    foreach ($free_products as $product){
+    foreach ($free_products as $product) {
 
         $downloads = $product->get_files();
 
         /**
          * for download @see 'init' action in tanhit-functions.php
          */
-        foreach ($downloads as $key => $download){?>
-          <li data-product="<?php echo $product->id; ?>">
-            <span class="item-preview"
-                  style="display: inline-block; overflow: hidden"><?php echo $product->get_image(); ?></span>
-            <a href="<?php echo get_the_permalink($product->id); ?>"
-               class="item-link vid-link" target="_blank"><?php echo $product->post->post_title; ?></a>
-            <span class="file-name"><?php echo $download['name']; ?></span>
-            
+        foreach ($downloads as $key => $download) {
+            ?>
+            <li data-product="<?php echo $product->id; ?>">
+                <span class="item-preview"
+                      style="display: inline-block; overflow: hidden"><?php echo $product->get_image(); ?></span>
+                <a href="<?php echo get_the_permalink($product->id); ?>"
+                   class="item-link vid-link" target="_blank"><?php echo $product->post->post_title; ?></a>
+                <span class="file-name"><?php echo $download['name']; ?></span>
+
             <?php
-            
             $youtube = false;
             if (getYotubeDownLink($download['file'])) {
                 $youtube = $download['file'];
             }
 
-            if (!empty($download['file']) && !$youtube){
+            if (!empty($download['file']) && !$youtube) {
                 /**
                  * Check for disabled file for online show
                  */
@@ -2141,73 +2115,75 @@ function custom_tanhit_free_download_products() {
                 if (!$disabled) {
                     $link = getVideoFileByKey($product->id, $key);
                     ?>
-            
+
+                        <a href="#vid<?php echo $product->id . "-" . $key; ?>" class="show-video btn-show">
+                    <?php pll_e('Онлайн-просмотр', 'tanhit'); ?>
+                        </a>
+
+                        <div style="display:none;" class="show_vid" id="vid<?php echo $product->id . "-" . $key; ?>" data-src="<?= $link; ?>">
+                            <div class="vid_player vid_player2">2
+                    <?= (getPlayerForm($link)) ?>
+                            </div>
+                        </div>
+                    <? } else { ?>
+                        <a href="<?php echo home_url() . '/?tanhit_download=true&product=' . $product->id . '&key=' . $key; ?>"
+                           class="btn-download"><?php pll_e('Скачать', 'tanhit'); ?>
+                        </a>
+                    <? } ?>
+                <? } elseif ($youtube) { ?>
                     <a href="#vid<?php echo $product->id . "-" . $key; ?>" class="show-video btn-show">
-                        <?php pll_e('Онлайн-просмотр', 'tanhit'); ?>
+                    <?php pll_e('Онлайн-просмотр', 'tanhit'); ?>
                     </a>
 
-                    <div style="display:none;" class="show_vid" id="vid<?php echo $product->id . "-" . $key; ?>" data-src="<?= $link; ?>">
-                        <div class="vid_player vid_player2">2
-                            <?= (getPlayerForm($link)) ?>
+                    <div style="display:none;" class="show_vid" id="vid<?php echo $product->id . "-" . $key; ?>"
+                         data-src="<?= $youtube; ?>">
+                        <div class="vid_player vid_player2">
+                    <?= (getPlayerForm($youtube)) ?>
                         </div>
                     </div>
-                <?}else{?>
-                    <a href="<?php echo home_url() . '/?tanhit_download=true&product=' . $product->id . '&key=' . $key; ?>"
-                        class="btn-download"><?php pll_e('Скачать', 'tanhit'); ?>
-                     </a>
-                <?}?>
-              <?}elseif ($youtube){?>
-                <a href="#vid<?php echo $product->id . "-" . $key; ?>" class="show-video btn-show">
-                    <?php pll_e('Онлайн-просмотр', 'tanhit'); ?>
-                </a>
-
-                <div style="display:none;" class="show_vid" id="vid<?php echo $product->id . "-" . $key; ?>"
-                     data-src="<?= $youtube; ?>">
-                  <div class="vid_player vid_player2">
-                      <?= (getPlayerForm($youtube)) ?>
-                  </div>
-                </div>
-              <?}?>
-          </li>
-        <?}
-    }
-}
-
-//Файлы к товарам которые заказаны
-remove_all_filters('woocommerce_available_download_start');
-add_action('woocommerce_available_download_start', 'custom_woocommerce_available_download_start');
-function custom_woocommerce_available_download_start($download) {
-    global $tanhit_customer_products;
-
-    $product = [];
-
-    foreach ($tanhit_customer_products as $pr) {
-        //echo "***{$download['product_id']}***";
-        if ($pr['product_id'] == $download['product_id']) {
-            $product[$download['product_id']] = $pr;
-            break;
+                <? } ?>
+            </li>
+            <?
+            }
         }
     }
 
-    //Для данных файлов, показывать ссылку на скачивание а не онлайн просмотр
-    $disable_file_online_show = ['.zip', '.rar', '.pdf'];
+//Файлы к товарам которые заказаны
+    remove_all_filters('woocommerce_available_download_start');
+    add_action('woocommerce_available_download_start', 'custom_woocommerce_available_download_start');
 
-    $youtube = false;
-    if (getYotubeDownLink($download['file']['file'])) {
-        $youtube = $download['file']['file'];
-    }
-    ?>
+    function custom_woocommerce_available_download_start($download) {
+        global $tanhit_customer_products;
+
+        $product = [];
+
+        foreach ($tanhit_customer_products as $pr) {
+            //echo "***{$download['product_id']}***";
+            if ($pr['product_id'] == $download['product_id']) {
+                $product[$download['product_id']] = $pr;
+                break;
+            }
+        }
+
+        //Для данных файлов, показывать ссылку на скачивание а не онлайн просмотр
+        $disable_file_online_show = ['.zip', '.rar', '.pdf'];
+
+        $youtube = false;
+        if (getYotubeDownLink($download['file']['file'])) {
+            $youtube = $download['file']['file'];
+        }
+        ?>
 
     <span class="item-preview" style=""><?php echo tanhit_get_product_thumbnail($download['product_id']); ?></span>
 
     <a href="<?php echo $product[$download['product_id']]['permalink']; ?>" class="item-link vid-link" target="_blank">
-        <?php echo $product[$download['product_id']]['product_name']; ?>
+    <?php echo $product[$download['product_id']]['product_name']; ?>
     </a>
 
-    <span class="file-name"><?php /* pll_e( 'Файл:', 'tanhit' );*/echo $download['file']['name']; ?></span>
+    <span class="file-name"><?php /* pll_e( 'Файл:', 'tanhit' ); */echo $download['file']['name']; ?></span>
 
     <?php
-    if ( ! empty($download['file']['file']) && ! $youtube){
+    if (!empty($download['file']['file']) && !$youtube) {
         $disabled = false;
         foreach ($disable_file_online_show as $piece) {
             if (false !== strpos($download['file']['file'], $piece)) {
@@ -2218,55 +2194,58 @@ function custom_woocommerce_available_download_start($download) {
         if (!$disabled) {
             $link = getVideoFile($download['file']['file']);
             ?>
-          <a href="#vid<?php echo md5($download['file']['file']); ?>" class="show-video btn-show">
-              <?php pll_e('Онлайн-просмотр', 'tanhit'); ?>
-          </a>
-
-
-          <div style="display:none;" class="show_vid" id="vid<?php echo md5($download['file']['file']); ?>"
-               data-src="<?= $link; ?>">
-            <div class="vid_player vid_player2">
-                <?php/* echo do_shortcode("[wpm_video video=".getVideoFile($download['file']['file'])." ratio=16by9 autoplay=off]"); */ ?>
-                <?= (getPlayerForm($link)) ?>
-            </div>
-          </div>
-        <?}else{?>
-            <a href="<?php echo esc_url($download['download_url']); ?>"
-                class="btn-download"><?php pll_e('Скачать', 'tanhit'); ?>
-            </a>
-        <?}
-    }elseif ($youtube) {?>
-        <a href="#vid<?php echo md5($download['file']['file']); ?>" class="show-video btn-show">
+            <a href="#vid<?php echo md5($download['file']['file']); ?>" class="show-video btn-show">
             <?php pll_e('Онлайн-просмотр', 'tanhit'); ?>
+            </a>
+
+
+            <div style="display:none;" class="show_vid" id="vid<?php echo md5($download['file']['file']); ?>"
+                 data-src="<?= $link; ?>">
+                <div class="vid_player vid_player2">
+            <?php /* echo do_shortcode("[wpm_video video=".getVideoFile($download['file']['file'])." ratio=16by9 autoplay=off]"); */ ?>
+            <?= (getPlayerForm($link)) ?>
+                </div>
+            </div>
+        <? } else { ?>
+            <a href="<?php echo esc_url($download['download_url']); ?>"
+               class="btn-download"><?php pll_e('Скачать', 'tanhit'); ?>
+            </a>
+        <? }
+    } elseif ($youtube) {
+        ?>
+        <a href="#vid<?php echo md5($download['file']['file']); ?>" class="show-video btn-show">
+        <?php pll_e('Онлайн-просмотр', 'tanhit'); ?>
         </a>
 
         <div style="display:none;" class="show_vid" id="vid<?php echo md5($download['file']['file']); ?>" data-src="<?= $youtube; ?>">
             <div class="vid_player vid_player2">
-                <?= (getPlayerForm($youtube)) ?>
+        <?= (getPlayerForm($youtube)) ?>
             </div>
         </div>
-    <?}
-}
+        <?
+        }
+    }
 
 //Фильтруем ссылки в письме, выполненного заказа
-add_filter('woocommerce_get_item_downloads', 'custom_woocommerce_get_item_downloads', 99, 3);
-function custom_woocommerce_get_item_downloads($files, $item, $el) {
+    add_filter('woocommerce_get_item_downloads', 'custom_woocommerce_get_item_downloads', 99, 3);
 
-    if (!is_admin()) {
-        $aData = parse_url($_SERVER['REQUEST_URI']);
-        if (trim($aData['path'], '/') != 'my-account') {
-            global $wpdb;
+    function custom_woocommerce_get_item_downloads($files, $item, $el) {
 
-            $product_id = $item['variation_id'] > 0 ? $item['variation_id'] : $item['product_id'];
-            $product = wc_get_product($product_id);
-            if (!$product) {
-                /**
-                 * $product can be `false`. Example: checking an old order, when a product or variation has been deleted.
-                 * @see \WC_Product_Factory::get_product
-                 */
-                return [];
-            }
-            $download_ids = $wpdb->get_col($wpdb->prepare("
+        if (!is_admin()) {
+            $aData = parse_url($_SERVER['REQUEST_URI']);
+            if (trim($aData['path'], '/') != 'my-account') {
+                global $wpdb;
+
+                $product_id = $item['variation_id'] > 0 ? $item['variation_id'] : $item['product_id'];
+                $product = wc_get_product($product_id);
+                if (!$product) {
+                    /**
+                     * $product can be `false`. Example: checking an old order, when a product or variation has been deleted.
+                     * @see \WC_Product_Factory::get_product
+                     */
+                    return [];
+                }
+                $download_ids = $wpdb->get_col($wpdb->prepare("
 				SELECT download_id
 				FROM {$wpdb->prefix}woocommerce_downloadable_product_permissions
 				WHERE user_email = %s
@@ -2275,165 +2254,167 @@ function custom_woocommerce_get_item_downloads($files, $item, $el) {
 				ORDER BY permission_id
 			", $this->billing_email, $this->order_key, $product_id));
 
-            $files = [];
-            foreach ($download_ids as $download_id) {
-                if ($product->has_file($download_id)) {
-                    $temp = $product->get_file($download_id);
-                    if (!getYotubeDownLink($temp['file'])) {
-                        $files[$download_id] = $temp;
-                        $files[$download_id]['download_url'] = $this->get_download_url($product_id, $download_id);
+                $files = [];
+                foreach ($download_ids as $download_id) {
+                    if ($product->has_file($download_id)) {
+                        $temp = $product->get_file($download_id);
+                        if (!getYotubeDownLink($temp['file'])) {
+                            $files[$download_id] = $temp;
+                            $files[$download_id]['download_url'] = $this->get_download_url($product_id, $download_id);
+                        }
                     }
                 }
             }
         }
+
+        return $files;
     }
 
-    return $files;
-}
-
 //получаем ссылку на видео файл
-function getYotubeDownLink($link) {
+    function getYotubeDownLink($link) {
 
-    $video_id = '';
+        $video_id = '';
 
-    if (false !== mb_strpos($link, 'youtu.be', 1, 'UTF-8')) {
-        $video_id = ltrim(mb_substr($link, 16, 1000, 'UTF-8'), '/');
-    } else
+        if (false !== mb_strpos($link, 'youtu.be', 1, 'UTF-8')) {
+            $video_id = ltrim(mb_substr($link, 16, 1000, 'UTF-8'), '/');
+        } else
         if (false !== mb_strpos($link, 'youtube.com', 1, 'UTF-8')) {
             $video_id = mb_substr($link, 31, 1000, 'UTF-8');
         }
 
-    if ($video_id) {
-        return true;
-    }
-
-    return false;
-
-    $res = '';
-    if ($video_id) {
-        $data = file_get_contents("https://www.youtube.com/get_video_info?video_id=$video_id");
-        parse_str($data);
-
-        $arr = explode(",", $url_encoded_fmt_stream_map);
-
-        foreach ($arr as $key => $item) {
-            parse_str($item, $aItem);
-
-            $aVideos[$aItem['itag']] = $aItem;
+        if ($video_id) {
+            return true;
         }
 
-        if ($aVideos) {
-            ksort($aVideos);
+        return false;
 
-            $aItem = array_pop($aVideos);
-            $res = $aItem['url'];
+        $res = '';
+        if ($video_id) {
+            $data = file_get_contents("https://www.youtube.com/get_video_info?video_id=$video_id");
+            parse_str($data);
+
+            $arr = explode(",", $url_encoded_fmt_stream_map);
+
+            foreach ($arr as $key => $item) {
+                parse_str($item, $aItem);
+
+                $aVideos[$aItem['itag']] = $aItem;
+            }
+
+            if ($aVideos) {
+                ksort($aVideos);
+
+                $aItem = array_pop($aVideos);
+                $res = $aItem['url'];
+            }
         }
+
+        return $res;
     }
 
-    return $res;
-}
+    function getVideoFile($file) {
 
-function getVideoFile($file) {
+        return $file;
+    }
 
-    return $file;
-}
+    function getVideoFileByKey($product_id, $key) {
+        $pr = wc_get_product($product_id);
+        $files = $pr->get_files();
 
-function getVideoFileByKey($product_id, $key) {
-    $pr = wc_get_product($product_id);
-    $files = $pr->get_files();
+        $file = $files[$key]['file'];
 
-    $file = $files[$key]['file'];
+        return $file;
+    }
 
-    return $file;
-}
+    function getPlayerForm($file) {
 
-function getPlayerForm($file) {
+        $videoUrl = parse_url($file);
+        $source_html = '';
+        $data = '';
 
-    $videoUrl = parse_url($file);
-    $source_html = '';
-    $data = '';
+        if (strpos($videoUrl['host'], 'youtu') !== false) {
+            $pattern = '#(?<=(?:v|i)=)[a-zA-Z0-9-]+(?=&)|(?<=(?:v|i)\/)[^&\n]+|(?<=embed\/)[^"&\n]+|(?<=‌​(?:v|i)=)[^&\n]+|(?<=youtu.be\/)[^&\n]+#';
+            preg_match($pattern, $file, $matches);
+            if (isset($matches[0])) {
+                $youtubeId = $matches[0];
+            } else {
+                parse_str(parse_url($file, PHP_URL_QUERY), $params);
+                $youtubeId = isset($params['v']) ? $params['v'] : (isset($params['amp;v']) ? $params['amp;v'] : '0');
+            }
 
-    if (strpos($videoUrl['host'], 'youtu') !== false) {
-        $pattern = '#(?<=(?:v|i)=)[a-zA-Z0-9-]+(?=&)|(?<=(?:v|i)\/)[^&\n]+|(?<=embed\/)[^"&\n]+|(?<=‌​(?:v|i)=)[^&\n]+|(?<=youtu.be\/)[^&\n]+#';
-        preg_match($pattern, $file, $matches);
-        if (isset($matches[0])) {
-            $youtubeId = $matches[0];
+            $link = 'http://www.youtube.com/watch?v=' . $youtubeId;
+            $data = 'data-setup=\'{"techOrder": ["youtube"], "sources": [{ "type": "video/youtube", "src": "' . $link . '"}], "youtube": { "controls": 0 }}\'';
         } else {
-            parse_str(parse_url($file, PHP_URL_QUERY), $params);
-            $youtubeId = isset($params['v']) ? $params['v'] : (isset($params['amp;v']) ? $params['amp;v'] : '0');
+            $link = $file;
+            $source_html = '<source src="' . $link . '" type="video/mp4"></source>';
         }
 
-        $link = 'http://www.youtube.com/watch?v=' . $youtubeId;
-        $data = 'data-setup=\'{"techOrder": ["youtube"], "sources": [{ "type": "video/youtube", "src": "' . $link . '"}], "youtube": { "controls": 0 }}\'';
-    } else {
-        $link = $file;
-        $source_html = '<source src="' . $link . '" type="video/mp4"></source>';
-    }
+        $videoId = 'vid_id_' . substr(md5($link . rand(0, 1000)), 0, 20);
+        //$script = '<script>wpmVideo.initYT("%s",%s,"%s",%d);</script>';
 
-    $videoId = 'vid_id_' . substr(md5($link . rand(0, 1000)), 0, 20);
-    //$script = '<script>wpmVideo.initYT("%s",%s,"%s",%d);</script>';
-
-    $video = '<video id="' . $videoId . '" class="video-js vjs-default-skin" controls preload="auto" ' . $data . ' width="490" height="275">' . $source_html . '  
+        $video = '<video id="' . $videoId . '" class="video-js vjs-default-skin" controls preload="auto" ' . $data . ' width="490" height="275">' . $source_html . '  
       <p class="vjs-no-js">
         To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank"> supports HTML5 video</a>
       </p>
     </video>';
 
-    $html = '<div class="wpm-video-size-wrap">';
-    $html .= '<div class="wpm-video-youtube video_wrap video_margin_center wpmjw inactive style-9">';
-    $html .= '<div class="embed-responsive embed-responsive-16by9">';
-    //$html .= '<div id="' . $videoId . '" data-src="'. $link .'"></div>';
-    $html .= $video;
-    $html .= '</div></div></div>';
+        $html = '<div class="wpm-video-size-wrap">';
+        $html .= '<div class="wpm-video-youtube video_wrap video_margin_center wpmjw inactive style-9">';
+        $html .= '<div class="embed-responsive embed-responsive-16by9">';
+        //$html .= '<div id="' . $videoId . '" data-src="'. $link .'"></div>';
+        $html .= $video;
+        $html .= '</div></div></div>';
 
-    //$html .= sprintf($script, $videoId, "'{$link}'", '16:9', 0);
+        //$html .= sprintf($script, $videoId, "'{$link}'", '16:9', 0);
 
-    return $html;
-}
-
+        return $html;
+    }
 
 //Если комната в вебинаре изменена, то обновляем версию, чтоб при запросе ссылки на вебинар у пользователя 
 //если ссылка старая - то обновилась, т.е. обновился кэш 
-add_action( 'updated_postmeta', 'custom_updated_post_meta', 10, 4 );
-function custom_updated_post_meta( $meta_id, $object_id, $meta_key, $meta_value ) {
-    
-    if ($meta_key == 'webinar_room_id'){
-        $iRevision = (int)get_post_meta($object_id, 'webinar_room_id_rev', true);
-        update_post_meta( $object_id, 'webinar_room_id_rev', ++$iRevision );
-    }
-}
+    add_action('updated_postmeta', 'custom_updated_post_meta', 10, 4);
 
+    function custom_updated_post_meta($meta_id, $object_id, $meta_key, $meta_value) {
 
-function woocommerce_checkout_thankyou_shortcode(){
-    echo '<div class="woocommerce"><p class="woocommerce-message">Спасибо за покупку! Сейчас вы будете перенаправлены в свой личный кабинет!</p>
-        <script >window.onload = function(){setTimeout(\'location="/my-account"\', 4000);}</script></div>';
-}
-add_shortcode('woocommerce_checkout_thankyou', 'woocommerce_checkout_thankyou_shortcode');
-
-add_action('display_pincodes', 'display_pincodes');
-function display_pincodes(){
-  $customer_orders = get_posts( apply_filters( 'woocommerce_my_account_my_orders_query', array(
-	'numberposts' => 100,
-	'meta_key'    => '_customer_user',
-	'meta_value'  => get_current_user_id(),
-	'post_type'   => 'shop_order',
-	'post_status' => 'wc-completed'
-) ) );
-
-  echo '<h2>Мои пин-коды</h2>';
-  $no_pins = true;
-  if(!empty($customer_orders)){
-      $WC_LD_Codes = new WC_LD_Code_Assignment();
-      foreach ($customer_orders as $order){
-        $table = $WC_LD_Codes->get_assigned_codes($order->ID);
-        if ($table){
-          $no_pins = false;
-          echo $table;
+        if ($meta_key == 'webinar_room_id') {
+            $iRevision = (int) get_post_meta($object_id, 'webinar_room_id_rev', true);
+            update_post_meta($object_id, 'webinar_room_id_rev', ++$iRevision);
         }
-      }
-  }
+    }
 
-  if ($no_pins) {
-    echo 'У вас ещё нет пин-кодов.';
-  }
-}
+    function woocommerce_checkout_thankyou_shortcode() {
+        echo '<div class="woocommerce"><p class="woocommerce-message">Спасибо за покупку! Сейчас вы будете перенаправлены в свой личный кабинет!</p>
+        <script >window.onload = function(){setTimeout(\'location="/my-account"\', 4000);}</script></div>';
+    }
+
+    add_shortcode('woocommerce_checkout_thankyou', 'woocommerce_checkout_thankyou_shortcode');
+
+    add_action('display_pincodes', 'display_pincodes');
+
+    function display_pincodes() {
+        $customer_orders = get_posts(apply_filters('woocommerce_my_account_my_orders_query', array(
+            'numberposts' => 100,
+            'meta_key' => '_customer_user',
+            'meta_value' => get_current_user_id(),
+            'post_type' => 'shop_order',
+            'post_status' => 'wc-completed'
+                )));
+
+        echo '<h2>Мои пин-коды</h2>';
+        $no_pins = true;
+        if (!empty($customer_orders)) {
+            $WC_LD_Codes = new WC_LD_Code_Assignment();
+            foreach ($customer_orders as $order) {
+                $table = $WC_LD_Codes->get_assigned_codes($order->ID);
+                if ($table) {
+                    $no_pins = false;
+                    echo $table;
+                }
+            }
+        }
+
+        if ($no_pins) {
+            echo 'У вас ещё нет пин-кодов.';
+        }
+    }
+    
