@@ -107,7 +107,7 @@ function tanhit_woocommerce_template_current_webinar() {
     <?
     } else {
         if ( ! $product->is_virtual()) {
-            wc_get_template('single-product/add-to-cart/simple.php');
+            //wc_get_template('single-product/add-to-cart/simple.php');
         } else {
             if ($tanhit_add_button_enter_to_webinar == 'download_in_myaccount') {
                 ?>
