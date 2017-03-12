@@ -53,29 +53,33 @@ wc_print_notices(); ?>
 <ul class="nav nav-tabs" role="tablist">
   <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Главная</a></li>
   <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Профиль</a></li>
+  <li role="presentation"><a href="#certificates" aria-controls="certificates" role="tab" data-toggle="tab">Сертификаты</a></li>
   <li role="presentation"><a href="#webinars" aria-controls="webinars" role="tab" data-toggle="tab">Вебинары и практики</a></li>
   <li role="presentation"><a href="#orders" aria-controls="orders" role="tab" data-toggle="tab">Заказы</a></li>
   <li role="presentation"><a href="#pins" aria-controls="pins" role="tab" data-toggle="tab">Пин-коды</a></li>
 </ul>
 
 <div class="tab-content">
-  <div role="tabpanel" class="tab-pane active" id="home">
-      <?php do_action( 'woocommerce_before_my_account' ); ?>
-      <?php do_action( 'tanhit_my_account' ); ?>
-      <?php do_action( 'woocommerce_after_my_account' ); ?>
-  </div>
-  <div role="tabpanel" class="tab-pane fade in" id="profile">
-      <?php wc_get_template( 'myaccount/form-edit-account.php', array( 'user' => get_user_by( 'id', get_current_user_id() ) ) );?>
-  </div>
-  <div role="tabpanel" class="tab-pane fade" id="webinars">
-      <?php wc_get_template( 'myaccount/my-downloads.php' ); ?>
-  </div>
-  <div role="tabpanel" class="tab-pane fade" id="orders">
-      <?php wc_get_template( 'myaccount/my-orders.php', array( 'order_count' => $order_count ) ); ?>
-  </div>
-  <div role="tabpanel" class="tab-pane fade" id="pins">
-      <?php do_action('display_pincodes'); ?>
-  </div>
+	<div role="tabpanel" class="tab-pane active" id="home">
+	  <?php do_action( 'woocommerce_before_my_account' ); ?>
+	  <?php do_action( 'tanhit_my_account' ); ?>
+	  <?php do_action( 'woocommerce_after_my_account' ); ?>
+	</div>
+	<div role="tabpanel" class="tab-pane fade in" id="profile">
+	  <?php wc_get_template( 'myaccount/form-edit-account.php', array( 'user' => get_user_by( 'id', get_current_user_id() ) ) );?>
+	</div>
+	<div role="tabpanel" class="tab-pane fade" id="certificates">
+      <?php wc_get_template( 'myaccount/my-certificates.php' ); ?>
+	</div>
+	<div role="tabpanel" class="tab-pane fade" id="webinars">
+	  <?php wc_get_template( 'myaccount/my-downloads.php' ); ?>
+	</div>
+	<div role="tabpanel" class="tab-pane fade" id="orders">
+	  <?php wc_get_template( 'myaccount/my-orders.php', array( 'order_count' => $order_count ) ); ?>
+	</div>
+	<div role="tabpanel" class="tab-pane fade" id="pins">
+	  <?php do_action('display_pincodes'); ?>
+	</div>
 </div>
 
 <?php /**
