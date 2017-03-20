@@ -5,26 +5,24 @@ jQuery(function($){
         if( typeof( wc_checkout_params ) !== "undefined" && wc_checkout_params.is_checkout == 1 ) {
 
             var delivery_point_select2 = function() {
-                $( 'select#billing_delivery_point:visible' ).select2( {
+                $('select#billing_delivery_point:visible').select2({
                     minimumResultsForSearch: 10,
                     placeholder: 'Выберите ПВЗ',
                     placeholderOption: 'first',
-                    width: '100%',
-                } );
+                    width: '100%'
+                });
             };
 
             var delivery_points_map = function() {
-
                 ymaps.ready(function () {
-
                     var contactmap;
-                    var map_container = 'edostavka_map';
-                    var points = $( '#' + map_container ).data('points');
+                    var $map_container = $('#edostavka_map');
+                    var points = $map_container.data('points');
 
-                    ymaps.geocode( $( '#' + map_container ).data('state-name') , { results: 1 }).then( function( response ){
+                    ymaps.geocode($map_container.data('state-name') , { results: 1 }).then(function(response){
 
                         var getCoordinats = response.geoObjects.get(0).geometry.getCoordinates();
-                        contactmap = new ymaps.Map( map_container, {
+                        contactmap = new ymaps.Map($map_container[0], {
                             center: getCoordinats,
                             zoom: 14,
                             behaviors: ['default', 'scrollZoom'],
@@ -36,8 +34,7 @@ jQuery(function($){
                         });
 
                         function addPointToMap( point ) {
-
-                            placemark = new ymaps.Placemark( [ point.coordY, point.coordX ], {
+                            var placemark = new ymaps.Placemark( [ point.coordY, point.coordX ], {
                                 balloonContentBody: [
                                     '<address>',
                                     '<strong>' + point.Name + '</strong>',
@@ -60,7 +57,7 @@ jQuery(function($){
                             } );
 
                             contactmap.geoObjects.add( placemark );
-                        };
+                        }
 
                         if( contactmap.geoObjects.getLength() > 1 ) {
                             contactmap.setBounds( contactmap.geoObjects.getBounds() );
@@ -71,8 +68,6 @@ jQuery(function($){
                     });
                 });
             };
-
-
 
             var load_autocomplate_states = function() {
 
@@ -206,7 +201,7 @@ jQuery(function($){
                                     }
                                 }
 
-                            }
+                            };
 
                             edostavka_request.init();
 
@@ -219,21 +214,13 @@ jQuery(function($){
             //load_autocomplate_states();
 
             $( 'body' ).on('updated_checkout', function(){
-                
-                if ( $('#billing_delivery_point option').length > 0 && $().select2 ) {
-
-                    $( '#billing_delivery_point_field' ).find( '.select2-container' ).remove();
-                    $('div#edostavka_map').empty();
-                    delivery_point_select2();
-                    delivery_points_map();
-
-                }
-				
                 var method = woocommerce_params.chosen_shipping_method;
 
                 $( 'select.shipping_method, input[name^=shipping_method][type=radio]:checked, input[name^=shipping_method][type=hidden]' ).each( function( index, input ) {
                     method = $( this ).val();
-                } );
+                });
+
+                var $billing_address_fields = $('.woocommerce-billing-fields > [id^=billing_address_]');
 
                 if( method && method.indexOf('edostavka_') >= 0 ) {
                     //Если СДЕК
@@ -242,25 +229,32 @@ jQuery(function($){
                     if( $.inArray( parseInt( tatiff_id ), woocommerce_params.is_door ) >= 0 ) {
                         //Если СДЕК до двери
                         $( '#billing_delivery_point_field, #edostavka_map' ).hide().addClass('hidden');
-                        $( '#billing_address_1_field, #billing_address_2_field').show().removeClass('hidden');
+						$billing_address_fields.show().removeClass('hidden');
                     } else {
                         //Если СДЕК до склада
                         $( '#billing_delivery_point_field' ).show().removeClass('hidden');
-                        if($( '#edostavka_map' ).data('points')){
-                            $( '#edostavka_map' ).show().removeClass('hidden');
+                        if($('#edostavka_map').data('points')){
+							if ($('#billing_delivery_point option').length > 0 && $().select2) {
+								$('#billing_delivery_point_field').find('.select2-container').remove();
+								$('div#edostavka_map').empty();
+								delivery_point_select2();
+								delivery_points_map();
+							}
+
+                            $('#edostavka_map').show().removeClass('hidden');
                         }
-                        
-                        $( '#billing_address_1_field, #billing_address_2_field' ).hide().addClass('hidden');
+
+						$billing_address_fields.hide().addClass('hidden');
                     }
 
                 } else {
                     // Для всех остальных методов
                     $( '#billing_delivery_point_field, #edostavka_map' ).hide().addClass('hidden'); //Прячем ПВЗ
-                    $( '#billing_address_1_field, #billing_address_2_field' ).show().removeClass('hidden'); //Показываем адрес
+					$billing_address_fields.show().removeClass('hidden'); //Показываем адрес
                 }
 
                 load_autocomplate_states();
-            } );
+            });
         }
     });
 });
