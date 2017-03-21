@@ -33,13 +33,15 @@ function tanhit_woocommerce_before_single_product() {
 
 
     /*
-     * If product free or bought Remove add to cart
-     */
-    $has_access_to_offer = false;
+    * If product free or bought Remove add to cart
+    */
+    $has_access_to_offer=false;
     $user_access = get_post_meta($product->id, 'access', TRUE);
-    if (tanhit_customer_bought_product() || $product->price == 0 || (current_user_can('vip') && in_array($user_access, array(1, 3)))) {
-        remove_action('woocommerce_single_product_summary', 'woocommerce_template_single_add_to_cart', 30);
-        $has_access_to_offer = true;
+    if ( tanhit_customer_bought_product() || $product->price == 0 || (current_user_can('vip') && in_array($user_access, array(1,3))) ) {
+        remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_add_to_cart', 30 );
+        $has_access_to_offer=true;
+    }elseif ( ! $product->is_virtual()){
+        remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_add_to_cart', 30 );
     }
 
     /*
@@ -107,7 +109,7 @@ function tanhit_woocommerce_template_current_webinar() {
     <?
     } else {
         if ( ! $product->is_virtual()) {
-            //wc_get_template('single-product/add-to-cart/simple.php');
+            wc_get_template('single-product/add-to-cart/simple.php');
         } else {
             if ($tanhit_add_button_enter_to_webinar == 'download_in_myaccount') {
                 ?>
