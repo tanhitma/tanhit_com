@@ -266,7 +266,8 @@ if (!class_exists('WC_Edostavka')) :
 
         public function add_delivery_points_field($checkout_fields) {
 
-            $delivery_points = self::get_delivery_points(WC()->customer->state_id);
+            $state_id = WC()->customer->state_id ? WC()->customer->state_id : 44;
+            $delivery_points = self::get_delivery_points($state_id);
 
             if (sizeof($delivery_points) > 0) {
                 $points = [0 => __('Выберите пункт выдачи')];
@@ -424,7 +425,8 @@ if (!class_exists('WC_Edostavka')) :
 
             $html_billing_delivery_points_map = '<div id="edostavka_map" class="hidden"></div>';
 
-            $delivery_points = self::get_delivery_points(WC()->customer->state_id);
+            $state_id = WC()->customer->state_id ? WC()->customer->state_id : 44;
+            $delivery_points = self::get_delivery_points($state_id);
             if (sizeof($delivery_points) > 0) {
                 $iMethod_id = str_replace('edostavka_', '', self::get_chosen_shipping_method());
 
