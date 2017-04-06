@@ -14,7 +14,6 @@ $inst = new InstagramParser();
 $data = [];
 if (is_array($inst->getRecent()) && !empty($inst->getRecent())){
     foreach ($inst->getRecent() as $post){
-        print_r($post);
         $link_parts = explode('/', trim($post->link,'/'));
         $post_id = (int)explode('_', $post->id)[0];
         $data[$post_id] = [
