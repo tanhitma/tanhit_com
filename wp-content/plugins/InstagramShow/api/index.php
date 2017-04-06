@@ -210,11 +210,8 @@ function serve_user_media_recent($username) {
     $count = input('count', 20);
     $max_id = input('max_id');
 
-    $cache_key = '@' . $username;
-    $raw_data = '';//storage_get($cache_key);
-
     global $wpdb;
-    $raw_data = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}instagram");
+    $raw_data = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}instagram ORDER BY `inst_id` DESC LIMIT {$count}");
 
     if (!empty($raw_data)) {
         $formatted_data = [];
