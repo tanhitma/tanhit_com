@@ -2518,8 +2518,6 @@ add_action('pre_get_posts', function(WP_Query $el) {
 function html2Pdf($sHtmlTitle, $sHtmlContent, $sSaveFile, $stylesheet = '', $to_browser = false, $aReplaceData = array()) {
     $sFile = $sSaveFile . '.pdf';
 	
-    require_once ABSPATH . 'vendor/autoload.php';
-	
     $mpdf = new mPDF('', 'A4', '', '', 0, 0, 0, 0, 0, 0);
 	$mpdf->SetTitle($sHtmlTitle);
     $mpdf->useOnlyCoreFonts = true;

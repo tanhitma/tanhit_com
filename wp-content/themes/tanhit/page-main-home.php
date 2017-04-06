@@ -4,7 +4,7 @@
  *
  * @package Tanhit
  */
-get_header(); 
+get_header();
 ?>
 <section style="min-height: 300px">
     <div class="container">

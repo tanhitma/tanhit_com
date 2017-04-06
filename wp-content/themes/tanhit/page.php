@@ -9,7 +9,7 @@ foreach( $ancestors as $ancestor ) {
 		break;
 	}	
 }	
-get_header(); 
+get_header();
 ?>
 <section style="min-height: 300px">
     <div class="container">
@@ -39,6 +39,7 @@ get_header();
 
             <?php endwhile; ?>
             <?php endif; ?>
+            <?php /* $post->ID == 129 ? do_shortcode( '[instashow id="1"]' ): ''; */?>
         </div>
     </div>
 </section>
