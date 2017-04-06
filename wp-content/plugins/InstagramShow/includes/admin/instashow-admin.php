@@ -4,7 +4,7 @@ if (!defined('ABSPATH')) exit;
 
 
 function elfsight_instashow_add_action_links($links) {
-    $links[] = '<a href="' . esc_url(admin_url('admin.php?page=elfsight-instashow')) . '">Settings</a>';
+    $links[] = '<a href="' . esc_url(admin_url('admin.php?page=instashow')) . '">Settings</a>';
     return $links;
 }
 add_filter('plugin_action_links_' . ELFSIGHT_INSTASHOW_PLUGIN_SLUG, 'elfsight_instashow_add_action_links');
@@ -263,26 +263,14 @@ function elfsight_instashow_settings_page() {
 
 
     // activation
-    $purchase_code = get_option('elfsight_instashow_purchase_code', '');
     $activated = get_option('elfsight_instashow_activated', '') == 1;
 
     $latest_version = get_option('elfsight_instashow_latest_version', '');
-    $last_check_datetime = get_option('elfsight_instashow_last_check_datetime', '');
-    $has_new_version = !empty($latest_version) && version_compare(ELFSIGHT_INSTASHOW_VERSION, $latest_version, '<');
 
     $activation_css_classes = '';
     if ($activated) {
         $activation_css_classes .= 'instashow-admin-activation-activated ';
     }
-    else if (!empty($purchase_code)) {
-        $activation_css_classes .= 'instashow-admin-activation-invalid ';
-    }
-    if ($has_new_version) {
-        $activation_css_classes .= 'instashow-admin-activation-has-new-version ';
-    }
-
-    // other products
-    $other_products_hidden = get_option('elfsight_instashow_other_products_hidden');
 
     ?><div class="<?php echo $activation_css_classes; ?>instashow-admin wrap">
         <h2 class="instashow-admin-wp-notifications-hack"></h2>
@@ -294,8 +282,6 @@ function elfsight_instashow_settings_page() {
 
             <div class="instashow-admin-menu-container">
                 <?php require_once(ELFSIGHT_INSTASHOW_PATH . implode(DIRECTORY_SEPARATOR, array('includes', 'admin', 'templates', 'menu.php'))); ?>
-
-                <?php //require_once(ELFSIGHT_INSTASHOW_PATH . implode(DIRECTORY_SEPARATOR, array('includes', 'admin', 'templates', 'menu-actions.php'))); ?>
             </div>
 
             <div class="instashow-admin-pages-container">
@@ -305,16 +291,10 @@ function elfsight_instashow_settings_page() {
 
                 <?php require_once(ELFSIGHT_INSTASHOW_PATH . implode(DIRECTORY_SEPARATOR, array('includes', 'admin', 'templates', 'page-edit-feed.php'))); ?>
 
-                <?php //require_once(ELFSIGHT_INSTASHOW_PATH . implode(DIRECTORY_SEPARATOR, array('includes', 'admin', 'templates', 'page-support.php'))); ?>
-
                 <?php require_once(ELFSIGHT_INSTASHOW_PATH . implode(DIRECTORY_SEPARATOR, array('includes', 'admin', 'templates', 'page-preferences.php'))); ?>
-
-                <?php //require_once(ELFSIGHT_INSTASHOW_PATH . implode(DIRECTORY_SEPARATOR, array('includes', 'admin', 'templates', 'page-activation.php'))); ?>
 
                 <?php require_once(ELFSIGHT_INSTASHOW_PATH . implode(DIRECTORY_SEPARATOR, array('includes', 'admin', 'templates', 'page-error.php'))); ?>
             </div>
         </main>
-
-        <?php //require_once(ELFSIGHT_INSTASHOW_PATH . implode(DIRECTORY_SEPARATOR, array('includes', 'admin', 'templates', 'other-products.php'))); ?>
     </div>
 <?php } ?>

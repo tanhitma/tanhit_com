@@ -1,11 +1,7 @@
 <?php
 /*
-Plugin Name: Elfsight InstaShow
+Plugin Name: InstaShow
 Description: Instagram feed for WordPress. Create unique galleries of Instagram photos. User friendly, flexible and fully responsive. Amazing look for stunning images.
-Plugin URI: https://elfsight.com/instagram-feed-instashow/wordpress/
-Version: 2.3.1
-Author: Elfsight
-Author URI: https://elfsight.com/
 */
 
 if (!defined('ABSPATH')) exit;
