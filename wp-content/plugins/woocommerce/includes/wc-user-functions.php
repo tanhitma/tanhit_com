@@ -429,7 +429,7 @@ function wc_get_customer_available_downloads( $customer_id ) {
 				$file_number = 0;
 				$_product    = wc_get_product( $product_id );
 			}
-
+			
 			// Check product exists and has the file
 			if ( ! $_product || ! $_product->exists() || ! $_product->has_file( $result->download_id ) ) {
 				continue;

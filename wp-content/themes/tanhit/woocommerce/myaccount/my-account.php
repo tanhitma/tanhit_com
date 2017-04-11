@@ -69,7 +69,10 @@ wc_print_notices(); ?>
 	  <?php wc_get_template( 'myaccount/form-edit-account.php', array( 'user' => get_user_by( 'id', get_current_user_id() ) ) );?>
 	</div>
 	<div role="tabpanel" class="tab-pane fade" id="certificates">
-      <?php wc_get_template( 'myaccount/my-certificates.php' ); ?>
+		<div class='content'>
+			<h2>Выданные сертификаты</h2>
+			<?php do_shortcode('[cert_list my=1]');?>
+		</div>
 	</div>
 	<div role="tabpanel" class="tab-pane fade" id="webinars">
 	  <?php wc_get_template( 'myaccount/my-downloads.php' ); ?>

@@ -11,8 +11,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=720">
     <meta name="description" content="">
-    <link rel="icon" href="/wp-content/favicon.png" type="image/png" />
-    <link rel="shortcut icon" href="/wp-content/favicon.png" type="image/png" />
+    <link rel="icon" href="/wp-content/uploads/2017/02/cropped-logo_znak.png" type="image/png" />
+    <link rel="shortcut icon" href="/wp-content/uploads/2017/02/cropped-logo_znak.png" type="image/png" />
 	
     <link href='https://code.cdn.mozilla.net/fonts/fira.css' rel='stylesheet' type='text/css' />
     <title><?php bloginfo('name'); ?> <?php wp_title(); ?></title>

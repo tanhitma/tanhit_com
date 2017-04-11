@@ -74,16 +74,32 @@ $aData = $wpdb->get_results( "
 				<div class='list-certificates'>
 					<div style='padding:10px 0;'>
 						<form method='post'>
-							сортировка: 
+							сертификат: 
 							<select name='sort' onChange='jQuery(this).parent().submit()'>
+								<option value='0'<?=('asc' == $order ? ' selected="selected"': '')?>>все</option>
 								<option value='id'<?=('id' == $sort ? ' selected="selected"': '')?>>по номеру</option>
 								<option value='name'<?=('name' == $sort ? ' selected="selected"': '')?>>по имени</option>
 								<option value='date'<?=('date' == $sort ? ' selected="selected"': '')?>>по дате выдачи</option>
 							</select>
+							статус: 
 							<select name='order' onChange='jQuery(this).parent().submit()'>
+								<option value='0'<?=('asc' == $order ? ' selected="selected"': '')?>>все</option>
 								<option value='asc'<?=('asc' == $order ? ' selected="selected"': '')?>>по возрастанию</option>
 								<option value='desc'<?=('desc' == $order ? ' selected="selected"': '')?>>по убыванию</option>
 							</select>
+							
+							<div style='float:right;'>
+								сортировка: 
+								<select name='sort' onChange='jQuery(this).parent().submit()'>
+									<option value='id'<?=('id' == $sort ? ' selected="selected"': '')?>>по номеру</option>
+									<option value='name'<?=('name' == $sort ? ' selected="selected"': '')?>>по имени</option>
+									<option value='date'<?=('date' == $sort ? ' selected="selected"': '')?>>по дате выдачи</option>
+								</select>
+								<select name='order' onChange='jQuery(this).parent().submit()'>
+									<option value='asc'<?=('asc' == $order ? ' selected="selected"': '')?>>по возрастанию</option>
+									<option value='desc'<?=('desc' == $order ? ' selected="selected"': '')?>>по убыванию</option>
+								</select>
+							</div>
 						</form>
 					</div>
 					<table>

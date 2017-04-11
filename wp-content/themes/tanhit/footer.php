@@ -14,15 +14,14 @@
                                 <div class="row">
                                 </div>
                             </div>
-
-
                             <div class="col-sm-2 align-right">
                                 <div class="icons">
                                     <a href="https://www.facebook.com/TanhitMa" class="icon-fb" target="_blank"></a>
-                                    <a href="https://vk.com/tanhit" class="icon-vk" target="_blank"></a>
-                                    <a href="http://www.youtube.com/channel/UCNzOcukRjk69ELB78XXj-VA" class="icon-youtube" target="_blank"></a>
+                                    <a href="https://vk.com/tanhitma" class="icon-vk" target="_blank"></a>
+                                    <a href="https://www.youtube.com/channel/UCNzOcukRjk69ELB78XXj-VA" class="icon-youtube" target="_blank"></a>
                                 </div>
                             </div>
+<center><a href="https://idea4web.biz" target="_blank"><img src="https://tanhit.com/wp-content/uploads/2017/02/foot_ico.png" width="88" height="31" border="0"></a><br><br></center>
                         </div>
                     </div>
                 </div>

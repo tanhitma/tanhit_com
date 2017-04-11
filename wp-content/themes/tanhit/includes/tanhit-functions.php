@@ -360,7 +360,6 @@ function tanhit_loop_add_to_cart_link( $link, $product ) {
 			esc_attr( isset( $class ) ? $class : 'button add_to_cart_button' ),
 			pll__( 'Просмотреть', 'tanhit' )
 		);
-		
 	}	
 	
 	return $link;

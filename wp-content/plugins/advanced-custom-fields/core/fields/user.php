@@ -185,7 +185,6 @@ class acf_field_user extends acf_field
 		// get users
 		$users = get_users( $args );
 		
-		
 		if( !empty($users) && !empty($editable_roles) )
 		{
 			$field['choices'] = array();
@@ -225,7 +224,7 @@ class acf_field_user extends acf_field
 				
 				foreach( $this_users as $user )
 				{
-					$field['choices'][ $label ][ $user->ID ] = ucfirst( $user->display_name );
+					$field['choices'][ $label ][ $user->ID ] = ucfirst( $user->display_name ) ." [{$user->user_email}]";
 				}
 				
 			}

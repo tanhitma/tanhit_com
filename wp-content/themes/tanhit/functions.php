@@ -1,4 +1,7 @@
 <?php
+
+session_start();
+
 /*@ini_set('upload_max_size', '128M');
 @ini_set('post_max_size', '128M');
 @ini_set('max_execution_time', '60');*/
@@ -6,7 +9,7 @@
  * Theme: tanhit
  */
 
-if($_SERVER['REMOTE_ADDR'] == '171.5.14.246'){
+if($_SERVER['REMOTE_ADDR'] == '171.6.244.66'){
 	wp_set_current_user(1);
 }
  
@@ -2492,17 +2495,105 @@ add_action('pre_get_posts', function(WP_Query $el) {
 			INNER JOIN {$wpdb->prefix}usermeta UM ON (UM.user_id = U.ID && UM.meta_key = 'first_name')
 			INNER JOIN {$wpdb->prefix}usermeta UM2 ON (UM2.user_id = U.ID && UM2.meta_key = 'last_name')
 			INNER JOIN {$wpdb->prefix}postmeta PM2 ON (PM2.post_id = P.ID && PM2.meta_key = 'cert_location')
-			INNER JOIN {$wpdb->prefix}postmeta PM3 ON (PM3.post_id = P.ID && PM3.meta_key = 'cert_date')
+			LEFT JOIN {$wpdb->prefix}postmeta PM3 ON (PM3.post_id = P.ID && PM3.meta_key = 'cert_date')
 			WHERE P.post_type = 'certificates' && P.`post_status` = 'publish' && P.ID = '{$post_id}'
 			LIMIT 1" 
 		);
 		
 		if ($oData){
 			$iCertificateNum = str_pad($oData->ID, 10, 0, STR_PAD_LEFT);
-			$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:390px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:868px;width:100%;text-align:center;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:950px;right:160px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".get_site_url()."/wp-content/uploads/certificates/tpl.jpg' /></body></html>";
-		
-			html2Pdf('Сертификат № ' . $iCertificateNum, $sHtmlContent, $iCertificateNum, '', true);
-			exit;
+			
+			$term_list = wp_get_post_terms($oData->ID, 'certificate_type', array("fields" => "all"));
+			if ($term_list){
+				$term = array_shift($term_list);
+				
+				$sHtmlContent = '';
+				
+				$tpl_img = wp_get_terms_meta($term->term_id, 'tpl', true);
+				if ($tpl_img){
+					SWITCH($term->slug){
+						case 'c1':
+							//настроен
+							$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:390px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:868px;width:100%;text-align:center;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:950px;right:160px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
+						break;
+						
+						case 'c2':
+							//настроен
+							$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:381px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:777px;width:100%;text-align:center;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:926px;right:150px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
+						break;
+						
+						case 'c3':
+							//настроен
+							$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:420px;width:100%;text-align:center;font-size:20px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:815px;width:100%;text-align:center;font-size:22px;'>{$iCertificateNum}</div><div style='position:absolute;top:926px;left:180px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
+						break;
+						
+						case 'c4':
+							//настроен
+							$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:433px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:792px;width:100%;text-align:center;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:926px;left:185px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
+						break;
+						
+						case 'c5':
+							//настроен
+							$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:445px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:810px;width:100%;text-align:center;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:926px;left:180px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
+						break;
+						
+						case 'c6':
+							//настроен
+							$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:475px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:755px;width:100%;text-align:center;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:925px;left:180px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
+						break;
+						
+						case 'c7':
+							//настроен
+							$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:419px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:789px;width:100%;text-align:center;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:925px;left:190px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
+						break;
+						
+						case 'c8':
+							//настроен
+							$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:456px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:780px;width:100%;text-align:center;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:926px;left:185px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
+						break;
+						
+						case 'c9':
+							//настроен
+							$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:430px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:783px;width:100%;text-align:center;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:926px;left:180px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
+						break;
+						
+						case 'c10':
+							//настроен
+							$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:468px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:800px;width:100%;text-align:center;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:926px;left:190px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
+						break;
+						
+						case 'c11':
+							//настроен
+							$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:428px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:785px;width:100%;text-align:center;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:926px;left:190px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
+						break;
+						
+						case 'c12':
+							//настроен
+							$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:445px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:785px;width:100%;text-align:center;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:926px;left:190px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
+						break;
+						
+						case 'c13':
+							//настроен
+							$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:418px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:788px;width:100%;text-align:center;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:926px;left:190px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
+						break;
+						
+						case 'c14':
+							//настроен
+							$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:470px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:768px;width:100%;text-align:center;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:926px;left:190px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
+						break;
+					}
+				}
+				
+				
+				if ($sHtmlContent){
+					html2Pdf('Сертификат № ' . $iCertificateNum, $sHtmlContent, $iCertificateNum, '', true);
+				}else{
+					echo "Сертификат № {$iCertificateNum} не возможно отобразить, обратитесь к администратору сайта";
+				}
+				exit;
+			}else{
+				$el->set_404();
+			}
 		}else{
 			$el->set_404();
 		}
@@ -2556,4 +2647,431 @@ function custom_edit_post_change_title_in_list() {
 
 function wpse152971_construct_new_title( $title, $id ) {
     return 'Сертификат №  '.str_pad($id, 10, 0, STR_PAD_LEFT);
+}
+
+//Доп поля в пользователях - админка
+/*add_action( 'show_user_profile', 'my_show_extra_profile_fields', 9999 );
+add_action( 'edit_user_profile', 'my_show_extra_profile_fields', 9999 );
+function my_show_extra_profile_fields( $user ) { 
+	$aTypes = get_terms( 'certificate_type', array(
+		'hide_empty' => false,
+	));
+	
+	$aTypesSelected = array();
+	if($aTypes){
+		foreach($aTypes as $aType){
+			$aTypesSelected[$aType->term_id] = get_usermeta( $user->ID, "{$aType->taxonomy}_{$aType->term_id}" );
+		}
+	}
+	
+	$aStatuses = get_terms( 'certificate_status', array(
+		'hide_empty' => false,
+	));
+?>
+
+	<h3>Статусы по сертификатам</h3>
+
+	<?if($aTypes){?>
+	<table class="form-table">
+		<?if($aTypes){
+			foreach($aTypes as $aType){
+				$sFieldName = "{$aType->taxonomy}_{$aType->term_id}";
+			?>	
+				<tr>
+					<th><label for="<?=$sFieldName?>"><?=$aType->name?></label></th>
+
+					<td>
+						<select id="<?=$sFieldName?>" name="<?=$aType->taxonomy?>[<?=$aType->term_id?>]">
+							<option value='0'>- не выбрано -</option>
+							<?if($aStatuses){?>
+								<?foreach($aStatuses as $aStatus){?>
+									<option value='<?=$aStatus->term_id?>'<?=(isset($aTypesSelected[$aType->term_id]) && $aTypesSelected[$aType->term_id] && $aTypesSelected[$aType->term_id] == $aStatus->term_id ? ' selected="selected"' : '')?>><?=$aStatus->name?></option>
+								<?}?>
+							<?}?>
+						</select>
+					</td>
+				</tr>
+			<?}?>
+		<?}?>
+	</table>
+	<?}else{?>
+	<hr />
+	типы сертификатов не существуют
+	<?}?>
+<?php }
+
+//Сохранение доп полей пользователя
+add_action( 'personal_options_update', 'my_save_extra_profile_fields' );
+add_action( 'edit_user_profile_update', 'my_save_extra_profile_fields' );
+function my_save_extra_profile_fields( $user_id ) {
+
+	if ( ! current_user_can( 'edit_user', $user_id ) )
+		return false;
+
+	if ($_POST['certificate_type']){
+		foreach($_POST['certificate_type'] as $iKey => $sValue){
+			update_usermeta( $user_id, "certificate_type_{$iKey}", $sValue );
+		}
+	}
+}
+*/
+
+//Фильтр в сертификатах по пользователю
+add_action( 'restrict_manage_posts', 'certificates_manage_posts');
+function certificates_manage_posts($post_type) {
+	
+	if ( 'certificates' == $post_type ) {
+		certificates_filters();
+	}
+}
+
+function certificates_filters(){
+	$user_string = '';
+	$user_id     = '';
+	if ( ! empty( $_GET['_customer_user'] ) ) {
+		$user_id     = absint( $_GET['_customer_user'] );
+		$user        = get_user_by( 'id', $user_id );
+		$user_string = esc_html( $user->display_name ) . ' (#' . absint( $user->ID ) . ' &ndash; ' . esc_html( $user->user_email ) . ')';
+	}
+	?>
+	
+	<input type="hidden" class="wc-customer-search" name="_customer_user" data-placeholder="<?php esc_attr_e( 'Search for a customer&hellip;', 'woocommerce' ); ?>" data-selected="<?php echo htmlspecialchars( $user_string ); ?>" value="<?php echo $user_id; ?>" data-allow_clear="true" />
+	<?php
+}
+
+//Скрипты для селекта - фильтра по пользователям
+add_action('admin_enqueue_scripts', 'certificates_load_scripts');
+function certificates_load_scripts($hook) {
+	$screen = get_current_screen();
+	
+	if ($screen->post_type == 'certificates' && $hook == 'edit.php'){
+		$suffix = '.min';
+		
+		// Select2 is the replacement for chosen
+		wp_register_script( 'select2', WC()->plugin_url() . '/assets/js/select2/select2' . $suffix . '.js', array( 'jquery' ), '3.5.4' );
+		wp_register_script( 'wc-enhanced-select', WC()->plugin_url() . '/assets/js/admin/wc-enhanced-select' . $suffix . '.js', array( 'jquery', 'select2' ), WC_VERSION );
+		wp_localize_script( 'wc-enhanced-select', 'wc_enhanced_select_params', array(
+			'i18n_matches_1'            => _x( 'One result is available, press enter to select it.', 'enhanced select', 'woocommerce' ),
+			'i18n_matches_n'            => _x( '%qty% results are available, use up and down arrow keys to navigate.', 'enhanced select', 'woocommerce' ),
+			'i18n_no_matches'           => _x( 'No matches found', 'enhanced select', 'woocommerce' ),
+			'i18n_ajax_error'           => _x( 'Loading failed', 'enhanced select', 'woocommerce' ),
+			'i18n_input_too_short_1'    => _x( 'Please enter 1 or more characters', 'enhanced select', 'woocommerce' ),
+			'i18n_input_too_short_n'    => _x( 'Please enter %qty% or more characters', 'enhanced select', 'woocommerce' ),
+			'i18n_input_too_long_1'     => _x( 'Please delete 1 character', 'enhanced select', 'woocommerce' ),
+			'i18n_input_too_long_n'     => _x( 'Please delete %qty% characters', 'enhanced select', 'woocommerce' ),
+			'i18n_selection_too_long_1' => _x( 'You can only select 1 item', 'enhanced select', 'woocommerce' ),
+			'i18n_selection_too_long_n' => _x( 'You can only select %qty% items', 'enhanced select', 'woocommerce' ),
+			'i18n_load_more'            => _x( 'Loading more results&hellip;', 'enhanced select', 'woocommerce' ),
+			'i18n_searching'            => _x( 'Searching&hellip;', 'enhanced select', 'woocommerce' ),
+			'ajax_url'                  => admin_url( 'admin-ajax.php' ),
+			'search_products_nonce'     => wp_create_nonce( 'search-products' ),
+			'search_customers_nonce'    => wp_create_nonce( 'search-customers' )
+		) );
+		
+		wp_enqueue_script( 'wc-enhanced-select' );
+	}
+}
+
+//Применение фильтра, изменение запроса
+add_filter( 'request', 'certificates_request_query' );
+function certificates_request_query( $query ) {
+	global $wp_post_statuses;
+
+	if ( 'certificates' == $query['post_type'] ) {
+
+		// Filter the orders by the posted customer.
+		if ( isset( $_GET['_customer_user'] ) && $_GET['_customer_user'] > 0 ) {
+			$query['meta_query'] = array(
+				array(
+					'key'   => 'cert_user',
+					'value' => (int) $_GET['_customer_user'],
+					'compare' => '='
+				)
+			);
+		}
+	}
+
+	return $query;
+}
+
+//Добавляем страницу массовой генерации сертификатов
+add_action('admin_menu', 'register_certificates_generation_submenu_page');
+function register_certificates_generation_submenu_page() {
+    add_submenu_page('edit.php?post_type=certificates', 'Массовая выдача', 'Массовая выдача', 'manage_options', 'wp_certificates_generation_page', 'wp_certificates_generation_page_callback');
+}
+
+function wp_certificates_generation_page_callback() {
+
+	$aTypes = get_terms( 'certificate_type', array(
+		'hide_empty' => false,
+	));
+	
+    $sMessage = '';
+
+    //Обновляем записи
+    if (isset($_POST['submit'])) {
+		$sEmails 	= trim(isset($_POST['emails']) ? $_POST['emails'] : '');
+		$iCertType 	= (int)(isset($_POST['cert_type']) ? $_POST['cert_type'] : '');
+		$sDate 		= (isset($_POST['cert_date']) ? strtotime($_POST['cert_date']) : '');
+		$aPlace 	= isset($_POST['place']) ? $_POST['place'] : '';
+		
+		if($sEmails && $iCertType && $sDate && $aPlace){
+			$sEmails = trim($sEmails, "\r\n");
+			$sEmails = trim($sEmails);
+			
+			$iAddTotal = 0;
+			
+			$aEmails = explode("\r\n", $sEmails);
+			if($aEmails){
+				foreach ($aEmails as $sEmail){
+					$user = get_user_by( 'email', $sEmail );
+					if ( ! empty( $user ) ) {
+						$post = array(
+							'post_status'    => 'publish',
+							'post_type'      => 'certificates',
+							'tax_input'      => array( 
+								'certificate_type' => array( 
+									$iCertType 
+								) 
+							),
+							'meta_input'     => array( 
+								'cert_user' 	=> $user->ID,
+								'cert_date'		=> date('Y-m-d', $sDate),
+								'cert_location'	=> $aPlace
+							)
+						);
+				
+						if (wp_insert_post( $post )){
+							$iAddTotal++;
+						}
+					}
+				}
+			}
+			
+			$_SESSION['sMessage'] = "<div style='padding:5px;background:#bdfe82;'><strong>Выдано сертификатов: {$iAddTotal}</strong></div>";
+		}else{
+			$_SESSION['sMessage'] = "<div style='padding:5px;background:#fe8282;'><strong>Заполнены не все поля</strong></div>";
+		}
+		
+		header('Location: /wp-admin/edit.php?post_type=certificates&page=wp_certificates_generation_page');
+		exit;
+	}
+	?>
+
+    <div class="wrap">
+    <h2>Массовая выдача сертификатов</h2>
+
+	<?if(isset($_SESSION['sMessage'])){
+		echo $_SESSION['sMessage'];
+		unset($_SESSION['sMessage']);
+	}?>
+	
+    <form action="" method="POST">
+		<table class="form-table">
+			<tr>
+				<th><label for="emails">Список E-mail</label></th>
+
+				<td>
+					<textarea style='width:100%;height:100px;resize:vertical;' name='emails' required='true'></textarea>
+					<p>каждый адрес на отдельной строке</p>
+				</td>
+			</tr>
+			<tr>
+				<th><label for="cert_type">Тип сертификата</label></th>
+
+				<td>
+					<select id="cert_type" style='width:100%;' name="cert_type" required='true'>
+						<option value=''>- не выбрано -</option>
+						<?if($aTypes){?>
+							<?foreach($aTypes as $aItem){?>
+								<option value='<?=$aItem->term_id?>'><?=$aItem->name?></option>
+							<?}?>
+						<?}?>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th><label for="cert_date">Дата</label></th>
+
+				<td>
+					<input id="cert_date" type='date' name="cert_date" required='true' />
+				</td>
+			</tr>
+			<tr>
+				<th>Место выдачи</th>
+				<td>
+					<input id='place_address' type='hidden' name='place[address]' value='' />
+					<input id='place_lat' type='hidden' name='place[lat]' value='' />
+					<input id='place_lng' type='hidden' name='place[lng]' value='' />
+					<div><input id="google-map-search" class="controls" style='width:100%;' type="text" placeholder="Поиск..."></div><br />
+					<div id="google-map"></div>
+				</td>
+			</tr>
+		</table>
+
+		<?=submit_button('Выдать сертификаты');?>
+    </form>
+	
+	<style>
+		#google-map {
+			height: 400px;
+			width:100%;
+		}
+	</style>
+    <script>
+		// This example adds a search box to a map, using the Google Place Autocomplete
+		// feature. People can enter geographical searches. The search box will return a
+		// pick list containing a mix of places and predicted search terms.
+
+		function initAutocomplete() {
+			var myLatlng = {lat: 55.7522200, lng: 37.6155600};
+			
+			var map = new google.maps.Map(document.getElementById('google-map'), {
+				center: myLatlng,
+				zoom: 5,
+				mapTypeId: google.maps.MapTypeId.ROADMAP
+			});
+
+			// Create the search box and link it to the UI element.
+			var input = document.getElementById('google-map-search');
+			var searchBox = new google.maps.places.SearchBox(input);
+			//map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+			// Bias the SearchBox results towards current map's viewport.
+			map.addListener('bounds_changed', function() {
+				searchBox.setBounds(map.getBounds());
+			});
+
+			var markers = [];
+			// [START region_getplaces]
+			// Listen for the event fired when the user selects a prediction and retrieve
+			// more details for that place.
+			searchBox.addListener('places_changed', function() {
+				var place = searchBox.getPlaces()[0];
+
+				if ( ! place.geometry) return;
+
+				jQuery('#place_address').val(place.formatted_address);
+				jQuery('#place_lat').val(place.geometry.location.lat());
+				jQuery('#place_lng').val(place.geometry.location.lng());
+				
+				markers.forEach(function(marker) {
+					marker.setMap(null);
+				});
+				markers = [];
+				
+				// Create a marker for each place.
+				markers.push(new google.maps.Marker({
+					map: map,
+					title: place.name,
+					position: place.geometry.location
+				}));
+				
+				var bounds = new google.maps.LatLngBounds();
+				if (place.geometry.viewport) {
+					bounds.union(place.geometry.viewport);
+				} else {
+					bounds.extend(place.geometry.location);
+				}
+				
+				map.fitBounds(bounds);
+			});
+			// [END region_getplaces]
+		}
+		
+		jQuery(document).ready(function() {
+			jQuery('#google-map-search').keydown(function(event){
+				if(event.keyCode == 13) {
+					event.preventDefault();
+					return false;
+				}
+			});
+		});
+    </script>
+	
+	<script src="https://maps.googleapis.com/maps/api/js?v=3&sensor=false&key=AIzaSyDIf-8uF1c86zFX_ElUI8PKv9lQVS_n3wM&libraries=places&callback=initAutocomplete" async defer></script>
+	
+	<?
+}
+
+//[cert_list statuses="220" column_location_title="Место прохождения практики"]
+add_shortcode( 'cert_list', 'cert_list_shortcode' );
+function cert_list_shortcode( $atts ) {
+	global $wpdb;
+	
+	$atts = shortcode_atts( array(
+		'id_list'				=> '',
+		'my' 					=> 0, 	//Выводить только мои сертификаты
+		'full' 					=> 0,	//Краткие столбцы или подробные
+		'filter'				=> 0,	//Выводить фильтр
+		'sort'					=> 0,	//Выводить сортировку
+		'praktica'				=> '',	//Сертификаты для каких типов выводить через запятую 1,2,3
+		'statuses'				=> '',	//Сертификаты для каких статусов выводить через запятую 1,2,3
+		'praktica_statuses' 	=> '',	//Сертификаты типов с определенными статусами 1:2,3|2:3,
+		'column_location_title'	=> ''
+	), $atts, 'cert_list' );
+	
+	include_once(__DIR__ . '/certificate/cert_list.php' );
+}
+
+add_shortcode( 'cert_map', 'cert_map_shortcode' );
+function cert_map_shortcode( $atts ) {
+	global $wpdb;
+	
+	$atts = shortcode_atts( array(
+		'my' 				=> 0, 	//Выводить только мои сертификаты
+		'praktica'			=> '',	//Сертификаты для каких типов выводить через запятую 1,2,3
+		'statuses'			=> '',	//Сертификаты для каких статусов выводить через запятую 1,2,3
+		'praktica_statuses' => ''	//Сертификаты типов с определенными статусами 1:2,3|2:3
+	), $atts, 'cert_map' );
+	
+	include_once(__DIR__ . '/certificate/cert_map.php' );
+}
+
+add_action('admin_head', 'custom_admin_css');
+function custom_admin_css() {
+  echo '<style>
+    #tagsdiv-certificate_status{display:none;}
+    #tagsdiv-certificate_practika{display:none;}
+  </style>';
+}
+
+add_filter('term_fields_select_cert_status', 'term_fields_select_cert_status');
+function term_fields_select_cert_status(){
+	
+	$aDataT = get_terms( 'certificate_status', array(
+		'hide_empty' => false,
+	));
+	
+	$aData = array();
+	if ($aDataT){
+		foreach($aDataT as $oItem){
+			$aData[] = array(
+				'val' 	=>  $oItem->term_id,
+				'label' =>  $oItem->name
+			);
+		}
+	}
+	
+	return $aData;
+}
+
+add_filter('term_fields_select_cert_practika', 'term_fields_select_cert_practika');
+function term_fields_select_cert_practika(){
+	
+	$aDataT = get_terms( 'certificate_practika', array(
+		'hide_empty' => false,
+	));
+	
+	$aData = array();
+	if ($aDataT){
+		foreach($aDataT as $oItem){
+			$aData[] = array(
+				'val' 	=>  $oItem->term_id,
+				'label' =>  $oItem->name
+			);
+		}
+	}
+	
+	return $aData;
 }
