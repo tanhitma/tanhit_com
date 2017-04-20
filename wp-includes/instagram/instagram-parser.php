@@ -66,7 +66,7 @@ class InstagramParser {
     public function getComments($id){
         try{
             $remote = json_decode(file_get_contents("https://www.instagram.com/p/{$id}/?__a=1"));
-            return $remote;
+            return $remote->graphql->shortcode_media->edge_media_to_comment->edges;
         } catch (Exception $e){
             echo $e->getMessage();
         }

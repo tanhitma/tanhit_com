@@ -939,13 +939,13 @@ function instagram_format_media($raw_data, $external) {
 
             foreach ($comments_list as $comment) {
                 $comment_author = null;
+                $comment = $comment['node'];
 
-
-                if (!empty($comment['user'])) {
+                if (!empty($comment['owner'])) {
                     $comment_author = array(
-                        'username' => $comment['user']['username'],
-                        'profile_picture' => $comment['user']['profile_pic_url'],
-                        'id' => $comment['user']['id']
+                        'username' => $comment['owner']['username'],
+                        'profile_picture' => $comment['owner']['profile_pic_url'],
+                        'id' => $comment['owner']['id']
                     );
                 }
 

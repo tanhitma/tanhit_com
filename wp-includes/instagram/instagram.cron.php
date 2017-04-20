@@ -34,7 +34,11 @@ if (is_array($inst->getRecent()) && !empty($inst->getRecent())){
             'videos' => $post->type == 'video' ? json_encode($post->videos) : null,
         ];
         if($data[$post_id]['comments_count'] > 0){
-            $data[$post_id]['comments_data'] = json_encode($inst->getComments($data[$post_id]['inst_link_id'])->media->comments->nodes);
+            //$data[$post_id]['comments_data'] = json_encode($inst->getComments($data[$post_id]['inst_link_id'])->media->comments->nodes);
+            $comments = json_encode($inst->getComments($data[$post_id]['inst_link_id']));
+            if(!empty($comments)){
+                $data[$post_id]['comments_data'] = $comments;
+            }
         }
     }
 }
