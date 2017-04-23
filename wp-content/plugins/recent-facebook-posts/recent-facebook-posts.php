@@ -3,7 +3,7 @@
 Plugin Name: Recent Facebook Posts
 Plugin URI: https://dannyvankooten.com/donate/
 Description: Lists most recent posts from a public Facebook page.
-Version: 2.0.8
+Version: 2.0.11
 Author: Danny van Kooten
 Author URI: https://dannyvankooten.com/
 Text Domain: recent-facebook-posts
@@ -32,37 +32,42 @@ if( ! defined( 'ABSPATH' ) ) {
 }
 
 // Plugin Constants
-define( 'RFBP_VERSION', '2.0.8' );
+define( 'RFBP_VERSION', '2.0.11' );
 define( 'RFBP_PLUGIN_DIR', dirname( __FILE__ ) . '/' );
 
 /**
  * Load the plugin files at `plugins_loaded:10`
+ *
+ * @ignore
  */
-function __rfbp_bootstrap() {
+function _rfbp_bootstrap() {
 
 	// Include Global code
-	require RFBP_PLUGIN_DIR . 'includes/functions/global.php';
+	require_once RFBP_PLUGIN_DIR . 'includes/functions/global.php';
+    require_once RFBP_PLUGIN_DIR . 'includes/functions/helpers.php';
+
+    // init
+    add_action( 'widgets_init', 'rfbp_register_widget' );
+    load_plugin_textdomain( 'recent-facebook-posts', false, basename( RFBP_PLUGIN_DIR ) . '/languages/' );
+
+    $settings = rfbp_get_settings();
 
 	if( ! is_admin() ) {
-
 		// frontend requests
-		include_once RFBP_PLUGIN_DIR . 'includes/functions/helpers.php';
-		include_once RFBP_PLUGIN_DIR . 'includes/functions/template.php';
-		require RFBP_PLUGIN_DIR . 'includes/class-public.php';
-
-		$rfbp_public = RFBP_Public::instance();
+        require_once RFBP_PLUGIN_DIR . 'includes/class-public.php';
+		$rfbp_public = RFBP_Public::instance( $settings );
 		$rfbp_public->add_hooks();
 
 	} elseif( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) {
 
 		// admin requests
 		require RFBP_PLUGIN_DIR . 'includes/class-admin.php';
-		$admin = new RFBP_Admin();
+		$admin = new RFBP_Admin( $settings );
 		$admin->add_hooks();
 
 	}
 
 }
 
-add_action( 'plugins_loaded', '__rfbp_bootstrap' );
+add_action( 'plugins_loaded', '_rfbp_bootstrap' );
 

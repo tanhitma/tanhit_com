@@ -32,7 +32,6 @@ class RFBP_Widget extends WP_Widget {
 	public function form( $instance ) {
 
 		$instance = array_merge( $this->defaults, $instance );
-		$opts = rfbp_get_settings();
 
 		if ( ! rfbp_valid_config() ) { ?>
  			<p style="color:red;"><?php printf( __( 'You need to <a href="%s">configure Recent Facebook Posts</a> first.', 'recent-facebook-posts' ), admin_url( 'options-general.php?page=rfbp' ) ); ?></p>

@@ -5,6 +5,27 @@ if( ! defined( 'RFBP_VERSION' ) ) {
 }
 
 /**
+ * Prints a list of Recent Facebook Posts
+ *
+ * Accepted arguments are the same as the shortcode args
+ *
+ * - number: 5
+ * - likes: true
+ * - comments: true
+ * - excerpt_length: 140
+ * - el: div
+ * - origin: shortcode
+ * - show_page_link: false
+ * - show_link_preview: false
+ *
+ * @param array $args
+ * @return void
+ */
+function recent_facebook_posts( $args = array() ) {
+    echo RFBP_Public::instance()->output( $args );
+}
+
+/**
  * Get the plugin settings (merged with defaults)
  *
  * @return array
@@ -43,17 +64,6 @@ function rfbp_register_widget() {
 	register_widget( "RFBP_Widget" );
 }
 
-add_action( 'widgets_init', 'rfbp_register_widget' );
-
-/**
- * Load plugin translations
- */
-function rfbp_load_textdomain() {
-	load_plugin_textdomain( 'recent-facebook-posts', false, basename( RFBP_PLUGIN_DIR ) . '/languages/' );
-}
-
-add_action( 'init', 'rfbp_load_textdomain' );
-
 /**
  * @return RFBP_API
  */
@@ -77,3 +87,4 @@ function rfbp_valid_config() {
 	$opts = rfbp_get_settings();
 	return ( ! empty( $opts['fb_id'] ) && ! empty( $opts['app_id'] ) && ! empty( $opts['app_secret'] ) );
 }
+

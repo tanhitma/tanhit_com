@@ -1,15 +1,15 @@
-# Copyright (C) 2015 Danny van Kooten
+# Copyright (C) 2016 Danny van Kooten
 # This file is distributed under the GPL3 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Recent Facebook Posts 2.0.8\n"
+"Project-Id-Version: Recent Facebook Posts 2.0.10\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/recent-facebook-posts\n"
-"POT-Creation-Date: 2015-07-01 08:57:40+00:00\n"
+"POT-Creation-Date: 2016-10-24 09:57:11+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2015-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2016-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Danny van Kooten <hi@dannyvankooten.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "X-Generator: grunt-wp-i18n 0.4.4\n"
@@ -25,19 +25,19 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Textdomain-Support: yes\n"
 
-#: includes/class-admin.php:154
+#: includes/class-admin.php:165
 msgid "<strong>Cache cleared!</strong> You succesfully cleared the cache."
 msgstr ""
 
-#: includes/class-admin.php:167
+#: includes/class-admin.php:178
 msgid "Settings"
 msgstr ""
 
-#: includes/class-admin.php:201
+#: includes/class-admin.php:211
 msgid "Your configuration seems to be okay and working. Nice work!."
 msgstr ""
 
-#: includes/class-admin.php:203
+#: includes/class-admin.php:213
 msgid "The following error was encountered when testing your configuration."
 msgstr ""
 
@@ -45,31 +45,31 @@ msgstr ""
 msgid "Facebook error:"
 msgstr ""
 
-#: includes/class-api.php:209
+#: includes/class-api.php:212
 msgid "Connection error:"
 msgstr ""
 
-#: includes/class-public.php:216
+#: includes/class-public.php:232
 msgid "likes"
 msgstr ""
 
-#: includes/class-public.php:217
+#: includes/class-public.php:233
 msgid "comments"
 msgstr ""
 
-#: includes/class-public.php:219
+#: includes/class-public.php:235
 msgid "%1$s at %2$s"
 msgstr ""
 
-#: includes/class-public.php:233
+#: includes/class-public.php:249
 msgid "No recent Facebook posts to show"
 msgstr ""
 
-#: includes/class-public.php:235
+#: includes/class-public.php:251
 msgid "Admins only notice"
 msgstr ""
 
-#: includes/class-public.php:235
+#: includes/class-public.php:251
 msgid "Did you <a href=\"%s\">configure the plugin</a> properly?"
 msgstr ""
 
@@ -81,39 +81,39 @@ msgstr ""
 msgid "Recent Facebook Posts"
 msgstr ""
 
-#: includes/class-widget.php:38
+#: includes/class-widget.php:37
 msgid "You need to <a href=\"%s\">configure Recent Facebook Posts</a> first."
 msgstr ""
 
-#: includes/class-widget.php:42
+#: includes/class-widget.php:41
 msgid "Title:"
 msgstr ""
 
-#: includes/class-widget.php:47
+#: includes/class-widget.php:46
 msgid "Number of posts:"
 msgstr ""
 
-#: includes/class-widget.php:52
+#: includes/class-widget.php:51
 msgid "Excerpt length:"
 msgstr ""
 
-#: includes/class-widget.php:58
+#: includes/class-widget.php:57
 msgid "Show like count?"
 msgstr ""
 
-#: includes/class-widget.php:63
+#: includes/class-widget.php:62
 msgid "Show comment count?"
 msgstr ""
 
-#: includes/class-widget.php:68
+#: includes/class-widget.php:67
 msgid "Show link to Facebook page?"
 msgstr ""
 
-#: includes/class-widget.php:73
+#: includes/class-widget.php:72
 msgid "Show link previews?"
 msgstr ""
 
-#: includes/functions/global.php:23 includes/views/settings_page.html.php:69
+#: includes/functions/global.php:44 includes/views/settings_page.html.php:69
 msgid "Find us on Facebook"
 msgstr ""
 
@@ -318,33 +318,29 @@ msgid "Leave a %s review on WordPress.org"
 msgstr ""
 
 #: includes/views/settings_page.html.php:150
-msgid "Write about the plugin from your blog."
-msgstr ""
-
-#: includes/views/settings_page.html.php:151
 msgid "Tweet about Recent Facebook Posts"
 msgstr ""
 
-#: includes/views/settings_page.html.php:152
+#: includes/views/settings_page.html.php:151
 msgid "Vote \"works\" on the WordPress.org plugin page"
 msgstr ""
 
-#: includes/views/settings_page.html.php:157
+#: includes/views/settings_page.html.php:156
 msgid "Looking for support?"
 msgstr ""
 
-#: includes/views/settings_page.html.php:158
+#: includes/views/settings_page.html.php:157
 msgid "Please use the <a href=\"%s\">plugin support forums</a> on WordPress.org."
 msgstr ""
 
-#: includes/views/settings_page.html.php:159
+#: includes/views/settings_page.html.php:158
 msgid ""
 "Take a close look at the <a href=\"%s\">installation instructions</a> for "
 "help configuring the plugin and registering your own Facebook application, "
 "which is required to get this plugin to work."
 msgstr ""
 
-#: includes/views/settings_page.html.php:163
+#: includes/views/settings_page.html.php:162
 msgid "Other plugins"
 msgstr ""
 

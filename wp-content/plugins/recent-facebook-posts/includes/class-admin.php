@@ -11,6 +11,20 @@ class RFBP_Admin {
 	 */
 	private $cache_cleared = false;
 
+    /**
+     * @var array
+     */
+    private $settings;
+
+    /**
+     * RFBP_Admin constructor.
+     *
+     * @param array $settings
+     */
+    public function __construct( $settings ) {
+        $this->settings = $settings;
+    }
+
 	/**
 	 * Add hooks
 	 */
@@ -65,15 +79,13 @@ class RFBP_Admin {
 		// upgrade to 1.8.5
 		if( version_compare( $db_version, '1.8.5', '<' ) ) {
 
-			$settings = rfbp_get_settings();
-
 			// rename `link_text` index to `page_link_text`
-			if ( isset( $settings['link_text'] ) ) {
-				$settings['page_link_text'] = $settings['link_text'];
-				unset( $settings['link_text'] );
+			if ( isset( $this->settings['link_text'] ) ) {
+                $this->settings['page_link_text'] = $this->settings['link_text'];
+				unset( $this->settings['link_text'] );
 			}
 
-			update_option( 'rfb_settings', $settings );
+			update_option( 'rfb_settings', $this->settings );
 		}
 
 		// Update version in database
@@ -95,7 +107,7 @@ class RFBP_Admin {
 	 * @return mixed
 	 */
 	public function sanitize_settings( $opts ) {
-		$old_opts = rfbp_get_settings();
+		$old_opts = $this->settings;
 
 		// fb config
 		$opts['app_id'] = sanitize_text_field( $opts['app_id'] );
@@ -146,8 +158,7 @@ class RFBP_Admin {
 	 * Shows the RFBP settings page
 	 */
 	public function settings_page() {
-
-		$opts = rfbp_get_settings();
+		$opts = $this->settings;
 
 		// show user-friendly error message
 		if( $this->cache_cleared ) {
@@ -177,9 +188,8 @@ class RFBP_Admin {
 	 * @param string $page_id
 	 * @return bool
 	 */
-	public function test_facebook_api( $app_id = '', $app_secret = '', $page_id = '' )
-	{
-		$opts = rfbp_get_settings();
+	public function test_facebook_api( $app_id = '', $app_secret = '', $page_id = '' ){
+		$opts = $this->settings;
 
 		if( '' === $app_id ) {
 			$app_id = $opts['app_id'];

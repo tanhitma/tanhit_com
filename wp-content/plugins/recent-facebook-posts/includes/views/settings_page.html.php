@@ -147,7 +147,6 @@
 			<p><?php _e( 'If you like this plugin, consider showing your consideration in one of the following ways.', 'recent-facebook-posts' ); ?></p>
 			<ul class="ul-square">
 				<li><a href="https://wordpress.org/support/view/plugin-reviews/recent-facebook-posts?rate=5#postform" target="_blank"><?php printf( __( 'Leave a %s review on WordPress.org', 'recent-facebook-posts' ), '&#9733;&#9733;&#9733;&#9733;&#9733;' ); ?></a></li>
-				<li><a href="https://wordpress.org/plugins/recent-facebook-posts/" target="_blank"><?php _e( 'Write about the plugin from your blog.', 'recent-facebook-posts' ); ?></a></li>
 				<li><a href="https://twitter.com/?status=I%20show%20recent%20facebook%20posts%20on%20my%20%23WordPress%20site%20using%20Recent%20Facebook%20Posts%20by%20%40DannyvanKooten%20-%20love%20it!%20http%3A%2F%2Fwordpress.org%2Fplugins%2Frecent-facebook-posts%2F" target="_blank"><?php _e( 'Tweet about Recent Facebook Posts', 'recent-facebook-posts' ); ?></a></li>
 				<li><a href="https://wordpress.org/plugins/recent-facebook-posts/#compatibility"><?php _e( 'Vote "works" on the WordPress.org plugin page', 'recent-facebook-posts' ); ?></a></li>
 			</ul>
@@ -164,29 +163,13 @@
 			<ul class="ul-square">
 				<li>
 					<h4><a href="https://wordpress.org/plugins/mailchimp-for-wp/">MailChimp for WordPress</a></h4>
-					<p>By far the best MailChimp (newsletter) sign-up plugin for WordPress, well over 250.000 sites are happily using it.</p>
+					<p>By far the best MailChimp (newsletter) sign-up plugin for WordPress, with over half a million sites happily using it.</p>
 				</li>
 				<li>
-					<h4><a href="https://wordpress.org/plugins/scroll-triggered-boxes/">Scroll Triggered Boxes</a></h4>
+					<h4><a href="https://wordpress.org/plugins/boxzilla/">Boxzilla Pop-Ups</a></h4>
 					<p>Need an unobtrusive conversion booster? This plugin offers an alternative to pop-ups. Highly converting yet not so annoying.</p>
 				</li>
-				<li>
-					<h4><a href="https://wordpress.org/plugins/dvk-social-sharing/">Social Sharing by Danny</a></h4>
-					<p>Lightweight social sharing links for your posts, with zero impact on your pageload times.</p>
-				</li>
-				<li>
-					<p><a href="https://dannyvankooten.com/wordpress-plugins/">More plugins by the same author..</a></p>
-				</li>
-
 			</ul>
-			</div>
-
-			<div class="rfbp-box">
-				<h3 class="rfbp-title">About <a href="https://dannyvankooten.com/">Danny van Kooten</a></h3>
-				<p>A twenty-something Dutch guy writing code and emails for a living.</p>
-				<p>I developed <a href="https://dannyvankooten.com/wordpress-plugins/">a few WordPress plugins</a> together totaling well over 2 million downloads, one of which you're using right now.</p>
-				<p>If you like to stay updated of what I'm doing, consider following <a href="https://twitter.com/dannyvankooten">@DannyvanKooten</a> on Twitter.</p>
-				<p>Hope you enjoy the plugin!</p>
 			</div>
 		</div>
 		<!-- End RFBP Sidebar -->

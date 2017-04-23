@@ -193,16 +193,19 @@ class RFBP_API {
 
 		// Add access token to data array
 		$data['access_token'] = "{$this->app_id}|{$this->app_secret}";
+		
+		// Add culture to localize returned content
+		$data['locale'] = get_locale();
 
 		// Add all data to URL
 		$url = add_query_arg( $data, $url );
 
-		$response = wp_remote_get($url, array( 
+		$response = wp_remote_get($url, array(
 			'timeout' => 10,
 			'headers' => array( 'Accept-Encoding' => '' ),
 			'sslverify' => false
-			) 
-		); 
+			)
+		);
 
 		// Did the request succeed?
 		if( is_wp_error( $response ) ) {
