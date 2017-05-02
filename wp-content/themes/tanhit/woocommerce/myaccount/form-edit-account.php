@@ -18,12 +18,15 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
+
+$aAvatar = wp_get_attachment_image_src( get_user_meta($user->ID, 'wp_user_avatar', true) );
 ?>
 
 <?php wc_print_notices(); ?>
 <h2><?php _e( 'Профиль', 'woocommerce' ); ?></h2>
-<form class="edit-account" action="" method="post" id="tanhit-edit-account">
-
+<form class="edit-account" action="" method="post" id="tanhit-edit-account" enctype="multipart/form-data">
+	<input type="hidden" name="submit" value="1" />
+	
 	<?php do_action( 'woocommerce_edit_account_form_start' ); ?>
 
 	<p class="form-row form-row-first">
@@ -43,6 +46,33 @@ if ( ! defined( 'ABSPATH' ) ) {
 	
 	<?php do_action( 'tanhit_edit_account_form' ); ?>
 
+	<fieldset style="margin-top: 25px">
+		<legend><?php _e( 'Дополнительная информация', 'woocommerce' ); ?></legend>
+
+		<table style='width:100%;'>
+			<tr>
+				<td style='width:110px;'>
+					<p class="form-row form-row-wide">
+						<label for="password_1"><?php _e( 'Аватар', 'woocommerce' ); ?></label>
+						<div class="clear"></div>
+						<?if($aAvatar){?>
+							<img style='max-width:100%;max-height:100%;' src='<?=$aAvatar[0]?>' />
+							<div class="clear"></div> <br />
+						<?}?>
+						<input type='file' name='user_avatar' />
+					</p>
+				</td>
+				<td>
+					<p class="form-row form-row-wide">
+						<label for="password_current"><?php _e( 'Биография', 'woocommerce' ); ?></label>
+						<textarea style='min-height:200px;' name='user_description'><?=get_user_meta($user->ID, 'description', true)?></textarea>
+					</p>
+				</td>
+			</tr>
+		</table>
+	</fieldset>
+	<div class="clear"></div>
+	
 	<fieldset style="margin-top: 25px">
 		<legend><?php _e( 'Смена пароля', 'woocommerce' ); ?></legend>
 

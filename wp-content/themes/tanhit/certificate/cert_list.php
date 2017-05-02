@@ -5,29 +5,29 @@ $aInnerTable = array();
 $aWhere = array();
 $aFilterWhere = array();
 
-if ( ! $attr['id_list'] ){
-	$attr['id_list'] = get_the_ID();
+if ( ! $atts['id_list'] ){
+	$atts['id_list'] = get_the_ID();
 }
 
 //Сортировка
 $sort = 'id';
-if (isset($_POST['sort_'.$attr['id_list']]) && $_POST['sort_'.$attr['id_list']]){
-	$sort = $_POST['sort_'.$attr['id_list']];
-	$_SESSION['cert_sort_'.$attr['id_list']] = $sort;
+if (isset($_POST['sort_'.$atts['id_list']]) && $_POST['sort_'.$atts['id_list']]){
+	$sort = $_POST['sort_'.$atts['id_list']];
+	$_SESSION['cert_sort_'.$atts['id_list']] = $sort;
 }
 
-if(isset($_SESSION['cert_sort_'.$attr['id_list']])){
-	$sort = $_SESSION['cert_sort_'.$attr['id_list']];
+if(isset($_SESSION['cert_sort_'.$atts['id_list']])){
+	$sort = $_SESSION['cert_sort_'.$atts['id_list']];
 }
 
 $order = 'asc';
-if (isset($_POST['order_'.$attr['id_list']]) && $_POST['order_'.$attr['id_list']]){
-	$order = $_POST['order_'.$attr['id_list']];
-	$_SESSION['cert_order_'.$attr['id_list']] = $order;
+if (isset($_POST['order_'.$atts['id_list']]) && $_POST['order_'.$atts['id_list']]){
+	$order = $_POST['order_'.$atts['id_list']];
+	$_SESSION['cert_order_'.$atts['id_list']] = $order;
 }
 
-if(isset($_SESSION['cert_order_'.$attr['id_list']])){
-	$order = $_SESSION['cert_order_'.$attr['id_list']];
+if(isset($_SESSION['cert_order_'.$atts['id_list']])){
+	$order = $_SESSION['cert_order_'.$atts['id_list']];
 }
 
 $sFieldSort = '';
@@ -84,6 +84,12 @@ $aStatusFilter = array();
 if (isset($atts['my']) && $atts['my']){
 	$aWhere[] = "U.ID = '".get_current_user_id()."'";
 }
+
+if (isset($atts['manager']) && $atts['manager']){
+	$aInnerTable[] = "INNER JOIN {$wpdb->prefix}postmeta PM_MANAGER ON (PM_MANAGER.post_id = P.ID && PM_MANAGER.meta_key = 'cert_manager')";
+	$aWhere[] = "PM_MANAGER.meta_value = '".get_current_user_id()."'";
+}
+
 if (isset($atts['practika']) && $atts['practika']){
 	$atts['practika'] = trim($atts['practika']);
 	$atts['practika'] = trim($atts['practika'],',');
@@ -164,13 +170,13 @@ if (isset($atts['practika_statuses']) && $atts['practika_statuses']){
 
 //Фильтр
 $cert_practika = '';
-if (isset($_POST['cert_practika_'.$attr['id_list']])){
-	$cert_practika = $_POST['cert_practika_'.$attr['id_list']];
-	$_SESSION['cert_practika_'.$attr['id_list']] = $cert_practika;
+if (isset($_POST['cert_practika_'.$atts['id_list']])){
+	$cert_practika = $_POST['cert_practika_'.$atts['id_list']];
+	$_SESSION['cert_practika_'.$atts['id_list']] = $cert_practika;
 }
 
-if(isset($_SESSION['cert_practika_'.$attr['id_list']])){
-	$cert_practika = $_SESSION['cert_practika_'.$attr['id_list']];
+if(isset($_SESSION['cert_practika_'.$atts['id_list']])){
+	$cert_practika = $_SESSION['cert_practika_'.$atts['id_list']];
 }
 //Сбрасываем практику
 if ($aPractikaFilter && count($aPractikaFilter)==1){
@@ -178,13 +184,13 @@ if ($aPractikaFilter && count($aPractikaFilter)==1){
 }
 
 $cert_status = '';
-if (isset($_POST['cert_status_'.$attr['id_list']])){
-	$cert_status = $_POST['cert_status_'.$attr['id_list']];
-	$_SESSION['cert_status_'.$attr['id_list']] = $cert_status;
+if (isset($_POST['cert_status_'.$atts['id_list']])){
+	$cert_status = $_POST['cert_status_'.$atts['id_list']];
+	$_SESSION['cert_status_'.$atts['id_list']] = $cert_status;
 }
 
-if(isset($_SESSION['cert_status_'.$attr['id_list']])){
-	$cert_status = $_SESSION['cert_status_'.$attr['id_list']];
+if(isset($_SESSION['cert_status_'.$atts['id_list']])){
+	$cert_status = $_SESSION['cert_status_'.$atts['id_list']];
 }
 //Сбрасываем статус
 if ($aStatusFilter && count($aStatusFilter)==1){
@@ -221,7 +227,7 @@ $sQuery = "
 	WHERE P.post_type = 'certificates' && P.`post_status` = 'publish'".($aWhere ? ' && ('.implode(' && ', $aWhere).')' : '').($aFilterWhere ? ' && '.implode(' && ', $aFilterWhere) : '')."  
 	GROUP BY P.ID 
 	ORDER BY {$sFieldSort} {$order}";
-	
+
 $aData = $wpdb->get_results( $sQuery );
 ?>
 
@@ -231,7 +237,7 @@ $aData = $wpdb->get_results( $sQuery );
 	.list-certificates table th,.list-certificates table td{padding:10px;border:1px solid;}
 </style>
 
-<section style="min-height: 300px">
+<section>
 	<div>		
 		<div class='list-certificates'>
 			<?if($atts['filter'] || $atts['sort']){?>
@@ -240,7 +246,7 @@ $aData = $wpdb->get_results( $sQuery );
 					<?if($atts['filter']){?>
 						<?if( ! $aPractikaFilter || count($aPractikaFilter)>1){?>
 						практика: 
-						<select style='width:150px;' name='cert_practika_<?=$attr['id_list']?>' onChange='jQuery(this).closest("form").submit()'>
+						<select style='width:150px;' name='cert_practika_<?=$atts['id_list']?>' onChange='jQuery(this).closest("form").submit()'>
 							<option value='0'<?=( ! $cert_practika ? ' selected="selected"': '')?>>все</option>
 							<?if($aPractika){?>
 								<?foreach($aPractika as $aPractikaItem){?>
@@ -254,7 +260,7 @@ $aData = $wpdb->get_results( $sQuery );
 					
 						<?if( ! $aStatusFilter || count($aStatusFilter)>1){?>
 						статус: 
-						<select style='width:150px;' name='cert_status_<?=$attr['id_list']?>' onChange='jQuery(this).closest("form").submit()'>
+						<select style='width:150px;' name='cert_status_<?=$atts['id_list']?>' onChange='jQuery(this).closest("form").submit()'>
 							<option value='0'<?=( ! $cert_status ? ' selected="selected"': '')?>>все</option>
 							<?if($aStatuses){?>
 								<?foreach($aStatuses as $aStatus){?>
@@ -270,12 +276,12 @@ $aData = $wpdb->get_results( $sQuery );
 					<?if($atts['sort']){?>
 					<div style='float:right;'>
 						сортировка: 
-						<select style='width:150px;' name='sort_<?=$attr['id_list']?>' onChange='jQuery(this).closest("form").submit()'>
+						<select style='width:150px;' name='sort_<?=$atts['id_list']?>' onChange='jQuery(this).closest("form").submit()'>
 							<option value='id'<?=('id' == $sort ? ' selected="selected"': '')?>>по номеру</option>
 							<option value='name'<?=('name' == $sort ? ' selected="selected"': '')?>>по имени</option>
 							<option value='date'<?=('date' == $sort ? ' selected="selected"': '')?>>по дате выдачи</option>
 						</select>
-						<select style='width:150px;' name='order_<?=$attr['id_list']?>' onChange='jQuery(this).closest("form").submit()'>
+						<select style='width:150px;' name='order_<?=$atts['id_list']?>' onChange='jQuery(this).closest("form").submit()'>
 							<option value='asc'<?=('asc' == $order ? ' selected="selected"': '')?>>по возрастанию</option>
 							<option value='desc'<?=('desc' == $order ? ' selected="selected"': '')?>>по убыванию</option>
 						</select>
