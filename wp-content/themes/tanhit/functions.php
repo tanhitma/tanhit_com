@@ -3153,7 +3153,7 @@ function cert_list_shortcode( $atts ) {
 		'praktica'				=> '',	//Сертификаты для каких типов выводить через запятую 1,2,3
 		'statuses'				=> '',	//Сертификаты для каких статусов выводить через запятую 1,2,3
 		'praktica_statuses' 	=> '',	//Сертификаты типов с определенными статусами 1:2,3|2:3,
-		'column_location_title'	=> ''
+		'column_location_title'	=> '',
 	), $atts, 'cert_list' );
 
 	include (__DIR__ . '/certificate/cert_list.php' );
@@ -3164,10 +3164,11 @@ function cert_map_shortcode( $atts ) {
 	global $wpdb;
 	
 	$atts = shortcode_atts( array(
+		'id_list'			=> '',
 		'my' 				=> 0, 	//Выводить только мои сертификаты
 		'praktica'			=> '',	//Сертификаты для каких типов выводить через запятую 1,2,3
 		'statuses'			=> '',	//Сертификаты для каких статусов выводить через запятую 1,2,3
-		'praktica_statuses' => ''	//Сертификаты типов с определенными статусами 1:2,3|2:3
+		'praktica_statuses' => '',	//Сертификаты типов с определенными статусами 1:2,3|2:3
 	), $atts, 'cert_map' );
 	
 	include (__DIR__ . '/certificate/cert_map.php' );

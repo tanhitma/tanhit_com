@@ -14,6 +14,10 @@ $aInnerTable = array();
 $aWhere = array();
 $aFilterWhere = array();
 
+if ( ! $atts['id_list'] ){
+	$atts['id_list'] = get_the_ID();
+}
+
 $aPractikaFilter = array();
 $aStatusFilter = array();
 
@@ -97,6 +101,43 @@ if (isset($atts['practika_statuses']) && $atts['practika_statuses']){
 	}
 }
 
+//Фильтр
+$cert_practika = '';
+if (isset($_POST['cert_practika_'.$atts['id_list']])){
+	$cert_practika = $_POST['cert_practika_'.$atts['id_list']];
+	$_SESSION['cert_practika_'.$atts['id_list']] = $cert_practika;
+}
+if(isset($_SESSION['cert_practika_'.$atts['id_list']])){
+	$cert_practika = $_SESSION['cert_practika_'.$atts['id_list']];
+}
+//Сбрасываем практику
+if ($aPractikaFilter && count($aPractikaFilter)==1){
+	$cert_practika = '';
+}
+
+$cert_status = '';
+if (isset($_POST['cert_status_'.$atts['id_list']])){
+	$cert_status = $_POST['cert_status_'.$atts['id_list']];
+	$_SESSION['cert_status_'.$atts['id_list']] = $cert_status;
+}
+if(isset($_SESSION['cert_status_'.$atts['id_list']])){
+	$cert_status = $_SESSION['cert_status_'.$atts['id_list']];
+}
+//Сбрасываем статус
+if ($aStatusFilter && count($aStatusFilter)==1){
+	$cert_status = '';
+}
+
+if ($cert_practika){
+	$aInnerTable[] = "LEFT JOIN {$wpdb->prefix}termsmeta UM_PRACTIKA_F ON (UM_PRACTIKA_F.terms_id = TR.term_taxonomy_id && UM_PRACTIKA_F.meta_key = 'cert_practika')";
+	$aWhere[] = "UM_PRACTIKA_F.meta_value = '{$cert_practika}'";
+}
+if ($cert_status){
+	$aInnerTable[] = "LEFT JOIN {$wpdb->prefix}termsmeta UM_STATUS_F ON (UM_STATUS_F.terms_id = TR.term_taxonomy_id && UM_STATUS_F.meta_key = 'cert_status')";
+	$aWhere[] = "UM_STATUS_F.meta_value = '{$cert_status}'";
+}
+//\Фильтр
+
 $sQuery = "
 	SELECT P.*, U.id as user_id, TR.term_taxonomy_id as cert_type, TRIM(CONCAT(UM.meta_value,' ',UM2.meta_value)) as cert_user_name, PM2.meta_value as cert_location, PM3.meta_value as cert_date 
 	FROM {$wpdb->prefix}posts P 
@@ -110,63 +151,65 @@ $sQuery = "
 	".($aInnerTable ? implode(' ',$aInnerTable) : '')."
 	WHERE P.post_type = 'certificates' && P.`post_status` = 'publish'".($aWhere ? ' && ('.implode(' && ', $aWhere).')' : '').($aFilterWhere ? ' && '.implode(' && ', $aFilterWhere) : '')."  
 	GROUP BY P.ID";
-	
+
 $aData = $wpdb->get_results( $sQuery );
 
-$aCertData = $aCoordData = array();
-//Вычисляем центр координат
-foreach ($aData as $oRow){
-	$aLocation = unserialize($oRow->cert_location);
-	
-	$aCoordData[] = array($aLocation['lat'], $aLocation['lng']);
-}
+if($aData){
+	$aCertData = $aCoordData = array();
+	//Вычисляем центр координат
+	foreach ($aData as $oRow){
+		$aLocation = unserialize($oRow->cert_location);
+		
+		$aCoordData[] = array($aLocation['lat'], $aLocation['lng']);
+	}
 
-$aCenterCoord = getCenterCoord($aCoordData);
+	$aCenterCoord = getCenterCoord($aCoordData);
 ?>
 
-<section style="min-height: 300px">
-	<div id='map-certificates'>
+	<section style="min-height: 300px">
+		<div id='map-certificates'>
 
-		<?if($aData){?>
-			<div id="map" style='width:100%;height:400px;'></div>
-			<script>
-				// The following example creates complex markers to indicate beaches near
-				// Sydney, NSW, Australia. Note that the anchor is set to (0,32) to correspond
-				// to the base of the flagpole.
-				
-				function initMap() {
-				  var map = new google.maps.Map(document.getElementById('map'), {
-					zoom: 3,
-					center: {lat: <?=$aCenterCoord[0]?>, lng: <?=$aCenterCoord[1]?>}
-				  });
-
-				  setMarkers(map);
-				}
-
-				var beaches = [];
-				<?foreach ($aData as $oRow){
-					$aLocation = unserialize($oRow->cert_location);?>
+			<?if($aData){?>
+				<div id="map" style='width:100%;height:400px;'></div>
+				<script>
+					// The following example creates complex markers to indicate beaches near
+					// Sydney, NSW, Australia. Note that the anchor is set to (0,32) to correspond
+					// to the base of the flagpole.
 					
-					beaches.push(['<?="{$oRow->cert_user_name} - ".str_pad($oRow->ID, 10, 0, STR_PAD_LEFT)?>', <?=$aLocation['lat']?>, <?=$aLocation['lng']?>]);
-				<?}?>
+					function initMap() {
+					  var map = new google.maps.Map(document.getElementById('map'), {
+						zoom: 3,
+						center: {lat: <?=$aCenterCoord[0]?>, lng: <?=$aCenterCoord[1]?>}
+					  });
 
-				function setMarkers(map) {
-				  // Adds markers to the map.
-				
-				  for (var i = 0; i < beaches.length; i++) {
-					var beach = beaches[i];
-					new google.maps.Marker({
-					  position: {lat: beach[1], lng: beach[2]},
-					  map: map,
-					  //icon: image,
-					  //shape: shape,
-					  title: beach[0],
-					  zIndex: beach[3]
-					});
-				  }
-				}
-			</script>
-			<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDIf-8uF1c86zFX_ElUI8PKv9lQVS_n3wM&callback=initMap"></script>
-		<?}?>
-	</div>
-</section>
+					  setMarkers(map);
+					}
+
+					var beaches = [];
+					<?foreach ($aData as $oRow){
+						$aLocation = unserialize($oRow->cert_location);?>
+						
+						beaches.push(['<?="{$oRow->cert_user_name} - ".str_pad($oRow->ID, 10, 0, STR_PAD_LEFT)?>', <?=$aLocation['lat']?>, <?=$aLocation['lng']?>]);
+					<?}?>
+
+					function setMarkers(map) {
+					  // Adds markers to the map.
+					
+					  for (var i = 0; i < beaches.length; i++) {
+						var beach = beaches[i];
+						new google.maps.Marker({
+						  position: {lat: beach[1], lng: beach[2]},
+						  map: map,
+						  //icon: image,
+						  //shape: shape,
+						  title: beach[0],
+						  zIndex: beach[3]
+						});
+					  }
+					}
+				</script>
+				<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDIf-8uF1c86zFX_ElUI8PKv9lQVS_n3wM&callback=initMap"></script>
+			<?}?>
+		</div>
+	</section>
+<?}?>
