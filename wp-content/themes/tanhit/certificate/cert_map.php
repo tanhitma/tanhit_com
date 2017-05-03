@@ -38,7 +38,7 @@ if (isset($atts['practika']) && $atts['practika']){
 		if ($aAttrPractika){
 			//$aWhere[] = "TR.term_taxonomy_id IN (".implode(',', $aAttrPractika).")";
 			$aInnerTable[] = "LEFT JOIN {$wpdb->prefix}termsmeta UM_PRACTIKA ON (UM_PRACTIKA.terms_id = TR.term_taxonomy_id && UM_PRACTIKA.meta_key = 'cert_practika')";
-			$aWhere[] = "UM_PRACTIKA.meta_value IN (".implode(',',$aAttrStatuses).")";
+			$aWhere[] = "UM_PRACTIKA.meta_value IN (".implode(',',$aAttrPractika).")";
 			
 			$aPractikaFilter = array_merge($aAttrPractika, $aPractikaFilter);
 		}
