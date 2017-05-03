@@ -3156,7 +3156,9 @@ function cert_list_shortcode( $atts ) {
 		'column_location_title'	=> '',
 	), $atts, 'cert_list' );
 
+	ob_start();
 	include (__DIR__ . '/certificate/cert_list.php' );
+	return ob_get_clean();
 }
 
 add_shortcode( 'cert_map', 'cert_map_shortcode' );
@@ -3173,7 +3175,9 @@ function cert_map_shortcode( $atts ) {
 		'icon_img'			=> ''
 	), $atts, 'cert_map' );
 	
+	ob_start();
 	include (__DIR__ . '/certificate/cert_map.php' );
+	return ob_get_clean();
 }
 
 add_action('admin_head', 'custom_admin_css');
