@@ -3166,9 +3166,11 @@ function cert_map_shortcode( $atts ) {
 	$atts = shortcode_atts( array(
 		'id_list'			=> '',
 		'my' 				=> 0, 	//Выводить только мои сертификаты
+		'manager' 			=> 0, 	//Сертификаты подопечных
 		'praktica'			=> '',	//Сертификаты для каких типов выводить через запятую 1,2,3
 		'statuses'			=> '',	//Сертификаты для каких статусов выводить через запятую 1,2,3
 		'praktica_statuses' => '',	//Сертификаты типов с определенными статусами 1:2,3|2:3
+		'icon_img'			=> ''
 	), $atts, 'cert_map' );
 	
 	include (__DIR__ . '/certificate/cert_map.php' );

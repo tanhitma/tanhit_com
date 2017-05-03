@@ -24,6 +24,10 @@ $aStatusFilter = array();
 if (isset($atts['my']) && $atts['my']){
 	$aWhere[] = "U.ID = '".get_current_user_id()."'";
 }
+if (isset($atts['manager']) && $atts['manager']){
+	$aInnerTable[] = "INNER JOIN {$wpdb->prefix}postmeta PM_MANAGER ON (PM_MANAGER.post_id = P.ID && PM_MANAGER.meta_key = 'cert_manager')";
+	$aWhere[] = "PM_MANAGER.meta_value = '".get_current_user_id()."'";
+}
 if (isset($atts['practika']) && $atts['practika']){
 	$atts['practika'] = trim($atts['practika']);
 	$atts['practika'] = trim($atts['practika'],',');
@@ -193,19 +197,21 @@ if($aData){
 					<?}?>
 
 					function setMarkers(map) {
-					  // Adds markers to the map.
-					
-					  for (var i = 0; i < beaches.length; i++) {
-						var beach = beaches[i];
-						new google.maps.Marker({
-						  position: {lat: beach[1], lng: beach[2]},
-						  map: map,
-						  //icon: image,
-						  //shape: shape,
-						  title: beach[0],
-						  zIndex: beach[3]
-						});
-					  }
+						// Adds markers to the map.
+
+						for (var i = 0; i < beaches.length; i++) {
+							var beach = beaches[i];
+							new google.maps.Marker({
+								position: {lat: beach[1], lng: beach[2]},
+								map: map,
+								//shape: shape,
+								title: beach[0],
+								zIndex: beach[3],
+								<?if (isset($atts['icon_img']) && $atts['icon_img']){?>
+									icon: '/wp-content/themes/tanhit/images/gmap-label-icon/<?=$atts['icon_img']?>',
+								<?}?>
+							});
+						}
 					}
 				</script>
 				<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDIf-8uF1c86zFX_ElUI8PKv9lQVS_n3wM&callback=initMap"></script>
