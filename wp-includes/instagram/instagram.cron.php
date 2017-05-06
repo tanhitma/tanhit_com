@@ -12,8 +12,9 @@ require_once('instagram-parser.php');
 
 $inst = new InstagramParser();
 $data = [];
-if (is_array($inst->getRecent()) && !empty($inst->getRecent())){
-    foreach ($inst->getRecent() as $post){
+$recent = $inst->getRecent();
+if (is_array($recent) && !empty($recent)){
+    foreach ($recent as $post){
         $link_parts = explode('/', trim($post->link,'/'));
         $post_id = (int)explode('_', $post->id)[0];
         $data[$post_id] = [
