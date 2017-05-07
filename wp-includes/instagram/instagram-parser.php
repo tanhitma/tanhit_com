@@ -11,10 +11,10 @@ class InstagramParser {
     private $client_id = 'f641e06fccec412fa9847bb362d33812';
     private $client_secret = '9e93873be8834c24a4353a49a0039c3e';
     private $callback = 'https://tanhit.com/my-account';
-    private $token = '';
+    private $token = '3245430378.f641e06.ee1f38064b00429982186c1233a4f730';
 
     public function __construct() {
-        $this->token = '3245430378.f641e06.cd94db8843f5463eb8320843c2b86ff7';
+        //$this->token = '3245430378.f641e06.cd94db8843f5463eb8320843c2b86ff7';
         $this->instagram = new Instagram([
             "ClientId"     => $this->client_id,
             "ClientSecret" => $this->client_secret,
