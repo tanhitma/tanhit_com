@@ -2942,6 +2942,7 @@ function wp_certificates_generation_page_callback() {
 		$iCertType 	= (int)(isset($_POST['cert_type']) ? $_POST['cert_type'] : '');
 		$sDate 		= (isset($_POST['cert_date']) ? strtotime($_POST['cert_date']) : '');
 		$aPlace 	= isset($_POST['place']) ? $_POST['place'] : '';
+		$aPlace2 	= isset($_POST['place2']) ? $_POST['place2'] : '';
 		$iManager 	= isset($_POST['manager']) ? $_POST['manager'] : '';
 		
 		if($sEmails && $iCertType && $sDate && $aPlace){
@@ -2966,7 +2967,8 @@ function wp_certificates_generation_page_callback() {
 							'meta_input'     => array( 
 								'cert_user' 	=> $user->ID,
 								'cert_date'		=> date('Y-m-d', $sDate),
-								'cert_location'	=> $aPlace
+								'cert_location'		=> $aPlace,
+								'cert_location_2'	=> $aPlace2,
 							)
 						);
 				
@@ -3041,6 +3043,16 @@ function wp_certificates_generation_page_callback() {
 				</td>
 			</tr>
 			<tr>
+				<th>Место выдачи (дополнительно)</th>
+				<td>
+					<input id='place_address2' type='hidden' name='place2[address]' value='' />
+					<input id='place_lat2' type='hidden' name='place2[lat]' value='' />
+					<input id='place_lng2' type='hidden' name='place2[lng]' value='' />
+					<div><input id="google-map-search2" class="controls" style='width:100%;' type="text" placeholder="Поиск..."></div><br />
+					<div id="google-map2"></div>
+				</td>
+			</tr>
+			<tr>
 				<th>Ведущий</th>
 				<td>
 					<select id='acf-field-cert_manager' name='manager'>
@@ -3058,6 +3070,10 @@ function wp_certificates_generation_page_callback() {
 	
 	<style>
 		#google-map {
+			height: 400px;
+			width:100%;
+		}
+		#google-map2 {
 			height: 400px;
 			width:100%;
 		}
@@ -3121,6 +3137,61 @@ function wp_certificates_generation_page_callback() {
 				map.fitBounds(bounds);
 			});
 			// [END region_getplaces]
+			
+			
+			var myLatlng2 = {lat: 55.7522200, lng: 37.6155600};
+			
+			var map2 = new google.maps.Map(document.getElementById('google-map2'), {
+				center: myLatlng2,
+				zoom: 5,
+				mapTypeId: google.maps.MapTypeId.ROADMAP
+			});
+
+			// Create the search box and link it to the UI element.
+			var input2 = document.getElementById('google-map-search2');
+			var searchBox2 = new google.maps.places.SearchBox(input2);
+			//map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+			// Bias the SearchBox results towards current map's viewport.
+			map2.addListener('bounds_changed', function() {
+				searchBox2.setBounds(map2.getBounds());
+			});
+
+			var markers2 = [];
+			// [START region_getplaces]
+			// Listen for the event fired when the user selects a prediction and retrieve
+			// more details for that place.
+			searchBox2.addListener('places_changed', function() {
+				var place2 = searchBox2.getPlaces()[0];
+
+				if ( ! place2.geometry) return;
+
+				jQuery('#place_address2').val(place2.formatted_address);
+				jQuery('#place_lat2').val(place2.geometry.location.lat());
+				jQuery('#place_lng2').val(place2.geometry.location.lng());
+				
+				markers2.forEach(function(marker) {
+					marker.setMap(null);
+				});
+				markers2 = [];
+				
+				// Create a marker for each place.
+				markers2.push(new google.maps.Marker({
+					map: map2,
+					title: place2.name,
+					position: place2.geometry.location
+				}));
+				
+				var bounds2 = new google.maps.LatLngBounds();
+				if (place2.geometry.viewport) {
+					bounds2.union(place2.geometry.viewport);
+				} else {
+					bounds2.extend(place2.geometry.location);
+				}
+				
+				map2.fitBounds(bounds2);
+			});
+			// [END region_getplaces]
 		}
 		
 		jQuery(document).ready(function() {
@@ -3130,11 +3201,18 @@ function wp_certificates_generation_page_callback() {
 					return false;
 				}
 			});
+			
+			jQuery('#google-map-search2').keydown(function(event){
+				if(event.keyCode == 13) {
+					event.preventDefault();
+					return false;
+				}
+			});
 		});
     </script>
 	
 	<script src="https://maps.googleapis.com/maps/api/js?v=3&sensor=false&key=AIzaSyDIf-8uF1c86zFX_ElUI8PKv9lQVS_n3wM&libraries=places&callback=initAutocomplete" async defer></script>
-	
+
 	<?
 }
 
@@ -3158,7 +3236,7 @@ function cert_list_shortcode( $atts ) {
 
 	ob_start();
 	include (__DIR__ . '/certificate/cert_list.php' );
-	return ob_get_clean();
+	return ob_get_contents();
 }
 
 add_shortcode( 'cert_map', 'cert_map_shortcode' );
@@ -3177,7 +3255,7 @@ function cert_map_shortcode( $atts ) {
 	
 	ob_start();
 	include (__DIR__ . '/certificate/cert_map.php' );
-	return ob_get_clean();
+	return ob_get_contents();
 }
 
 add_action('admin_head', 'custom_admin_css');
