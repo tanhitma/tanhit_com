@@ -25,12 +25,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 		/* pll_e( 'Price: ', 'tanhit' ); */
 		global $product;
-		$product_prop=get_the_terms($post->ID, 'product_cat');
+		/*$product_prop=get_the_terms($post->ID, 'product_cat');
 		$product_cat = $product_prop[0]->slug;
 
 		if ($product_cat == 'seminar') {
 			pll_e( 'Предоплата: ', 'tanhit' );
-		}
+		}*/
+
+		if(get_post_meta($product->get_id(), '_wc_preorder', 1) == 'yes'){
+		  pll_e( get_post_meta($product->get_id(), 'wc_product_preorder_text', 1). ': ', 'tanhit' );
+    }
 
 		echo $product->get_price_html();
 
@@ -40,5 +44,4 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<meta itemprop="price" content="<?php echo esc_attr( $product->get_price() ); ?>" />
 	<meta itemprop="priceCurrency" content="<?php echo esc_attr( get_woocommerce_currency() ); ?>" />
 	<link itemprop="availability" href="http://schema.org/<?php echo $product->is_in_stock() ? 'InStock' : 'OutOfStock'; ?>" />
-
 </div>

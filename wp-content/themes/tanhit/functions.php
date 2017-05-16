@@ -3388,3 +3388,28 @@ function custom_woocommerce_save_account_details($user_id){
         }
 	}
 }
+
+
+add_action('save_post', 'product_save_actions', 15, 3);
+function product_save_actions($post_id) {
+    $post = get_post($post_id);
+
+    if ($post->post_type == "product") {
+        $preorder = isset($_POST['_wc_preorder']) && $_POST['_wc_preorder'] != 'no' ? 'yes' : 'no';
+
+        update_post_meta($post_id, '_wc_preorder', $preorder);
+    }
+}
+
+add_filter('product_type_options', 'product_type_options', 10, 1);
+function product_type_options($options) {
+    $options['wc_preorder'] = [
+        'id'            => '_wc_preorder',
+        'wrapper_class' => 'show_if_simple',
+        'label'         => __('Предоплата', 'highthemes'),
+        'description'   => __('Выводить текст о предоплате', 'highthemes'),
+        'default'       => 'no'
+    ];
+
+    return $options;
+}
