@@ -3236,7 +3236,7 @@ function cert_list_shortcode( $atts ) {
 
 	ob_start();
 	include (__DIR__ . '/certificate/cert_list.php' );
-	return ob_get_contents();
+	return ob_get_clean();
 }
 
 add_shortcode( 'cert_map', 'cert_map_shortcode' );
@@ -3255,7 +3255,7 @@ function cert_map_shortcode( $atts ) {
 	
 	ob_start();
 	include (__DIR__ . '/certificate/cert_map.php' );
-	return ob_get_contents();
+	return ob_get_clean();
 }
 
 add_action('admin_head', 'custom_admin_css');
