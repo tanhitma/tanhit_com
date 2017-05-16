@@ -88,7 +88,7 @@ $iCertStatusMax = $wpdb->get_var( $sQuery );
 	<div role="tabpanel" class="tab-pane fade" id="certificates">
 		<div class='content'>
 			<h2>Выданные сертификаты</h2>
-			<?php do_shortcode('[cert_list my=1 id_list=list]');?>
+			<?php echo do_shortcode('[cert_list my=1 id_list=list]');?>
 		</div>
 	</div>
 	<div role="tabpanel" class="tab-pane fade" id="webinars">
@@ -108,7 +108,7 @@ $iCertStatusMax = $wpdb->get_var( $sQuery );
 			<button style='float:right;margin:20px 0px 0 0;' type='button' onClick='get_cert_archive()'>Сформировать и выслать архив на почту</button>
 			<div style='clear:both;'></div>
 			
-			<?php do_shortcode('[cert_list manager=1'.(220 == $iCertStatusMax ? '' : ' full=1').' filter=1 sort=1 id_list=manager]');?>
+			<?php echo do_shortcode('[cert_list manager=1'.(220 == $iCertStatusMax ? '' : ' full=1').' filter=1 sort=1 id_list=manager]');?>
 		</div>
 	</div>
 	<script>

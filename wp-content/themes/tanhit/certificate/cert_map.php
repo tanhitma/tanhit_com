@@ -1,13 +1,15 @@
 <?php
 session_start ();
 
-function getCenterCoord($coord)
-{
-    $centroid = array_reduce( $coord, function ($x,$y) use ($coord) {
-        $len = count($coord);
-        return [$x[0] + $y[0]/$len, $x[1] + $y[1]/$len];
-    }, array(0,0));
-    return $centroid;
+if ( ! function_exists('getCenterCoord')){
+	function getCenterCoord($coord)
+	{
+		$centroid = array_reduce( $coord, function ($x,$y) use ($coord) {
+			$len = count($coord);
+			return [$x[0] + $y[0]/$len, $x[1] + $y[1]/$len];
+		}, array(0,0));
+		return $centroid;
+	}
 }
 
 $aInnerTable = array();
@@ -143,13 +145,14 @@ if ($cert_status){
 //\Фильтр
 
 $sQuery = "
-	SELECT P.*, U.id as user_id, TR.term_taxonomy_id as cert_type, TRIM(CONCAT(UM.meta_value,' ',UM2.meta_value)) as cert_user_name, PM2.meta_value as cert_location, PM3.meta_value as cert_date 
+	SELECT P.*, U.id as user_id, TR.term_taxonomy_id as cert_type, TRIM(CONCAT(UM.meta_value,' ',UM2.meta_value)) as cert_user_name, PM2.meta_value as cert_location, PM4.meta_value as cert_location_2, PM3.meta_value as cert_date 
 	FROM {$wpdb->prefix}posts P 
 	INNER JOIN {$wpdb->prefix}postmeta PM ON (PM.post_id = P.ID && PM.meta_key = 'cert_user')
 	INNER JOIN {$wpdb->prefix}users U ON (U.ID = PM.meta_value)
 	INNER JOIN {$wpdb->prefix}usermeta UM ON (UM.user_id = U.ID && UM.meta_key = 'first_name')
 	LEFT JOIN {$wpdb->prefix}usermeta UM2 ON (UM2.user_id = U.ID && UM2.meta_key = 'last_name')
 	INNER JOIN {$wpdb->prefix}postmeta PM2 ON (PM2.post_id = P.ID && PM2.meta_key = 'cert_location')
+	LEFT JOIN {$wpdb->prefix}postmeta PM4 ON (PM4.post_id = P.ID && PM4.meta_key = 'cert_location_2')
 	LEFT JOIN {$wpdb->prefix}postmeta PM3 ON (PM3.post_id = P.ID && PM3.meta_key = 'cert_date')
 	INNER JOIN {$wpdb->prefix}term_relationships TR ON (TR.object_id = P.ID)
 	".($aInnerTable ? implode(' ',$aInnerTable) : '')."
@@ -165,6 +168,12 @@ if($aData){
 		$aLocation = unserialize($oRow->cert_location);
 		
 		$aCoordData[] = array($aLocation['lat'], $aLocation['lng']);
+		
+		if( ! empty($oRow->cert_location_2)){
+			$aLocation2 = unserialize($oRow->cert_location_2);
+			
+			$aCoordData[] = array($aLocation2['lat'], $aLocation2['lng']);
+		}
 	}
 
 	$aCenterCoord = getCenterCoord($aCoordData);
@@ -194,6 +203,14 @@ if($aData){
 						$aLocation = unserialize($oRow->cert_location);?>
 						
 						beaches.push(['<?="{$oRow->cert_user_name} - ".str_pad($oRow->ID, 10, 0, STR_PAD_LEFT)?>', <?=$aLocation['lat']?>, <?=$aLocation['lng']?>]);
+					
+						<?if( ! empty($oRow->cert_location_2)){
+							$aLocation2 = unserialize($oRow->cert_location_2);
+						?>
+							
+						beaches.push(['<?="{$oRow->cert_user_name} - ".str_pad($oRow->ID, 10, 0, STR_PAD_LEFT)?>', <?=$aLocation2['lat']?>, <?=$aLocation2['lng']?>]);
+						
+						<?}?>
 					<?}?>
 
 					function setMarkers(map) {

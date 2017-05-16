@@ -214,13 +214,14 @@ if ($cert_status){
 
 
 $sQuery = "
-	SELECT P.*, U.id as user_id, TR.term_taxonomy_id as cert_type, TRIM(CONCAT(UM.meta_value,' ',UM2.meta_value)) as cert_user_name, PM2.meta_value as cert_location, PM3.meta_value as cert_date 
+	SELECT P.*, U.id as user_id, TR.term_taxonomy_id as cert_type, TRIM(CONCAT(UM.meta_value,' ',UM2.meta_value)) as cert_user_name, PM2.meta_value as cert_location, PM4.meta_value as cert_location_2, PM3.meta_value as cert_date 
 	FROM {$wpdb->prefix}posts P 
 	INNER JOIN {$wpdb->prefix}postmeta PM ON (PM.post_id = P.ID && PM.meta_key = 'cert_user')
 	INNER JOIN {$wpdb->prefix}users U ON (U.ID = PM.meta_value)
 	INNER JOIN {$wpdb->prefix}usermeta UM ON (UM.user_id = U.ID && UM.meta_key = 'first_name')
 	LEFT JOIN {$wpdb->prefix}usermeta UM2 ON (UM2.user_id = U.ID && UM2.meta_key = 'last_name')
 	INNER JOIN {$wpdb->prefix}postmeta PM2 ON (PM2.post_id = P.ID && PM2.meta_key = 'cert_location')
+	LEFT JOIN {$wpdb->prefix}postmeta PM4 ON (PM4.post_id = P.ID && PM4.meta_key = 'cert_location_2')
 	LEFT JOIN {$wpdb->prefix}postmeta PM3 ON (PM3.post_id = P.ID && PM3.meta_key = 'cert_date')
 	INNER JOIN {$wpdb->prefix}term_relationships TR ON (TR.object_id = P.ID)
 	".($aInnerTable ? implode(' ',$aInnerTable) : '')."
@@ -311,7 +312,8 @@ $aData = $wpdb->get_results( $sQuery );
 							<th>Дата получения</th>
 						</tr>
 					<?foreach($aData as $oRow){
-						$aLocation = unserialize($oRow->cert_location);
+						$aLocation  = unserialize($oRow->cert_location);
+						$aLocation2 = ( ! empty($oRow->cert_location_2) ? unserialize($oRow->cert_location_2) : '');
 						
 						if($atts['full'] || $atts['my']){
 							$i_practika_id = wp_get_terms_meta($oRow->cert_type, 'cert_practika', true);
@@ -357,7 +359,12 @@ $aData = $wpdb->get_results( $sQuery );
 								<?}?>
 							<?}?>
 							
-							<td><?=($aLocation['address'])?></td>
+							<td>
+								<div><?=($aLocation['address'])?></div>
+								<?if($aLocation2){?>
+								<div><?=($aLocation2['address'])?></div>	
+								<?}?>
+							</td>
 							<td><?=date('d.m.Y', strtotime($oRow->cert_date))?></td>
 						</tr>
 					<?}?>
