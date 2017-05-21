@@ -1134,6 +1134,10 @@ function remove_accents( $string ) {
 		return $string;
 
 	if (seems_utf8($string)) {
+                if (is_admin()){
+                    return $string;
+		}
+                
 		$chars = array(
 		// Decompositions for Latin-1 Supplement
 		chr(194).chr(170) => 'a', chr(194).chr(186) => 'o',
