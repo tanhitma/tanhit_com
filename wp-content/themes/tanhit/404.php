@@ -2,7 +2,7 @@
 <section style="min-height: 300px">
     <div class="container">
         <div class="content">
-            <?php if (have_posts()) : while (have_posts()) : the_post(); ?>
+            <?php/* if (have_posts()) : while (have_posts()) : the_post(); ?>
                 <div class="row">
                     <div class="col-sm-12">
                         <h2><?php the_title(); ?></h2>
@@ -14,7 +14,7 @@
                     </div>
                 </div>
             <?php endwhile; ?>
-            <?php else: ?>
+            <?php else: */?>
 
                 <?php /*
                 <!-- <h2><?php pll_e( 'Page not found', 'tanhit' ); ?></h2> -->
@@ -29,6 +29,8 @@
  */?>
                 <br>
                 <br>
+				<div>Страница не найдена</div>
+				<br>
                 <p>
                     Если Вы были зарегистрированы на старой версии сайта и/или получали наши рассылки, то скорее всего Ваш профиль уже зарегистрирован - попробуйте
                     восстановить пароль по <a href="/wp-login.php?action=lostpassword">этой ссылке</a>.
@@ -37,7 +39,7 @@
                     Список доступных вебинаров Вы можете увидеть по ссылке в меню "<a href="/архив-вебинаров-и-практик">Вебинары</a>"
 
                 </p>
-            <?php endif; ?>
+            <?php/* endif; */?>
         </div>
     </div>
 </section>

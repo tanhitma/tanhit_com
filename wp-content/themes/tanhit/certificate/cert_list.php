@@ -84,12 +84,13 @@ $aStatusFilter = array();
 if (isset($atts['my']) && $atts['my']){
 	$aWhere[] = "U.ID = '".get_current_user_id()."'";
 }
-
+if (isset($atts['user_id']) && $atts['user_id']){
+	$aWhere[] = "U.ID = '{$atts['user_id']}'";
+}
 if (isset($atts['manager']) && $atts['manager']){
 	$aInnerTable[] = "INNER JOIN {$wpdb->prefix}postmeta PM_MANAGER ON (PM_MANAGER.post_id = P.ID && PM_MANAGER.meta_key = 'cert_manager')";
 	$aWhere[] = "PM_MANAGER.meta_value = '".get_current_user_id()."'";
 }
-
 if (isset($atts['practika']) && $atts['practika']){
 	$atts['practika'] = trim($atts['practika']);
 	$atts['practika'] = trim($atts['practika'],',');
@@ -302,7 +303,7 @@ $aData = $wpdb->get_results( $sQuery );
 							<th>Фото</th>
 							<th>Информация</th>
 							<?}else{?>
-								<?if($atts['my']){?>
+								<?if($atts['my'] || $atts['user_id']){?>
 								<th>Информация</th>
 								<?}else{?>
 								<th>Имя участника</th>
@@ -315,7 +316,7 @@ $aData = $wpdb->get_results( $sQuery );
 						$aLocation  = unserialize($oRow->cert_location);
 						$aLocation2 = ( ! empty($oRow->cert_location_2) ? unserialize($oRow->cert_location_2) : '');
 						
-						if($atts['full'] || $atts['my']){
+						if($atts['full'] || $atts['my'] || $atts['user_id']){
 							$i_practika_id = wp_get_terms_meta($oRow->cert_type, 'cert_practika', true);
 							$oDataTaxonomyT = get_term_by( 'term_taxonomy_id', $i_practika_id, 'certificate_praktica' );
 							$sPractika = (isset($oDataTaxonomyT->name) ? $oDataTaxonomyT->name : '');
@@ -323,7 +324,7 @@ $aData = $wpdb->get_results( $sQuery );
 							$i_status_id = wp_get_terms_meta($oRow->cert_type, 'cert_status', true);
 							$oDataTaxonomyT = get_term_by( 'term_taxonomy_id', $i_status_id, 'certificate_status' );
 							$sStatus = (isset($oDataTaxonomyT->name) ? $oDataTaxonomyT->name : '');
-							
+						
 							$user_info = get_userdata($oRow->user_id);
 							$aAvatar = wp_get_attachment_image_src( get_user_meta($oRow->user_id, 'wp_user_avatar', true) );
 						}
@@ -347,7 +348,7 @@ $aData = $wpdb->get_results( $sQuery );
 								<?}?>
 							</td>
 							<?}else{?>
-								<?if($atts['my']){?>
+								<?if($atts['my'] || $atts['user_id']){?>
 									<td>
 										<div>Практика: <?=$sPractika?></div>
 										<div>Статус: <?=$sStatus?></div>

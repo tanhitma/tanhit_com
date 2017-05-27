@@ -24,15 +24,7 @@ global $wpdb;
 wc_print_notices(); 
 
 //Получаем максимальный статус имеющегося сертификата у пользователя
-$sQuery = "SELECT MAX(UM_STATUS.meta_value) as `status`
-FROM {$wpdb->prefix}posts P 
-INNER JOIN {$wpdb->prefix}postmeta PM ON (PM.post_id = P.ID && PM.meta_key = 'cert_user') 
-INNER JOIN {$wpdb->prefix}users U ON (U.ID = PM.meta_value && U.ID = '".get_current_user_id()."')  
-INNER JOIN {$wpdb->prefix}term_relationships TR ON (TR.object_id = P.ID) 
-INNER JOIN {$wpdb->prefix}termsmeta UM_STATUS ON (UM_STATUS.terms_id = TR.term_taxonomy_id && UM_STATUS.meta_key = 'cert_status') 
-WHERE P.post_type = 'certificates' && P.`post_status` = 'publish' && (UM_STATUS.meta_value IN (220,221,222,223))";
-
-$iCertStatusMax = $wpdb->get_var( $sQuery );
+$iCertStatusMax = getUserStatus();
 ?>
 
 <div class="myaccount_user" style="margin-bottom: 20px;">

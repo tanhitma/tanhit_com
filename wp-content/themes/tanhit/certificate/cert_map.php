@@ -26,6 +26,9 @@ $aStatusFilter = array();
 if (isset($atts['my']) && $atts['my']){
 	$aWhere[] = "U.ID = '".get_current_user_id()."'";
 }
+if (isset($atts['user_id']) && $atts['user_id']){
+	$aWhere[] = "U.ID = '{$atts['user_id']}'";
+}
 if (isset($atts['manager']) && $atts['manager']){
 	$aInnerTable[] = "INNER JOIN {$wpdb->prefix}postmeta PM_MANAGER ON (PM_MANAGER.post_id = P.ID && PM_MANAGER.meta_key = 'cert_manager')";
 	$aWhere[] = "PM_MANAGER.meta_value = '".get_current_user_id()."'";
@@ -185,51 +188,56 @@ if($aData){
 			<?if($aData){?>
 				<div id="map" style='width:100%;height:400px;'></div>
 				<script>
-					// The following example creates complex markers to indicate beaches near
-					// Sydney, NSW, Australia. Note that the anchor is set to (0,32) to correspond
-					// to the base of the flagpole.
-					
-					function initMap() {
-					  var map = new google.maps.Map(document.getElementById('map'), {
+				function initMap() {
+					var map = new google.maps.Map(document.getElementById('map'), {
 						zoom: 3,
 						center: {lat: <?=$aCenterCoord[0]?>, lng: <?=$aCenterCoord[1]?>}
-					  });
-
-					  setMarkers(map);
-					}
-
-					var beaches = [];
-					<?foreach ($aData as $oRow){
-						$aLocation = unserialize($oRow->cert_location);?>
-						
-						beaches.push(['<?="{$oRow->cert_user_name} - ".str_pad($oRow->ID, 10, 0, STR_PAD_LEFT)?>', <?=$aLocation['lat']?>, <?=$aLocation['lng']?>]);
+					});
 					
-						<?if( ! empty($oRow->cert_location_2)){
-							$aLocation2 = unserialize($oRow->cert_location_2);
-						?>
-							
-						beaches.push(['<?="{$oRow->cert_user_name} - ".str_pad($oRow->ID, 10, 0, STR_PAD_LEFT)?>', <?=$aLocation2['lat']?>, <?=$aLocation2['lng']?>]);
+					setMarkers(map);
+				}
+
+				var beaches = [];
+				<?foreach ($aData as $oRow){
+					$iCertStatusMax = getUserStatus($oRow->user_id);
+					
+					$aLocation = unserialize($oRow->cert_location);?>
+					
+					beaches.push(['<?="{$oRow->cert_user_name} - ".str_pad($oRow->ID, 10, 0, STR_PAD_LEFT)?>', <?=$aLocation['lat']?>, <?=$aLocation['lng']?>, <?=($iCertStatusMax ? $oRow->user_id : '')?>]);
+
+					<?if( ! empty($oRow->cert_location_2)){
+						$aLocation2 = unserialize($oRow->cert_location_2);
+					?>
 						
-						<?}?>
+					beaches.push(['<?="{$oRow->cert_user_name} - ".str_pad($oRow->ID, 10, 0, STR_PAD_LEFT)?>', <?=$aLocation2['lat']?>, <?=$aLocation2['lng']?>, <?=($iCertStatusMax ? $oRow->user_id : '')?>]);
+					
 					<?}?>
+				<?}?>
 
-					function setMarkers(map) {
-						// Adds markers to the map.
+				function setMarkers(map) {
+					// Adds markers to the map.
 
-						for (var i = 0; i < beaches.length; i++) {
-							var beach = beaches[i];
-							new google.maps.Marker({
-								position: {lat: beach[1], lng: beach[2]},
-								map: map,
-								//shape: shape,
-								title: beach[0],
-								zIndex: beach[3],
-								<?if (isset($atts['icon_img']) && $atts['icon_img']){?>
-									icon: '/wp-content/themes/tanhit/images/gmap-label-icon/<?=$atts['icon_img']?>',
-								<?}?>
-							});
-						}
+					for (var i = 0; i < beaches.length; i++) {
+						var beach = beaches[i];
+						var marker = new google.maps.Marker({
+							position: {lat: beach[1], lng: beach[2]},
+							map: map,
+							//shape: shape,
+							title: beach[0],
+							//zIndex: beach[3],
+							<?if (isset($atts['icon_img']) && $atts['icon_img']){?>
+								icon: '/wp-content/themes/tanhit/images/gmap-label-icon/<?=$atts['icon_img']?>',
+							<?}?>
+							url: (beach[3] ? '/users/'+beach[3] : ''),
+						});
+						
+						google.maps.event.addListener(marker, 'click', function() {
+							if (this.url){
+								window.location.href = this.url;
+							}
+						});
 					}
+				}
 				</script>
 				<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDIf-8uF1c86zFX_ElUI8PKv9lQVS_n3wM&callback=initMap"></script>
 			<?}?>

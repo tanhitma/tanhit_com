@@ -3224,6 +3224,7 @@ function cert_list_shortcode( $atts ) {
 	$atts = shortcode_atts( array(
 		'id_list'				=> '',
 		'my' 					=> 0, 	//Выводить только мои сертификаты
+		'user_id' 				=> 0, 	//Выводить сертификаты пользователя
 		'manager' 				=> 0, 	//Сертификаты подопечных
 		'full' 					=> 0,	//Краткие столбцы или подробные
 		'filter'				=> 0,	//Выводить фильтр
@@ -3246,6 +3247,7 @@ function cert_map_shortcode( $atts ) {
 	$atts = shortcode_atts( array(
 		'id_list'			=> '',
 		'my' 				=> 0, 	//Выводить только мои сертификаты
+		'user_id' 			=> 0, 	//Выводить сертификаты пользователя
 		'manager' 			=> 0, 	//Сертификаты подопечных
 		'practika'			=> '',	//Сертификаты для каких типов выводить через запятую 1,2,3
 		'statuses'			=> '',	//Сертификаты для каких статусов выводить через запятую 1,2,3
@@ -3412,4 +3414,45 @@ function product_type_options($options) {
     ];
 
     return $options;
+}
+
+//Получаем максимальный статус имеющегося сертификата у пользователя
+function getUserStatus($user_id = 0){
+	global $wpdb;
+	
+	if ( ! $user_id){
+		$user_id = get_current_user_id();
+	}
+	
+	$sQuery = "SELECT MAX(UM_STATUS.meta_value) as `status`
+	FROM {$wpdb->prefix}posts P 
+	INNER JOIN {$wpdb->prefix}postmeta PM ON (PM.post_id = P.ID && PM.meta_key = 'cert_user') 
+	INNER JOIN {$wpdb->prefix}users U ON (U.ID = PM.meta_value && U.ID = '{$user_id}')  
+	INNER JOIN {$wpdb->prefix}term_relationships TR ON (TR.object_id = P.ID) 
+	INNER JOIN {$wpdb->prefix}termsmeta UM_STATUS ON (UM_STATUS.terms_id = TR.term_taxonomy_id && UM_STATUS.meta_key = 'cert_status') 
+	WHERE P.post_type = 'certificates' && P.`post_status` = 'publish' && (UM_STATUS.meta_value IN (220,221,222,223))";
+	
+	return (int)$wpdb->get_var( $sQuery );
+}
+
+add_action('init', 'do_rewrite');
+function do_rewrite(){
+	// Правило перезаписи
+	add_rewrite_rule( 'users$', 'index.php?pagename=404', 'top' );
+	add_rewrite_rule( 'users/$', 'index.php?pagename=404', 'top' );
+	add_rewrite_rule( 'users/([0-9]+)$', 'index.php?pagename=users&user_id=$matches[1]', 'top' );
+	add_rewrite_rule( 'users/([0-9]+)/$', 'index.php?pagename=users&user_id=$matches[1]', 'top' );
+
+	// скажем WP, что есть новые параметры запроса
+	add_filter( 'query_vars', function( $vars ){
+		$vars[] = 'user_id';
+		return $vars;
+	} );
+}
+
+function force404(){
+	status_header( 404 );
+	nocache_headers();
+	include( get_query_template( '404' ) );
+	exit; 
 }
