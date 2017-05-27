@@ -2238,6 +2238,16 @@ function getCertificatePdf($post_id, $save_dir = ''){
 						//настроен
 						$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:470px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:768px;width:100%;text-align:center;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:926px;left:190px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
 					break;
+					
+					case 'c15':
+						//настроен
+						$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:482px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:675px;width:100%;text-align:center;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:876px;right:155px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
+					break;
+					
+					case 'c16':
+						//настроен
+						$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:482px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:690px;width:100%;text-align:center;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:910px;right:155px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
+					break;
 				}
 			}
 			
@@ -2269,7 +2279,8 @@ add_action('pre_get_posts', function(WP_Query $el) {
 	}
 	else
 	if ($el->query['post_type'] == 'certificates' && is_singular()){
-		$post_id = (int)$el->get('certificates');
+		$iCertificateNum = $el->get('certificates');
+		$post_id = (int)$iCertificateNum;
 		
 		if (getCertificatePdf($post_id) === FALSE){
 			echo "Сертификат № {$iCertificateNum} не возможно отобразить, обратитесь к администратору сайта";
