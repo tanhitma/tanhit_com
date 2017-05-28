@@ -2879,6 +2879,10 @@ function custom_woocommerce_save_account_details($user_id){
           }
         }
 	}
+	
+	//Рассылка
+	mailchimp_updated_user_meta($user_id, 'subscribe_all', (int)$_POST['subscribe_all']);
+	mailchimp_updated_user_meta($user_id, 'subscribe_vip', (int)$_POST['subscribe_vip']);
 }
 
 
@@ -3902,3 +3906,162 @@ function MY_COLUMNS_SORT_FUNCTION( $columns ) {
     );
     return wp_parse_args( $custom, $columns );
 }*/
+
+
+//Подписка при регистрации пользователя
+add_action('user_register', 'mailchimp_user_register');
+function mailchimp_user_register($user_id){
+	
+	//Подписываем на рассылку
+	mailchimp_updated_user_meta($user_id, 'subscribe_all', 1);
+}
+
+//Добавление пользователя в вип
+add_action('add_user_role','mailchimp_add_role',10,2);
+function mailchimp_add_role($user_id, $role){
+	
+	//Подписываем на рассылку
+	mailchimp_updated_user_meta($user_id, 'subscribe_vip', 1);
+}
+
+//Удаление пользователя из вип
+add_action('remove_user_role','mailchimp_remove_role',10,2);
+function mailchimp_remove_role($user_id, $role){
+		
+	//Отписываем от рассылки
+	mailchimp_updated_user_meta($user_id, 'subscribe_vip', 0);
+}
+
+//При изменении данных
+add_action( 'updated_user_meta', 'mailchimp_update_user_meta', 10, 4 );
+function mailchimp_update_user_meta($meta_id, $user_id, $meta_key, $_meta_value) {
+	
+	if ($_meta_value && in_array($meta_key, array('first_name','last_name'))){
+		//Подписываем на рассылку
+		mailchimp_updated_user_meta($user_id, 'subscribe_all', 1);
+	}
+}
+
+use \DrewM\MailChimp\MailChimp;	
+
+//Изменение флага рассылки
+function mailchimp_updated_user_meta($user_id, $meta_key, $_meta_value){
+	
+	$user = get_userdata($user_id);
+
+	//Подключаем MailChimp
+	include('includes/mailchimp-api/MailChimp.php'); 
+	
+	//use \DrewM\MailChimp\MailChimp;
+	$MailChimp = new MailChimp('41cce6d337dd08ca80df2842f604bf6a-us14');
+	
+	
+	SWITCH($meta_key){
+		case 'subscribe_all':
+			//Общий список рассылки
+			$list_id = 'be2d256a25';
+	
+			//Подписка
+			if($_meta_value){
+				if ($user->first_name && $user->last_name){
+					$result = $MailChimp->post("lists/{$list_id}/members", [
+						'email_address' => $user->user_email,
+						'status'        => 'subscribed',
+						'merge_fields'  => array('FNAME' => $user->first_name,'LNAME' => $user->last_name)
+					]);
+				
+					if ( ! $MailChimp->success()) {
+						$subscriber_hash = $MailChimp->subscriberHash($user->user_email);
+						$result = $MailChimp->patch("lists/{$list_id}/members/$subscriber_hash", [
+							'status' 		=> 'subscribed',
+							'merge_fields'  => array('FNAME' => $user->first_name,'LNAME' => $user->last_name)
+						]);
+					}
+				}
+			}
+			//отписка
+			else{
+				$subscriber_hash = $MailChimp->subscriberHash($user->user_email);
+				$result = $MailChimp->patch("lists/{$list_id}/members/$subscriber_hash", [
+					'status' => 'unsubscribed'
+				]);
+			}
+		break;
+		
+		case 'subscribe_vip':
+			//VIP список рассылки
+			$list_id = 'e11dd4d4b6';
+	
+			//Подписка
+			if($_meta_value){
+				if ($user->first_name && $user->last_name){
+					$result = $MailChimp->post("lists/{$list_id}/members", [
+						'email_address' => $user->user_email,
+						'status'        => 'subscribed',
+						'merge_fields'  => array('FNAME' => $user->first_name,'LNAME' => $user->last_name)
+					]);
+					
+					if ( ! $MailChimp->success()) {
+						$subscriber_hash = $MailChimp->subscriberHash($user->user_email);
+						$result = $MailChimp->patch("lists/{$list_id}/members/$subscriber_hash", [
+							'status' 		=> 'subscribed',
+							'merge_fields'  => array('FNAME' => $user->first_name,'LNAME' => $user->last_name)
+						]);
+					}
+				}
+			}
+			//отписка
+			else{
+				$subscriber_hash = $MailChimp->subscriberHash($user->user_email);
+				$result = $MailChimp->patch("lists/{$list_id}/members/$subscriber_hash", [
+					'status' => 'unsubscribed'
+				]);
+			}
+		break;
+	}
+	
+	//die(var_dump($result));
+}
+
+//Изменение email у пользователя
+add_action( 'profile_update', 'mailchimp_profile_update', 10, 2 );
+function mailchimp_profile_update($user_id, $old_user_data){
+	
+	$aListIds = array(
+		//Общий список рассылки
+		'be2d256a25',
+		//VIP список рассылки
+		'e11dd4d4b6',
+	);
+
+	$user = get_userdata($user_id);
+	
+	//Подключаем MailChimp
+	include('includes/mailchimp-api/MailChimp.php'); 
+	
+	//use \DrewM\MailChimp\MailChimp;*
+	$MailChimp = new MailChimp('41cce6d337dd08ca80df2842f604bf6a-us14');
+	
+	
+	//изменяем email в списках подписки
+	foreach ($aListIds as $list_id){
+		$subscriber_hash = $MailChimp->subscriberHash($old_user_data->user_email);
+		$result = $MailChimp->patch("lists/{$list_id}/members/$subscriber_hash", [
+			'email_address' => $user->user_email
+		]);
+	}
+}
+
+function mailchimp_exists($user_email, $list_id){
+    //Подключаем MailChimp
+	include('includes/mailchimp-api/MailChimp.php'); 
+	
+	//use \DrewM\MailChimp\MailChimp;*
+	$MailChimp = new MailChimp('41cce6d337dd08ca80df2842f604bf6a-us14');
+    $subscriber_hash = $MailChimp->subscriberHash($user_email);
+	
+    $result = $MailChimp->get("lists/$list_id/members/$subscriber_hash");
+	
+    if ($result['status'] != 'subscribed') return false;
+    return true;
+}

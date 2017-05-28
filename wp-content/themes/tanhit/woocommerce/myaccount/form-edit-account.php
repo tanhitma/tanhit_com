@@ -91,6 +91,21 @@ $aAvatar = wp_get_attachment_image_src( get_user_meta($user->ID, 'wp_user_avatar
 	</fieldset>
 	<div class="clear"></div>
 
+	<fieldset style="margin-top: 25px">
+		<legend><?php _e( 'Новостная рассылка', 'woocommerce' ); ?></legend>
+
+		<p class="form-row form-row-wide">
+			<label style='font-weight:normal;' for="subscribe_all"><input type="checkbox" id="subscribe_all" name="subscribe_all" value='1' <?=(mailchimp_exists($user->user_email, 'be2d256a25') ? 'checked="checked"' : '')?> />&nbsp;&nbsp;<?php _e( 'Подключиться на общую рассылку от Танит.', 'woocommerce' ); ?></label>
+		</p>
+		
+		<?if(current_user_can('vip')){?>
+		<p class="form-row form-row-wide">
+			<label style='font-weight:normal;' for="subscribe_vip"><input type="checkbox" id="subscribe_vip" name="subscribe_vip" value='1' <?=(mailchimp_exists($user->user_email, 'e11dd4d4b6') ? 'checked="checked"' : '')?> />&nbsp;&nbsp;<?php _e( 'Подключиться на рассылку для ближнего круга от Танит.', 'woocommerce' ); ?></label>
+		</p>
+		<?}?>
+	</fieldset>
+	<div class="clear"></div>
+	
 	<?php do_action( 'woocommerce_edit_account_form' ); ?>
 
 	<p>
