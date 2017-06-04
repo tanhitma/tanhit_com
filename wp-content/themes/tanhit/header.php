@@ -142,7 +142,7 @@
                             <span class="lbl"><?php pll_e('ВОЗЛЮБЛЕННАЯ', 'tanhit'); ?></span>
                         </div>
                         <div class="col-xs-6 align-right lang">
-                            <a href="/%d0%ba%d0%be%d0%bd%d1%82%d0%b0%d0%ba%d1%82%d1%8b" class="up-contact"><span class="glyphicon glyphicon-envelope"></span> <?php pll_e('контакты', 'tanhit'); ?></a>
+                            <a href="/contacts" class="up-contact"><span class="glyphicon glyphicon-envelope"></span> <?php pll_e('контакты', 'tanhit'); ?></a>
                             <a href="/my-account" class="up-login"><span class="glyphicon glyphicon-log-in"></span> <?php
                                 if ( is_user_logged_in() ) {
                                     pll_e('личный кабинет', 'tanhit');

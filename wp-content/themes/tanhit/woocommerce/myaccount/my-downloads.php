@@ -57,6 +57,11 @@ if ( $downloads = WC()->customer->get_downloadable_products() ) : ?>
 
 <?php endif; ?>
 
+<link href="/wp-content/themes/tanhit/js/videojs/video-js.min.css" rel="stylesheet">
+<script type="text/javascript" src="/wp-content/themes/tanhit/js/videojs/video.min.js"></script>
+<script type="text/javascript" src="/wp-content/themes/tanhit/js/videojs/youtube.min.js"></script>
+<script type="text/javascript" src="/wp-content/themes/tanhit/js/videojs/video_init.js"></script>
+
 <style>
 	.vid_player2{height:400px;margin-top:-200px;width:600px;margin-left:-300px;}
 </style>
@@ -87,4 +92,25 @@ if ( $downloads = WC()->customer->get_downloadable_products() ) : ?>
 			}
 		}*/
 	//}
+	
+	/* Player */
+	jQuery('.show-video').click(function() {
+		var pContainer = jQuery(jQuery(jQuery(this).attr("href"))[0]);
+		pContainer.show();
+	});
+
+	jQuery('.show_vid').click(function() {
+		if (jQuery(this).find('.video-js').length){
+			var plId = jQuery(this).find('.video-js').attr('id');
+			var player = videojs(plId);
+			player.pause();
+		}
+
+		jQuery(this).hide();
+		jQuery(".flowplayer").each(function () {
+			$(this).data("flowplayer").stop();
+		});
+	}).children().click(function(e) {
+		return false;
+	});
 </script>

@@ -56,72 +56,80 @@ $iCertStatusMax = getUserStatus();
 	?>
 </div>
 
-<ul class="nav nav-tabs" role="tablist">
-  <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Главная</a></li>
-  <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Профиль</a></li>
-  <li role="presentation"><a href="#certificates" aria-controls="certificates" role="tab" data-toggle="tab">Сертификаты</a></li>
-  <li role="presentation"><a href="#webinars" aria-controls="webinars" role="tab" data-toggle="tab">Вебинары и практики</a></li>
-  <li role="presentation"><a href="#orders" aria-controls="orders" role="tab" data-toggle="tab">Заказы</a></li>
-  <li role="presentation"><a href="#pins" aria-controls="pins" role="tab" data-toggle="tab">Пин-коды</a></li>
-  <?if($iCertStatusMax){?>
-	<li role="presentation"><a href="#manager" aria-controls="manager" role="tab" data-toggle="tab"><?=(220==$iCertStatusMax ? 'ВЕДУЩИЙ' : 'МАСТЕР')?></a></li>
-  <?}?>
+<ul id='ajax-tabs' class="nav nav-tabs" role="tablist">
+	<li role="presentation"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Главная</a></li>
+	<li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Профиль</a></li>
+	<li role="presentation"><a href="#certificates" aria-controls="certificates" role="tab" data-toggle="tab">Сертификаты</a></li>
+	<li role="presentation"><a href="#webinars" aria-controls="webinars" role="tab" data-toggle="tab">Вебинары и практики</a></li>
+	<li role="presentation"><a href="#orders" aria-controls="orders" role="tab" data-toggle="tab">Заказы</a></li>
+	<li role="presentation"><a href="#pins" aria-controls="pins" role="tab" data-toggle="tab">Пин-коды</a></li>
+	<?if($iCertStatusMax){?>
+		<li role="presentation"><a href="#manager" aria-controls="manager" role="tab" data-toggle="tab" data-load="1"><?=(220==$iCertStatusMax ? 'ВЕДУЩИЙ' : 'МАСТЕР')?></a></li>
+	<?}?>
 </ul>
 
-<div class="tab-content">
-	<div role="tabpanel" class="tab-pane active" id="home">
-		<?php do_action( 'woocommerce_before_my_account' ); ?>
-		<?php do_action( 'tanhit_my_account' ); ?>
-		<?php do_action( 'woocommerce_after_my_account' ); ?>
-	</div>
-	<div role="tabpanel" class="tab-pane fade in" id="profile">
-		<?php wc_get_template( 'myaccount/form-edit-account.php', array( 'user' => get_user_by( 'id', get_current_user_id() ) ) );?>
-	</div>
-	<div role="tabpanel" class="tab-pane fade" id="certificates">
-		<div class='content'>
-			<h2>Выданные сертификаты</h2>
-			<?php echo do_shortcode('[cert_list my=1 id_list=list]');?>
-		</div>
-	</div>
-	<div role="tabpanel" class="tab-pane fade" id="webinars">
-		<?php wc_get_template( 'myaccount/my-downloads.php' ); ?>
-	</div>
-	<div role="tabpanel" class="tab-pane fade" id="orders">
-		<?php wc_get_template( 'myaccount/my-orders.php', array( 'order_count' => $order_count ) ); ?>
-	</div>
-	<div role="tabpanel" class="tab-pane fade" id="pins">
-		<?php do_action('display_pincodes'); ?>
-	</div>
+<div id='ajax-tabs-panels' class="tab-content">
+	<div role="tabpanel" class="tab-pane" id="home"></div>
+	<div role="tabpanel" class="tab-pane fade" id="profile"></div>
+	<div role="tabpanel" class="tab-pane fade" id="certificates"></div>
+	<div role="tabpanel" class="tab-pane fade" id="webinars"></div>
+	<div role="tabpanel" class="tab-pane fade" id="orders"></div>
+	<div role="tabpanel" class="tab-pane fade" id="pins"></div>
 	<?if($iCertStatusMax){?>
-	<div role="tabpanel" class="tab-pane fade" id="manager">
-		<div class='content'>
-			<div style='clear:both;'></div>
-			<h2 style='float:left;'>Сертификаты учеников</h2>
-			<button style='float:right;margin:20px 0px 0 0;' type='button' onClick='get_cert_archive()'>Сформировать и выслать архив на почту</button>
-			<div style='clear:both;'></div>
-			
-			<?php echo do_shortcode('[cert_list manager=1'.(220 == $iCertStatusMax ? '' : ' full=1').' filter=1 sort=1 id_list=manager]');?>
-		</div>
-	</div>
-	<script>
-		function get_cert_archive(){
-			jQuery.ajax({
-			  method: "POST",
-			  url: "<?=admin_url('admin-ajax.php')?>",
-			  data: { action: "get_cert_archive"}
-			}).done(function( msg ) {
-				//console.log(msg);
-			});
-			  
-			alert('В ближайшее время ссылка на архив будет отправлена на вашу почту');
-			  
-			return false;
-		}
-	</script>
+	<div role="tabpanel" class="tab-pane fade" id="manager"><?php wc_get_template( 'myaccount/my-manager-certificates.php' );?></div>
 	<?}?>
 </div>
 
-<?php /**
- * don't load my-address at my-account page
- */
-// wc_get_template( 'myaccount/my-address.php' ); ?>
+<style>
+#ajax-tabs-panels .tab-preloader{
+	background: url('/wp-content/themes/tanhit/images/preloader/2.gif') no-repeat center center;
+	width: 100%;
+    height: 200px;
+}
+</style>
+<script>
+	//Текущая вкладка
+	var start_tab = (window.location.hash ? window.location.hash.substring(1) : '');
+	
+	var set_default = true;
+	jQuery('#ajax-tabs li a').each(function(i,v){
+		if ( set_default && jQuery(v).attr('aria-controls') == start_tab){
+			set_default = false;
+		}
+	});
+	
+	//Вкладка по умолчнаию
+	if (set_default){
+		start_tab = 'home';
+	}
+	
+	jQuery('#ajax-tabs li a').click(function(){
+		var el = this;
+		
+		var tab_name = jQuery(el).attr('aria-controls');
+		
+		window.location.hash = tab_name;
+		
+		//Если вкладка не подгружена
+		if ( ! jQuery(el).attr('data-load')){
+			jQuery('.tab-content #'+tab_name).html('<div class="tab-preloader"></div>');
+			
+			jQuery.ajax({
+				method: "POST",
+				url: "<?=admin_url('admin-ajax.php')?>",
+				data: { action: 'load_user_tab', session_id: '<?=session_id()?>', tab_name : tab_name },
+				success: function(html){
+					jQuery('.tab-content #'+tab_name).html(html);
+					
+					jQuery(el).attr('data-load', 1);
+				}
+			})
+		}
+	});
+	
+	jQuery(document).ready(function($) {
+		"use strict";
+		
+		jQuery('#ajax-tabs li a[aria-controls="'+start_tab+'"]').click();
+	});
+</script>

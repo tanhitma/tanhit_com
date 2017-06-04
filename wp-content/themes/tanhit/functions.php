@@ -1,6 +1,15 @@
 <?php
 
-session_start();
+add_action('init', 'myStartSession', 1);
+function myStartSession() {
+    if (isset($_POST['session_id']) && $_POST['session_id']){
+		session_id($_POST['session_id']);
+	}
+	
+	if( ! session_id()) {
+        session_start();
+    }
+}
 
 /*@ini_set('upload_max_size', '128M');
 @ini_set('post_max_size', '128M');
@@ -174,6 +183,11 @@ if (class_exists('WooCommerce')) :
     require_once('includes/tanhit-ajax-actions.php');
     Tanhit_Ajax::controller();
 
+	/**
+	 * Add various functions and filters
+	 */
+	require_once('includes/tanhit-functions.php');
+	
     if (defined('DOING_AJAX') && DOING_AJAX) {
         /** do nothing */
     } else {
@@ -182,11 +196,6 @@ if (class_exists('WooCommerce')) :
          * Add page 'архив-вебинаров-и-практик' specific code
          */
         require_once('includes/tanhit-archive-webinars-practice.php');
-
-        /**
-         * Add various functions and filters
-         */
-        require_once('includes/tanhit-functions.php');
     }
 
 endif;
@@ -1239,7 +1248,7 @@ function woo_order_has_virtual_product() {
 
 function isOrderVirtual($order){
 	
-	$result = TRUE;
+	//$result = TRUE;
 	
 	if (is_numeric($order)){
 		$order = new WC_Order($order);
@@ -1248,15 +1257,18 @@ function isOrderVirtual($order){
 	//Товары в заказе
 	$order_items = $order->get_items();
 	foreach ($order_items as $item_id => $item_data) {
-		$oProduct = $order->get_product_from_item($item_data);
+	
+		$oProduct = new WC_Product($item_data['product_id']);//$order->get_product_from_item($item_data);
 
-		if ( ! $oProduct->is_virtual()) {
-			$result = FALSE;
-			break;
+		if ( $oProduct){
+			if ( ! $oProduct->is_virtual()) {
+				return FALSE;
+				break;
+			}
 		}
 	}  
 	
-	return $result;
+	return true;
 }
 	
 //Добавляем роль пользователя
@@ -4064,4 +4076,47 @@ function mailchimp_exists($user_email, $list_id){
 	
     if ($result['status'] != 'subscribed') return false;
     return true;
+}
+
+//Подгрузка вкладок личного кабинета по требованию
+add_action( 'wp_ajax_load_user_tab', 'load_user_tab' ); // For logged in users
+add_action( 'wp_ajax_nopriv_load_user_tab', 'load_user_tab' ); // For anonymous users
+function load_user_tab(){
+	set_time_limit (0);
+	
+	$sTab = isset($_POST['tab_name']) ? $_POST['tab_name'] : '';
+	
+	SWITCH($sTab){
+		case 'home':
+			do_action( 'woocommerce_before_my_account' );
+			do_action( 'tanhit_my_account' );
+			do_action( 'woocommerce_after_my_account' );
+		break;
+		
+		case 'profile':
+			wc_get_template( 'myaccount/form-edit-account.php', array( 'user' => get_user_by( 'id', get_current_user_id() ) ) );
+		break;
+		
+		case 'certificates':
+			wc_get_template( 'myaccount/my-user-certificates.php' );
+		break;
+		
+		case 'webinars':
+			wc_get_template( 'myaccount/my-downloads.php' );
+		break;
+		
+		case 'orders':
+			wc_get_template( 'myaccount/my-orders.php', array( 'order_count' => $order_count ) );
+		break;
+		
+		case 'pins':
+			do_action('display_pincodes');
+		break;
+		
+		case 'manager':
+			wc_get_template( 'myaccount/my-manager-certificates.php' );
+		break;
+	}
+	
+	exit;
 }

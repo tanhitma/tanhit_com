@@ -1,5 +1,4 @@
 <?php
-session_start ();
 
 if ( ! function_exists('getCenterCoord')){
 	function getCenterCoord($coord)

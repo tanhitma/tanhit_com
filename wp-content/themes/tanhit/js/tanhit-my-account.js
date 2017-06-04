@@ -8,7 +8,7 @@
  */
 /*jslint browser: true*/
 /*global jQuery, console, TanhitMyAccount*/
-jQuery(document).ready(function($) {
+/*jQuery(document).ready(function($) {
 	"use strict";
 
 	if ( typeof TanhitMyAccount === 'undefined' ) {
@@ -45,4 +45,4 @@ jQuery(document).ready(function($) {
 	};	
 	TanhitMyAccount = $.extend({}, TanhitMyAccount, api);
 	TanhitMyAccount.init();	
-});
+});*/
