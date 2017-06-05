@@ -4086,6 +4086,8 @@ function load_user_tab(){
 	
 	$sTab = isset($_POST['tab_name']) ? $_POST['tab_name'] : '';
 	
+        do_action( 'woocommerce_my_account' );
+        
 	SWITCH($sTab){
 		case 'home':
 			do_action( 'woocommerce_before_my_account' );

@@ -116,32 +116,35 @@ if ( $customer_orders ) : ?>
 	</table>
 <?php endif; ?>
 
+<style>
+.order.clone-wrapper .order-details{display:table-cell;}
+</style>
 <script>
 jQuery(document).ready(function($) {
 	"use strict";
 
-	$('.show-order-items.view').on( 'click', function(ev) {
+	jQuery('.show-order-items.view').on( 'click', function(ev) {
 		var id = $(this).data( 'order-id' );
 		var stop = false,
 			clone;
 			
-		if ( $( '.clone-wrapper' ).length > 0 ) {
-			$( '.clone-wrapper' ).each( function(i,e){
+		if ( jQuery( '.clone-wrapper' ).length > 0 ) {
+			jQuery( '.clone-wrapper' ).each( function(i,e){
 				var td = $(e).find( 'td' );
 				if ( td.attr('id') == 'clone-'+id ) {
 					stop = true;
 				}	
-				$(e).remove();
+				jQuery(e).remove();
 			});	
 		}	
 		if ( stop ) return;
 		
-		var table = $( '#table-order-' + id );
+		var table = jQuery( '#table-order-' + id );
 		var p = table.parents( 'tr.order' );
-		clone = $( table.clone() );
+		clone = jQuery( table.clone() );
 		clone.attr( 'id', 'clone-' + id );
-		clone.wrap( '<tr class="order clone-wrapper">' );
-		$( clone ).insertAfter( p );
+		//clone.wrap( '<tr class="order clone-wrapper">' );console.log(clone);
+		jQuery( clone ).insertAfter( p ).wrap( '<tr class="order clone-wrapper">' );
 	});	
 });
 </script>

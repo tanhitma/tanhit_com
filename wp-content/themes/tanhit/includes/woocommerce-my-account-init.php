@@ -4,7 +4,7 @@
  * @subpackage My Account
  */
 
-add_action( 'woocommerce_before_my_account', 'tanhit_my_account_init', 0 );
+add_action( 'woocommerce_my_account', 'tanhit_my_account_init', 0 );
 function tanhit_my_account_init() {	
 	
 	/**
