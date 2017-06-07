@@ -2260,6 +2260,16 @@ function getCertificatePdf($post_id, $save_dir = ''){
 						//настроен
 						$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:482px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:690px;width:100%;text-align:center;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:910px;right:155px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
 					break;
+                                        
+                                        case 'c17':
+						//настроен
+						$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:482px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:670px;width:100%;text-align:center;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:910px;right:155px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
+					break;
+					
+					case 'c18':
+						//настроен
+						$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:470px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:740px;width:100%;text-align:center;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:875px;right:155px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
+					break;
 				}
 			}
 			
