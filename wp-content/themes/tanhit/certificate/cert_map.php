@@ -147,18 +147,21 @@ if ($cert_status){
 //\Фильтр
 
 $sQuery = "
-	SELECT P.*, U.id as user_id, TR.term_taxonomy_id as cert_type, TRIM(CONCAT(UM.meta_value,' ',UM2.meta_value)) as cert_user_name, PM2.meta_value as cert_location, PM4.meta_value as cert_location_2, PM3.meta_value as cert_date 
+	SELECT P.*, U.id as user_id, TR.term_taxonomy_id as cert_type, TRIM(CONCAT(UM.meta_value,' ',UM2.meta_value)) as cert_user_name, 
+	PM2.meta_value as cert_location, PM4.meta_value as cert_location_2, PM3.meta_value as cert_date, UM3.meta_value as user_extra_adress1, UM4.meta_value as user_extra_adress2  
 	FROM {$wpdb->prefix}posts P 
 	INNER JOIN {$wpdb->prefix}postmeta PM ON (PM.post_id = P.ID && PM.meta_key = 'cert_user')
 	INNER JOIN {$wpdb->prefix}users U ON (U.ID = PM.meta_value)
 	INNER JOIN {$wpdb->prefix}usermeta UM ON (UM.user_id = U.ID && UM.meta_key = 'first_name')
 	LEFT JOIN {$wpdb->prefix}usermeta UM2 ON (UM2.user_id = U.ID && UM2.meta_key = 'last_name')
-	INNER JOIN {$wpdb->prefix}postmeta PM2 ON (PM2.post_id = P.ID && PM2.meta_key = 'cert_location')
+	LEFT JOIN {$wpdb->prefix}postmeta PM2 ON (PM2.post_id = P.ID && PM2.meta_key = 'cert_location')
 	LEFT JOIN {$wpdb->prefix}postmeta PM4 ON (PM4.post_id = P.ID && PM4.meta_key = 'cert_location_2')
 	LEFT JOIN {$wpdb->prefix}postmeta PM3 ON (PM3.post_id = P.ID && PM3.meta_key = 'cert_date')
+	LEFT JOIN {$wpdb->prefix}usermeta UM3 ON (UM3.user_id = U.ID && UM3.meta_key = 'user_extra_adress1')
+	LEFT JOIN {$wpdb->prefix}usermeta UM4 ON (UM4.user_id = U.ID && UM4.meta_key = 'user_extra_adress2')
 	INNER JOIN {$wpdb->prefix}term_relationships TR ON (TR.object_id = P.ID)
 	".($aInnerTable ? implode(' ',$aInnerTable) : '')."
-	WHERE P.post_type = 'certificates' && P.`post_status` = 'publish'".($aWhere ? ' && ('.implode(' && ', $aWhere).')' : '').($aFilterWhere ? ' && '.implode(' && ', $aFilterWhere) : '')."  
+	WHERE (PM2.meta_value!='' || UM3.meta_value!='') && P.post_type = 'certificates' && P.`post_status` = 'publish'".($aWhere ? ' && ('.implode(' && ', $aWhere).')' : '').($aFilterWhere ? ' && '.implode(' && ', $aFilterWhere) : '')."  
 	GROUP BY P.ID";
 
 $aData = $wpdb->get_results( $sQuery );
@@ -202,39 +205,68 @@ if($aData){
 					
 					$aLocation = unserialize($oRow->cert_location);?>
 					
-					beaches.push(['<?="{$oRow->cert_user_name} - ".str_pad($oRow->ID, 10, 0, STR_PAD_LEFT)?>', <?=$aLocation['lat']?>, <?=$aLocation['lng']?>, <?=($iCertStatusMax ? $oRow->user_id : '')?>]);
+					beaches.push(['<?="{$oRow->cert_user_name} - ".str_pad($oRow->ID, 10, 0, STR_PAD_LEFT)?>', <?=$aLocation['lat']?>, <?=$aLocation['lng']?>, <?=($iCertStatusMax ? $oRow->user_id : '')?>, '<?=($oRow->user_extra_adress1 ? $oRow->user_extra_adress1 : '')?>']);
 
 					<?if( ! empty($oRow->cert_location_2)){
 						$aLocation2 = unserialize($oRow->cert_location_2);
 					?>
 						
-					beaches.push(['<?="{$oRow->cert_user_name} - ".str_pad($oRow->ID, 10, 0, STR_PAD_LEFT)?>', <?=$aLocation2['lat']?>, <?=$aLocation2['lng']?>, <?=($iCertStatusMax ? $oRow->user_id : '')?>]);
+					beaches.push(['<?="{$oRow->cert_user_name} - ".str_pad($oRow->ID, 10, 0, STR_PAD_LEFT)?>', <?=$aLocation2['lat']?>, <?=$aLocation2['lng']?>, <?=($iCertStatusMax ? $oRow->user_id : '')?>, '<?=($oRow->user_extra_adress2 ? $oRow->user_extra_adress2 : '')?>']);
 					
 					<?}?>
 				<?}?>
 
 				function setMarkers(map) {
+					var geocoder = new google.maps.Geocoder();
+					
 					// Adds markers to the map.
 
 					for (var i = 0; i < beaches.length; i++) {
 						var beach = beaches[i];
-						var marker = new google.maps.Marker({
-							position: {lat: beach[1], lng: beach[2]},
-							map: map,
-							//shape: shape,
-							title: beach[0],
-							//zIndex: beach[3],
-							<?if (isset($atts['icon_img']) && $atts['icon_img']){?>
-								icon: '/wp-content/themes/tanhit/images/gmap-label-icon/<?=$atts['icon_img']?>',
-							<?}?>
-							url: (beach[3] ? '/users/'+beach[3] : ''),
-						});
 						
-						google.maps.event.addListener(marker, 'click', function() {
-							if (this.url){
-								window.location.href = this.url;
-							}
-						});
+						if (beach[4]){
+							geocoder.geocode({'address': beach[4]}, function(results, status) {
+								if (status === 'OK' && results[0].geometry.location) {
+									var marker = new google.maps.Marker({
+										position: results[0].geometry.location,
+										map: map,
+										//shape: shape,
+										title: beach[0],
+										//zIndex: beach[3],
+										<?if (isset($atts['icon_img']) && $atts['icon_img']){?>
+											icon: '/wp-content/themes/tanhit/images/gmap-label-icon/<?=$atts['icon_img']?>',
+										<?}?>
+										url: (beach[3] ? '/users/'+beach[3] : ''),
+									});
+									
+									google.maps.event.addListener(marker, 'click', function() {
+										if (this.url){
+											window.open(this.url,'_blank'); 
+											return false;
+										}
+									});
+								}
+							});
+						}else{
+							var marker = new google.maps.Marker({
+								position: {lat: beach[1], lng: beach[2]},
+								map: map,
+								//shape: shape,
+								title: beach[0],
+								//zIndex: beach[3],
+								<?if (isset($atts['icon_img']) && $atts['icon_img']){?>
+									icon: '/wp-content/themes/tanhit/images/gmap-label-icon/<?=$atts['icon_img']?>',
+								<?}?>
+								url: (beach[3] ? '/users/'+beach[3] : ''),
+							});
+							
+							google.maps.event.addListener(marker, 'click', function() {
+								if (this.url){
+									window.open(this.url,'_blank'); 
+									return false;
+								}
+							});
+						}
 					}
 				}
 				</script>

@@ -214,18 +214,21 @@ if ($cert_status){
 
 
 $sQuery = "
-	SELECT P.*, U.id as user_id, TR.term_taxonomy_id as cert_type, TRIM(CONCAT(UM.meta_value,' ',UM2.meta_value)) as cert_user_name, PM2.meta_value as cert_location, PM4.meta_value as cert_location_2, PM3.meta_value as cert_date 
+	SELECT P.*, U.id as user_id, TR.term_taxonomy_id as cert_type, TRIM(CONCAT(UM.meta_value,' ',UM2.meta_value)) as cert_user_name, 
+	PM2.meta_value as cert_location, PM4.meta_value as cert_location_2, PM3.meta_value as cert_date, UM3.meta_value as user_extra_adress1, UM4.meta_value as user_extra_adress2 
 	FROM {$wpdb->prefix}posts P 
 	INNER JOIN {$wpdb->prefix}postmeta PM ON (PM.post_id = P.ID && PM.meta_key = 'cert_user')
 	INNER JOIN {$wpdb->prefix}users U ON (U.ID = PM.meta_value)
 	INNER JOIN {$wpdb->prefix}usermeta UM ON (UM.user_id = U.ID && UM.meta_key = 'first_name')
 	LEFT JOIN {$wpdb->prefix}usermeta UM2 ON (UM2.user_id = U.ID && UM2.meta_key = 'last_name')
-	INNER JOIN {$wpdb->prefix}postmeta PM2 ON (PM2.post_id = P.ID && PM2.meta_key = 'cert_location')
+	LEFT JOIN {$wpdb->prefix}postmeta PM2 ON (PM2.post_id = P.ID && PM2.meta_key = 'cert_location')
 	LEFT JOIN {$wpdb->prefix}postmeta PM4 ON (PM4.post_id = P.ID && PM4.meta_key = 'cert_location_2')
 	LEFT JOIN {$wpdb->prefix}postmeta PM3 ON (PM3.post_id = P.ID && PM3.meta_key = 'cert_date')
+	LEFT JOIN {$wpdb->prefix}usermeta UM3 ON (UM3.user_id = U.ID && UM3.meta_key = 'user_extra_adress1')
+	LEFT JOIN {$wpdb->prefix}usermeta UM4 ON (UM4.user_id = U.ID && UM4.meta_key = 'user_extra_adress2')
 	INNER JOIN {$wpdb->prefix}term_relationships TR ON (TR.object_id = P.ID)
 	".($aInnerTable ? implode(' ',$aInnerTable) : '')."
-	WHERE P.post_type = 'certificates' && P.`post_status` = 'publish'".($aWhere ? ' && ('.implode(' && ', $aWhere).')' : '').($aFilterWhere ? ' && '.implode(' && ', $aFilterWhere) : '')."  
+	WHERE (PM2.meta_value!='' || UM3.meta_value!='') && P.post_type = 'certificates' && P.`post_status` = 'publish'".($aWhere ? ' && ('.implode(' && ', $aWhere).')' : '').($aFilterWhere ? ' && '.implode(' && ', $aFilterWhere) : '')."  
 	GROUP BY P.ID 
 	ORDER BY {$sFieldSort} {$order}";
 
@@ -326,6 +329,8 @@ $aData = $wpdb->get_results( $sQuery );
 						
 							$user_info = get_userdata($oRow->user_id);
 							$aAvatar = wp_get_attachment_image_src( get_user_meta($oRow->user_id, 'wp_user_avatar', true) );
+							
+							$aUserExtra = get_user_meta($oRow->user_id, 'user_extra', true);
 						}
 					?>
 						<tr>
@@ -338,8 +343,8 @@ $aData = $wpdb->get_results( $sQuery );
 								</div>
 							</td>
 							<td>
-								<div>Имя: <?=($oRow->cert_user_name ? $oRow->cert_user_name : 'отсуствует')?></div>
-								<div>E-mail: <a href='mailto:<?=$user_info->data->user_email?>'><?=($user_info->data->user_email)?></a></div>
+								<div>Имя: <a href='/users/<?=$oRow->user_id?>' target='_blank'><?=($oRow->cert_user_name ? $oRow->cert_user_name : 'отсуствует')?></a></div>
+								<div>E-mail: <a href='mailto:<?=($aUserExtra['email'] ? $aUserExtra['email'] : $user_info->data->user_email)?>'><?=($aUserExtra['email'] ? $aUserExtra['email'] : $user_info->data->user_email)?></a></div>
 								<div>Практика: <?=$sPractika?></div>
 								<div>Статус: <?=$sStatus?></div>
 								<?if(get_user_meta($oRow->user_id, 'description', true)){?>
@@ -360,9 +365,9 @@ $aData = $wpdb->get_results( $sQuery );
 							<?}?>
 							
 							<td>
-								<div><?=($aLocation['address'])?></div>
-								<?if($aLocation2){?>
-								<div><?=($aLocation2['address'])?></div>	
+								<div><?=($oRow->user_extra_adress1 ? $oRow->user_extra_adress1 : $aLocation['address'])?></div>
+								<?if($aLocation2 || $oRow->user_extra_adress2){?>
+								<div><?=($oRow->user_extra_adress2 ? $oRow->user_extra_adress2 : $aLocation2['address'])?></div>	
 								<?}?>
 							</td>
 							<td><?=date('d.m.Y', strtotime($oRow->cert_date))?></td>

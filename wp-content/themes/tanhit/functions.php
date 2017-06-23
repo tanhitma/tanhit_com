@@ -2260,8 +2260,8 @@ function getCertificatePdf($post_id, $save_dir = ''){
 						//настроен
 						$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:482px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:690px;width:100%;text-align:center;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:910px;right:155px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
 					break;
-                                        
-                                        case 'c17':
+					
+					case 'c17':
 						//настроен
 						$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:482px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:670px;width:100%;text-align:center;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:910px;right:155px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
 					break;
@@ -2901,6 +2901,22 @@ function custom_woocommerce_save_account_details($user_id){
           }
         }
 	}
+	
+	//if (isset($_POST['user_extra']) && $_POST['user_extra']){
+		update_user_meta($user_id, 'user_extra', $_POST['user_extra']);
+	//}
+	
+	//if (isset($_POST['user_extra_adress1']) && $_POST['user_extra_adress1']){
+		update_user_meta($user_id, 'user_extra_adress1', $_POST['user_extra_adress1']);
+	//}
+	//if (isset($_POST['user_extra_adress2']) && $_POST['user_extra_adress2']){
+		update_user_meta($user_id, 'user_extra_adress2', $_POST['user_extra_adress2']);
+	//}
+	
+	//if (isset($_POST['user_social']) && $_POST['user_social']){
+		$aUserSocial = array_filter($_POST['user_social'], function($var){return $var!='';});
+		update_user_meta($user_id, 'user_social', $aUserSocial);
+	//}
 	
 	//Рассылка
 	mailchimp_updated_user_meta($user_id, 'subscribe_all', (int)$_POST['subscribe_all']);
@@ -4096,8 +4112,8 @@ function load_user_tab(){
 	
 	$sTab = isset($_POST['tab_name']) ? $_POST['tab_name'] : '';
 	
-        do_action( 'woocommerce_my_account' );
-        
+	do_action( 'woocommerce_my_account' );
+	
 	SWITCH($sTab){
 		case 'home':
 			do_action( 'woocommerce_before_my_account' );

@@ -20,11 +20,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 $aAvatar = wp_get_attachment_image_src( get_user_meta($user->ID, 'wp_user_avatar', true) );
+
+//Получаем максимальный статус имеющегося сертификата у пользователя
+$iCertStatusMax = getUserStatus();
 ?>
 
 <?php wc_print_notices(); ?>
 <h2><?php _e( 'Профиль', 'woocommerce' ); ?></h2>
-<form class="edit-account" action="" method="post" id="tanhit-edit-account" enctype="multipart/form-data">
+<form class="edit-account" action="/my-account/edit-account" method="post" id="tanhit-edit-account" enctype="multipart/form-data">
 	<input type="hidden" name="submit" value="1" />
 	
 	<?php do_action( 'woocommerce_edit_account_form_start' ); ?>
@@ -47,8 +50,12 @@ $aAvatar = wp_get_attachment_image_src( get_user_meta($user->ID, 'wp_user_avatar
 	<?php do_action( 'tanhit_edit_account_form' ); ?>
 
 	<fieldset style="margin-top: 25px">
-		<legend><?php _e( 'Дополнительная информация', 'woocommerce' ); ?></legend>
+		<legend><?php _e( 'Данные публичной страницы', 'woocommerce' ); ?></legend>
 
+		<?if($iCertStatusMax){?>
+			<div>Ваш адрес публичного профиля на сайте Танит (на него идет переход с карты сертифицированных ведущих / мастеров + вы можете предоставлять его любому желающему пользователю): <a href='<?=(site_url('users/'.get_current_user_id()))?>'><?=(site_url('users/'.get_current_user_id()))?></a></div>
+		<?}?>
+		
 		<table style='width:100%;'>
 			<tr>
 				<td style='width:110px;'>
@@ -70,6 +77,63 @@ $aAvatar = wp_get_attachment_image_src( get_user_meta($user->ID, 'wp_user_avatar
 				</td>
 			</tr>
 		</table>
+		
+		<?if($iCertStatusMax){
+			$aUserExtra = get_user_meta($user->ID, 'user_extra', true);
+			$aUserSocial = get_user_meta($user->ID, 'user_social',true);
+		?>
+		
+			<p class="form-row form-row-wide">
+				<label for="user_extra_email"><?php _e( 'Контактный e-mail', 'woocommerce' ); ?></label>
+				<input type="text" class="input-text" name="user_extra[email]" id="user_extra_email" value="<?=$aUserExtra['email']?>" />
+			</p>
+			<p class="form-row form-row-wide">
+				<label for="user_extra_phone"><?php _e( 'Контактный телефон', 'woocommerce' ); ?></label>
+				<input type="text" class="input-text" name="user_extra[phone]" id="user_extra_phone" value="<?=$aUserExtra['phone']?>" />
+			</p>
+			<p class="form-row form-row-wide">
+				<label for="user_extra_anons"><?php _e( 'Анонс ближайших мероприятий', 'woocommerce' ); ?></label>
+				<textarea style='min-height:200px;' name='user_extra[anons]'><?=$aUserExtra['anons']?></textarea>
+			</p>
+			<p class="form-row form-row-wide">
+				<label for="user_extra_adress1"><?php _e( 'Адрес1', 'woocommerce' ); ?></label>
+				<input type="text" class="input-text" name="user_extra_adress1" id="user_extra_adress1" value="<?=get_user_meta($user->ID, 'user_extra_adress1', true)?>" />
+			</p>
+			<p class="form-row form-row-wide">
+				<label for="user_extra_adress2"><?php _e( 'Адрес2', 'woocommerce' ); ?></label>
+				<input type="text" class="input-text" name="user_extra_adress2" id="user_extra_adress2" value="<?=get_user_meta($user->ID, 'user_extra_adress2', true)?>" />
+			</p>
+			<p class="form-row form-row-wide">
+				<label for="user_extra_site"><?php _e( 'Адрес сайта', 'woocommerce' ); ?></label>
+				<input type="text" class="input-text" name="user_extra[site]" id="user_extra_site" value="<?=$aUserExtra['site']?>" />
+			</p>
+			
+			<legend><?php _e( 'Профили в соц сетях', 'woocommerce' ); ?></legend>
+			<p class="form-row form-row-wide">
+				<label for="user_extra_social_in"><?php _e( 'Instagram', 'woocommerce' ); ?></label>
+				<input type="text" class="input-text" name="user_social[in]" id="user_extra_social_in" value="<?=$aUserSocial['in']?>" />
+			</p>
+			<p class="form-row form-row-wide">
+				<label for="user_extra_social_fb"><?php _e( 'Facebook', 'woocommerce' ); ?></label>
+				<input type="text" class="input-text" name="user_social[fb]" id="user_extra_social_fb" value="<?=$aUserSocial['fb']?>" />
+			</p>
+			<p class="form-row form-row-wide">
+				<label for="user_extra_social_vk"><?php _e( 'VK', 'woocommerce' ); ?></label>
+				<input type="text" class="input-text" name="user_social[vk]" id="user_extra_social_vk" value="<?=$aUserSocial['vk']?>" />
+			</p>
+			<p class="form-row form-row-wide">
+				<label for="user_extra_social_ok"><?php _e( 'Odnoklassniki', 'woocommerce' ); ?></label>
+				<input type="text" class="input-text" name="user_social[ok]" id="user_extra_social_ok" value="<?=$aUserSocial['ok']?>" />
+			</p>
+			<p class="form-row form-row-wide">
+				<label for="user_extra_social_youtube"><?php _e( 'Youtube', 'woocommerce' ); ?></label>
+				<input type="text" class="input-text" name="user_social[youtube]" id="user_extra_social_youtube" value="<?=$aUserSocial['youtube']?>" />
+			</p>
+			<p class="form-row form-row-wide">
+				<label for="user_extra_social_google"><?php _e( 'Google+', 'woocommerce' ); ?></label>
+				<input type="text" class="input-text" name="user_social[google]" id="user_extra_social_google" value="<?=$aUserSocial['google']?>" />
+			</p>
+		<?}?>
 	</fieldset>
 	<div class="clear"></div>
 	
