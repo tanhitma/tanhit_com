@@ -36,14 +36,8 @@
     <a href="/cart"><?php pll_e('Моя библиотека<br>	выбрано <span></span> шт.'); ?></a>
 </div>
 
-<div id="google_translate_element"></div><script type="text/javascript">
-    function googleTranslateElementInit() {
-        new google.translate.TranslateElement({includedLanguages: 'ru,en', layout: google.translate.TranslateElement.FloatPosition.TOP_LEFT, autoDisplay: false, gaTrack: true, gaId: 'UA-76367746-1'}, 'google_translate_element');
-    }
-</script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
+<?php dynamic_sidebar( 'footer' );?>
 
 <?php wp_footer(); ?>
-<script type="text/javascript" src="//cdn.perezvoni.com/widget/js/przv.js?przv_code=22017-7428a1e400a8-8a1e400a80738cf-2ab3-ffe07428-80738cf" ></script>
 </body>
 </html>

@@ -898,6 +898,15 @@ function tanhit_widgets_init() {
             'before_title'  => '',
             'after_title'   => '',
         ]);
+		
+		register_sidebar([
+            'name'          => 'Футер код',
+            'id'            => 'footer',
+            'before_widget' => '',
+            'after_widget'  => '',
+            'before_title'  => '',
+            'after_title'   => '',
+        ]);
     }
 }
 
@@ -2506,79 +2515,80 @@ function wp_certificates_generation_page_callback() {
 	?>
 
     <div class="wrap">
-    <h2>Массовая выдача сертификатов</h2>
+		<h2>Массовая выдача сертификатов</h2>
 
-	<?if(isset($_SESSION['sMessage'])){
-		echo $_SESSION['sMessage'];
-		unset($_SESSION['sMessage']);
-	}?>
-	
-    <form action="" method="POST">
-		<table class="form-table">
-			<tr>
-				<th><label for="emails">Список E-mail</label></th>
+		<?if(isset($_SESSION['sMessage'])){
+			echo $_SESSION['sMessage'];
+			unset($_SESSION['sMessage']);
+		}?>
+		
+		<form action="" method="POST">
+			<table class="form-table">
+				<tr>
+					<th><label for="emails">Список E-mail</label></th>
 
-				<td>
-					<textarea style='width:100%;height:100px;resize:vertical;' name='emails' required='true'></textarea>
-					<p>каждый адрес на отдельной строке</p>
-				</td>
-			</tr>
-			<tr>
-				<th><label for="cert_type">Тип сертификата</label></th>
+					<td>
+						<textarea style='width:100%;height:100px;resize:vertical;' name='emails' required='true'></textarea>
+						<p>каждый адрес на отдельной строке</p>
+					</td>
+				</tr>
+				<tr>
+					<th><label for="cert_type">Тип сертификата</label></th>
 
-				<td>
-					<select id="cert_type" style='width:100%;' name="cert_type" required='true'>
-						<option value=''>- не выбрано -</option>
-						<?if($aTypes){?>
-							<?foreach($aTypes as $aItem){?>
-								<option value='<?=$aItem->term_id?>'><?=$aItem->name?></option>
+					<td>
+						<select id="cert_type" style='width:100%;' name="cert_type" required='true'>
+							<option value=''>- не выбрано -</option>
+							<?if($aTypes){?>
+								<?foreach($aTypes as $aItem){?>
+									<option value='<?=$aItem->term_id?>'><?=$aItem->name?></option>
+								<?}?>
 							<?}?>
-						<?}?>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<th><label for="cert_date">Дата</label></th>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<th><label for="cert_date">Дата</label></th>
 
-				<td>
-					<input id="cert_date" type='date' name="cert_date" required='true' />
-				</td>
-			</tr>
-			<tr>
-				<th>Место выдачи</th>
-				<td>
-					<input id='place_address' type='hidden' name='place[address]' value='' />
-					<input id='place_lat' type='hidden' name='place[lat]' value='' />
-					<input id='place_lng' type='hidden' name='place[lng]' value='' />
-					<div><input id="google-map-search" class="controls" style='width:100%;' type="text" placeholder="Поиск..."></div><br />
-					<div id="google-map"></div>
-				</td>
-			</tr>
-			<tr>
-				<th>Место выдачи (дополнительно)</th>
-				<td>
-					<input id='place_address2' type='hidden' name='place2[address]' value='' />
-					<input id='place_lat2' type='hidden' name='place2[lat]' value='' />
-					<input id='place_lng2' type='hidden' name='place2[lng]' value='' />
-					<div><input id="google-map-search2" class="controls" style='width:100%;' type="text" placeholder="Поиск..."></div><br />
-					<div id="google-map2"></div>
-				</td>
-			</tr>
-			<tr>
-				<th>Ведущий</th>
-				<td>
-					<select id='acf-field-cert_manager' name='manager'>
-						<option></option>
-						<?foreach(get_users(array('number'=>'','count_total'=>false,'fields'=>array('ID','display_name','user_email'),'orderby'=>'display_name')) as $oUser){?>
-							<option value='<?=$oUser->ID?>'><?=$oUser->display_name?> [<?=$oUser->user_email?>]</option>
-						<?}?>
-					</select>
-				</td>
-			</tr>
-		</table>
+					<td>
+						<input id="cert_date" type='date' name="cert_date" required='true' />
+					</td>
+				</tr>
+				<tr>
+					<th>Место выдачи</th>
+					<td>
+						<input id='place_address' type='hidden' name='place[address]' value='' />
+						<input id='place_lat' type='hidden' name='place[lat]' value='' />
+						<input id='place_lng' type='hidden' name='place[lng]' value='' />
+						<div><input id="google-map-search" class="controls" style='width:100%;' type="text" placeholder="Поиск..."></div><br />
+						<div id="google-map"></div>
+					</td>
+				</tr>
+				<tr>
+					<th>Место выдачи (дополнительно)</th>
+					<td>
+						<input id='place_address2' type='hidden' name='place2[address]' value='' />
+						<input id='place_lat2' type='hidden' name='place2[lat]' value='' />
+						<input id='place_lng2' type='hidden' name='place2[lng]' value='' />
+						<div><input id="google-map-search2" class="controls" style='width:100%;' type="text" placeholder="Поиск..."></div><br />
+						<div id="google-map2"></div>
+					</td>
+				</tr>
+				<tr>
+					<th>Ведущий</th>
+					<td>
+						<select id='acf-field-cert_manager' name='manager'>
+							<option></option>
+							<?foreach(get_users(array('number'=>'','count_total'=>false,'fields'=>array('ID','display_name','user_email'),'orderby'=>'display_name')) as $oUser){?>
+								<option value='<?=$oUser->ID?>'><?=$oUser->display_name?> [<?=$oUser->user_email?>]</option>
+							<?}?>
+						</select>
+					</td>
+				</tr>
+			</table>
 
-		<?=submit_button('Выдать сертификаты');?>
-    </form>
+			<?=submit_button('Выдать сертификаты');?>
+		</form>
+	</div>
 	
 	<style>
 		#google-map {
@@ -2725,6 +2735,94 @@ function wp_certificates_generation_page_callback() {
 	
 	<script src="https://maps.googleapis.com/maps/api/js?v=3&sensor=false&key=AIzaSyDIf-8uF1c86zFX_ElUI8PKv9lQVS_n3wM&libraries=places&callback=initAutocomplete" async defer></script>
 
+	<?
+}
+
+
+//Добавляем страницу массового добавления/исключения БК
+add_action('admin_menu', 'register_users_generation_submenu_page');
+function register_users_generation_submenu_page() {
+    add_submenu_page('users.php', 'Массовое добавление/исключение БК', 'Массовое добавление/исключение БК', 'manage_options', 'wp_users_generation_page', 'wp_users_generation_page_callback');
+}
+
+function wp_users_generation_page_callback() {
+
+    $sMessage = '';
+
+    //Обновляем записи
+    if (isset($_POST['submit'])) {
+		$sEmails 	= trim(isset($_POST['emails']) ? $_POST['emails'] : '');
+		$iActionId 	= (int)(isset($_POST['action_id']) ? $_POST['action_id'] : '');
+		
+		if($sEmails && $iActionId){
+			$sEmails = trim($sEmails, "\r\n");
+			$sEmails = trim($sEmails);
+			
+			$iAddTotal = 0;
+			
+			$aEmails = explode("\r\n", $sEmails);
+			if($aEmails){
+				foreach ($aEmails as $sEmail){
+					$user = get_user_by( 'email', $sEmail );
+					if ( ! empty( $user ) ) {
+						//Добавление
+						if ($iActionId==1){
+							$user->add_role( 'vip' );
+						}
+						//Исключение
+						else{
+							$user->remove_role( 'vip' );
+							$user->add_role( 'customer' );
+						}
+						
+						$iAddTotal++;
+					}
+				}
+			}
+			
+			$_SESSION['sMessage'] = "<div style='padding:5px;background:#bdfe82;'><strong>Обработано пользователей: {$iAddTotal}</strong></div>";
+		}else{
+			$_SESSION['sMessage'] = "<div style='padding:5px;background:#fe8282;'><strong>Заполнены не все поля</strong></div>";
+		}
+		
+		header('Location: /wp-admin/users.php?page=wp_users_generation_page');
+		exit;
+	}
+	?>
+
+    <div class="wrap">
+		<h2>Массовая добавление/исключение БК</h2>
+
+		<?if(isset($_SESSION['sMessage'])){
+			echo $_SESSION['sMessage'];
+			unset($_SESSION['sMessage']);
+		}?>
+		
+		<form action="" method="POST">
+			<table class="form-table">
+				<tr>
+					<th><label for="emails">Список E-mail</label></th>
+
+					<td>
+						<textarea style='width:100%;height:200px;resize:vertical;' name='emails' required='true'></textarea>
+						<p>каждый адрес на отдельной строке</p>
+					</td>
+				</tr>
+				<tr>
+					<th><label for="action_id">Действие</label></th>
+
+					<td>
+						<select id="action_id" style='width:100%;' name="action_id" required='true'>
+							<option value='1'>Добавление в БК</option>
+							<option value='2'>Исключение из БК</option>
+						</select>
+					</td>
+				</tr>
+			</table>
+
+			<?=submit_button('Выполнить');?>
+		</form>
+	</div>
 	<?
 }
 
