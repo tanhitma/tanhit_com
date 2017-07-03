@@ -2279,6 +2279,26 @@ function getCertificatePdf($post_id, $save_dir = ''){
 						//настроен
 						$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:470px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:740px;width:100%;text-align:center;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:875px;right:155px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
 					break;
+					
+					case 'c19':
+						//настроен
+						$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:597px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:918px;right:150px;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:993px;left:210px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
+					break;
+					
+					case 'c20':
+						//настроен
+						$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:657px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:884px;right:155px;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:992px;left:210px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
+					break;
+					
+					case 'c21':
+						//настроен
+						$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:682px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:877px;right:155px;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:971px;left:192px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
+					break;
+					
+					case 'c22':
+						//настроен
+						$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:635px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:927px;right:155px;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:985px;left:170px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
+					break;
 				}
 			}
 			
@@ -4292,7 +4312,7 @@ Class Custom_Coupons{
 		
 		<div style='padding:10px;'>
 			<h3>Customers</h3>
-			<textarea style='width:100%;height:100px;resize:vertical;' name='custom_emails'><?if($aData){foreach($aData as $oItem){?><?=($oItem->user_email."\r\n")?><?}}?></textarea>
+			<textarea style='width:100%;height:200px;resize:vertical;' name='custom_emails'><?if($aData){foreach($aData as $oItem){?><?=($oItem->user_email."\r\n")?><?}}?></textarea>
 			<p>каждый e-mail на отдельной строке</p>
 		</div>
 		
