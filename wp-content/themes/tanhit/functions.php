@@ -4246,3 +4246,105 @@ function load_user_tab(){
 	
 	exit;
 }
+
+
+/*=========================ОГРАНИЧЕНИЕ КУПОНОВ ДЛЯ ПОЛЬЗОВАТЕЛЕЙ===============================*/
+add_filter( 'woocommerce_coupon_data_tabs', array('Custom_Coupons', 'admin_coupon_options_tabs'), 20, 1);
+add_action( 'woocommerce_coupon_data_panels', array( 'Custom_Coupons', 'admin_coupon_options_panels' ), 10, 0 );
+add_action( 'wjecf_coupon_metabox_customer', array( 'Custom_Coupons', 'admin_coupon_metabox_customer' ), 10, 2 );
+add_action( 'woocommerce_process_shop_coupon_meta', array( 'Custom_Coupons', 'process_shop_coupon_meta' ), 10, 2 ); 
+add_filter('woocommerce_coupon_is_valid', array( 'Custom_Coupons', 'coupon_is_valid' ), 10, 2 );
+
+Class Custom_Coupons{
+	public function admin_coupon_options_tabs( $tabs ) {
+				
+		$tabs['extended_features_customers'] = array(
+			'label'  => __( 'Customers', 'woocommerce-jos-autocoupon' ),
+			'target' => 'wjecf_coupondata_customers',
+			'class'  => 'wjecf_coupondata_customers',
+		);
+
+		return $tabs;
+	} 
+	
+	public function admin_coupon_options_panels() {
+		global $thepostid, $post;
+		$thepostid = empty( $thepostid ) ? $post->ID : $thepostid;
+		?>
+			<div id="wjecf_coupondata_customers" class="panel woocommerce_options_panel">
+				<?php
+					do_action( 'wjecf_coupon_metabox_customer', $thepostid, $post );
+				?>
+			</div>
+		<?php        
+	}
+	
+	public function admin_coupon_metabox_customer( $thepostid, $post ) {
+		
+		$sUsers = get_post_meta($thepostid, 'customer_ids', true);
+		$aUsers = ($sUsers ? $sUsers : array());
+
+		$aData = array();
+		if ($aUsers){
+			$aData = get_users( array('include' => $aUsers, 'fields' => array('user_email')) );
+		}
+		?>
+		
+		<div style='padding:10px;'>
+			<h3>Customers</h3>
+			<textarea style='width:100%;height:100px;resize:vertical;' name='custom_emails'><?if($aData){foreach($aData as $oItem){?><?=($oItem->user_email."\r\n")?><?}}?></textarea>
+			<p>каждый e-mail на отдельной строке</p>
+		</div>
+		
+		<?php
+	}
+	
+	function process_shop_coupon_meta( $post_id, $post ) {
+		$sEmails = isset($_POST['custom_emails']) ? $_POST['custom_emails'] : '';
+		
+		$aSave = array();
+		if($sEmails){
+			$sEmails = trim($sEmails, "\r\n");
+			$sEmails = trim($sEmails);
+			
+			$aEmails = explode("\r\n", $sEmails);
+			if($aEmails){
+				foreach ($aEmails as $sEmail){
+					if ($sEmail){
+						$user = get_user_by( 'email', $sEmail );
+						if ( ! empty( $user ) && $user->ID) {
+							$aSave[] = $user->ID;
+						}
+					}
+				}
+			}
+		}
+		
+
+		if($aSave){
+			update_post_meta( $post_id, 'customer_ids', $aSave );
+		}else{
+			delete_post_meta( $post_id, 'customer_ids' );
+		}
+	}
+	
+	public function coupon_is_valid ( $valid, $coupon ) {
+        //Not valid? Then it will never validate, so get out of here
+        if ( ! $valid ) {
+            return FALSE;
+        }
+		
+		$aUsers = get_post_meta($coupon->id, 'customer_ids', true);
+		
+        if ($aUsers) {        
+            $user = wp_get_current_user();
+
+            //If both fail we invalidate. Otherwise it's ok
+            if ( ! in_array( $user->ID, $aUsers )) {
+                return FALSE;
+            }
+        }
+		
+		return TRUE;
+    } 
+}
