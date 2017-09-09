@@ -166,7 +166,8 @@ $sQuery = "
 
 $aData = $wpdb->get_results( $sQuery );
 
-if($aData){
+
+if($aData){	
 	$aCertData = $aCoordData = array();
 	//Вычисляем центр координат
 	foreach ($aData as $oRow){
@@ -197,46 +198,29 @@ if($aData){
 					});
 					
 					setMarkers(map);
-				}
-
-				var beaches = [];
-				<?foreach ($aData as $oRow){
-					$iCertStatusMax = getUserStatus($oRow->user_id);
 					
-					$aLocation = unserialize($oRow->cert_location);?>
-					
-					beaches.push(['<?="{$oRow->cert_user_name} - ".str_pad($oRow->ID, 10, 0, STR_PAD_LEFT)?>', <?=$aLocation['lat']?>, <?=$aLocation['lng']?>, <?=($iCertStatusMax ? $oRow->user_id : '')?>, '<?=($oRow->user_extra_adress1 ? $oRow->user_extra_adress1 : '')?>']);
-
-					<?if( ! empty($oRow->cert_location_2)){
-						$aLocation2 = unserialize($oRow->cert_location_2);
-					?>
-						
-					beaches.push(['<?="{$oRow->cert_user_name} - ".str_pad($oRow->ID, 10, 0, STR_PAD_LEFT)?>', <?=$aLocation2['lat']?>, <?=$aLocation2['lng']?>, <?=($iCertStatusMax ? $oRow->user_id : '')?>, '<?=($oRow->user_extra_adress2 ? $oRow->user_extra_adress2 : '')?>']);
-					
-					<?}?>
-				<?}?>
-
-				function setMarkers(map) {
+					//Set markers by adress
 					var geocoder = new google.maps.Geocoder();
 					
-					// Adds markers to the map.
-
-					for (var i = 0; i < beaches.length; i++) {
-						var beach = beaches[i];
-						
-						if (beach[4]){
-							geocoder.geocode({'address': beach[4]}, function(results, status) {
+					//Выполняется асинхронно, т.е. переменная beach меняется быстрее чем происходит возврат координат, таким образом - происходит что, данная переменная одинакова на несколько записей
+					<?foreach ($aData as $oRow){
+						$iCertStatusMax = getUserStatus($oRow->user_id);
+					?>
+						<?if($oRow->user_extra_adress1){?>
+							geocoder.geocode({'address': '<?=$oRow->user_extra_adress1?>'}, function(results, status) {
 								if (status === 'OK' && results[0].geometry.location) {
 									var marker = new google.maps.Marker({
 										position: results[0].geometry.location,
 										map: map,
 										//shape: shape,
-										title: beach[0],
+										title: '<?="{$oRow->cert_user_name} - ".str_pad($oRow->ID, 10, 0, STR_PAD_LEFT)?>',
 										//zIndex: beach[3],
 										<?if (isset($atts['icon_img']) && $atts['icon_img']){?>
 											icon: '/wp-content/themes/tanhit/images/gmap-label-icon/<?=$atts['icon_img']?>',
 										<?}?>
-										url: (beach[3] ? '/users/'+beach[3] : ''),
+										<?if($iCertStatusMax){?>
+											url: '/users/'+'<?=$oRow->user_id?>',
+										<?}?>
 									});
 									
 									google.maps.event.addListener(marker, 'click', function() {
@@ -247,26 +231,83 @@ if($aData){
 									});
 								}
 							});
-						}else{
-							var marker = new google.maps.Marker({
-								position: {lat: beach[1], lng: beach[2]},
-								map: map,
-								//shape: shape,
-								title: beach[0],
-								//zIndex: beach[3],
-								<?if (isset($atts['icon_img']) && $atts['icon_img']){?>
-									icon: '/wp-content/themes/tanhit/images/gmap-label-icon/<?=$atts['icon_img']?>',
-								<?}?>
-								url: (beach[3] ? '/users/'+beach[3] : ''),
-							});
-							
-							google.maps.event.addListener(marker, 'click', function() {
-								if (this.url){
-									window.open(this.url,'_blank'); 
-									return false;
+						<?}?>
+						
+						<?if($oRow->user_extra_adress2){?>
+							geocoder.geocode({'address': '<?=$oRow->user_extra_adress2?>'}, function(results, status) {
+								if (status === 'OK' && results[0].geometry.location) {
+									var marker = new google.maps.Marker({
+										position: results[0].geometry.location,
+										map: map,
+										//shape: shape,
+										title: '<?="{$oRow->cert_user_name} - ".str_pad($oRow->ID, 10, 0, STR_PAD_LEFT)?>',
+										//zIndex: beach[3],
+										<?if (isset($atts['icon_img']) && $atts['icon_img']){?>
+											icon: '/wp-content/themes/tanhit/images/gmap-label-icon/<?=$atts['icon_img']?>',
+										<?}?>
+										<?if($iCertStatusMax){?>
+											url: '/users/'+'<?=$oRow->user_id?>',
+										<?}?>
+									});
+									
+									google.maps.event.addListener(marker, 'click', function() {
+										if (this.url){
+											window.open(this.url,'_blank'); 
+											return false;
+										}
+									});
 								}
 							});
-						}
+						<?}?>
+					<?}?>
+				}
+
+				var beaches = [];
+				<?foreach ($aData as $oRow){
+					$aLocation = unserialize($oRow->cert_location);
+					
+					$iCertStatusMax = getUserStatus($oRow->user_id);
+					?>
+					
+					<?if( ! $oRow->user_extra_adress1){?>
+							beaches.push(['<?="{$oRow->cert_user_name} - ".str_pad($oRow->ID, 10, 0, STR_PAD_LEFT)?>', '<?=$aLocation['lat']?>', '<?=$aLocation['lng']?>', '<?=($iCertStatusMax ? $oRow->user_id : '')?>']);
+					<?}?>
+					
+					<?if( ! empty($oRow->cert_location_2)){
+						$aLocation2 = unserialize($oRow->cert_location_2);?>
+							
+						<?if( ! $oRow->user_extra_adress2){?>
+							beaches.push(['<?="{$oRow->cert_user_name} - ".str_pad($oRow->ID, 10, 0, STR_PAD_LEFT)?>', '<?=$aLocation2['lat']?>', '<?=$aLocation2['lng']?>', '<?=($iCertStatusMax ? $oRow->user_id : '')?>']);
+						<?}?>
+					<?}?>
+				<?}?>
+
+
+				function setMarkers(map) {
+					// Adds markers to the map.
+					for (var i = 0; i < beaches.length; i++) {
+						var beach = beaches[i];
+						
+						var latLng = new google.maps.LatLng(parseFloat(beach[1]), parseFloat(beach[2]));
+						
+						var marker = new google.maps.Marker({
+							position: latLng,
+							map: map,
+							//shape: shape,
+							title: beach[0],
+							//zIndex: beach[3],
+							<?if (isset($atts['icon_img']) && $atts['icon_img']){?>
+								icon: '/wp-content/themes/tanhit/images/gmap-label-icon/<?=$atts['icon_img']?>',
+							<?}?>
+							url: (beach[3] ? '/users/'+beach[3] : ''),
+						});
+					
+						google.maps.event.addListener(marker, 'click', function() {
+							if (this.url){
+								window.open(this.url,'_blank'); 
+								return false;
+							}
+						});
 					}
 				}
 				</script>

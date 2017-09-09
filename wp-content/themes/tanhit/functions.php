@@ -2299,6 +2299,11 @@ function getCertificatePdf($post_id, $save_dir = ''){
 						//настроен
 						$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:635px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:927px;right:155px;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:985px;left:170px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
 					break;
+					
+					case 'c23':
+						//настроен
+						$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:480px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:805px;right:190px;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:642px;left:187px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
+					break;
 				}
 			}
 			
@@ -2506,8 +2511,8 @@ function wp_certificates_generation_page_callback() {
 								) 
 							),
 							'meta_input'     => array( 
-								'cert_user' 	=> $user->ID,
-								'cert_date'		=> date('Y-m-d', $sDate),
+								'cert_user' 		=> $user->ID,
+								'cert_date'			=> date('Y-m-d', $sDate),
 								'cert_location'		=> $aPlace,
 								'cert_location_2'	=> $aPlace2,
 							)
