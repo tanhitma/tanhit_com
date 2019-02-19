@@ -9,9 +9,15 @@ foreach( $ancestors as $ancestor ) {
 		break;
 	}	
 }	
+
+$post_access_protect = get_field( "access_protect", $post->ID );
+$iShowPage = getPageProtectShow($post->ID);
+
+
 get_header();
-?>
-<section style="min-height: 300px">
+
+if ($iShowPage){?>
+<section <?if($post_access_protect){?>class='protection-content'<?}?> style="min-height: 300px">
     <div class="container">
         <div class="content">
             <?php if (have_posts()) : while (have_posts()) : the_post(); ?>
@@ -43,4 +49,18 @@ get_header();
         </div>
     </div>
 </section>
+<?}else{?>
+	<section style="min-height: 300px">
+		<div class="container">
+			<div class="content">
+				<div class="row">
+                    <div class="col-sm-12">
+                        <div style='padding:20px;text-align:center;'>Страница защищена от просмотра</div>
+                    </div>
+                </div>
+			</div>
+		</div>
+	</section>
+<?}?>
+
 <?php get_footer(); ?>

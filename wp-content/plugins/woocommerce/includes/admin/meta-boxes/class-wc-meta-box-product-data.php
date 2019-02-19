@@ -192,6 +192,8 @@ class WC_Meta_Box_Product_Data {
 									<th class="sort">&nbsp;</th>
 									<th><?php _e( 'Name', 'woocommerce' ); ?> <?php echo wc_help_tip( __( 'This is the name of the download shown to the customer.', 'woocommerce' ) ); ?></th>
 									<th colspan="2"><?php _e( 'File URL', 'woocommerce' ); ?> <?php echo wc_help_tip( __( 'This is the URL or absolute path to the file which customers will get access to. URLs entered here should already be encoded.', 'woocommerce' ) ); ?></th>
+									<th colspan="2">Изображение</th>
+									<th>Доступ истекает через (дней)</th>
 									<th>&nbsp;</th>
 								</tr>
 							</thead>
@@ -208,9 +210,10 @@ class WC_Meta_Box_Product_Data {
 							</tbody>
 							<tfoot>
 								<tr>
-									<th colspan="5">
+									<th colspan="7">
 										<a href="#" class="button insert" data-row="<?php
 											$file = array(
+												'img'  => '',
 												'file' => '',
 												'name' => ''
 											);
@@ -1154,7 +1157,10 @@ class WC_Meta_Box_Product_Data {
 
 			if ( isset( $_POST['_wc_file_urls'] ) ) {
 				$file_names         = isset( $_POST['_wc_file_names'] ) ? $_POST['_wc_file_names'] : array();
+				$img_urls           = isset( $_POST['_wc_img_urls'] )  ? wp_unslash( array_map( 'trim', $_POST['_wc_img_urls'] ) ) : array();
 				$file_urls          = isset( $_POST['_wc_file_urls'] )  ? wp_unslash( array_map( 'trim', $_POST['_wc_file_urls'] ) ) : array();
+				$download_expires   = isset( $_POST['_wc_download_expires'] ) ? $_POST['_wc_download_expires'] : array();
+				
 				$file_url_size      = sizeof( $file_urls );
 				$allowed_file_types = apply_filters( 'woocommerce_downloadable_file_allowed_mime_types', get_allowed_mime_types() );
 
@@ -1174,7 +1180,12 @@ class WC_Meta_Box_Product_Data {
 
 						$file_name = wc_clean( $file_names[ $i ] );
 						$file_hash = md5( $file_url );
-
+						
+						$download_expiry = (int)wc_clean( $download_expires[ $i ] );
+						if ( ! $download_expiry){
+							$download_expiry = '';
+						}
+						
 						// Validate the file extension
 						if ( in_array( $file_is, array( 'absolute', 'relative' ) ) ) {
 							$file_type  = wp_check_filetype( strtok( $file_url, '?' ), $allowed_file_types );
@@ -1200,9 +1211,24 @@ class WC_Meta_Box_Product_Data {
 							}
 						}
 
+						$img_url = '';
+						//Картинка
+						if ( ! empty( $img_urls[ $i ] ) ) {
+							// Find type and file URL
+							if ( 0 === strpos( $img_urls[ $i ], 'http' ) ) {
+								$img_url = esc_url_raw( $img_urls[ $i ] );
+							} elseif ( '[' === substr( $img_urls[ $i ], 0, 1 ) && ']' === substr( $img_urls[ $i ], -1 ) ) {
+								$img_url = wc_clean( $img_urls[ $i ] );
+							} else {
+								$img_url = wc_clean( $img_urls[ $i ] );
+							}
+						}
+						
 						$files[ $file_hash ] = array(
-							'name' => $file_name,
-							'file' => $file_url
+							'img'  		=> $img_url,
+							'name' 		=> $file_name,
+							'file' 		=> $file_url,
+							'expiry' 	=> $download_expiry
 						);
 					}
 				}

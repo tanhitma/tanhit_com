@@ -82,10 +82,15 @@ $aStatusFilter = array();
 
 if (isset($atts['my']) && $atts['my']){
 	$aWhere[] = "U.ID = '".get_current_user_id()."'";
+}else{
+	$aInnerTable[] = "LEFT JOIN {$wpdb->prefix}postmeta PM5 ON (PM5.post_id = P.ID && PM5.meta_key = 'custom_hidden')";
+	$aWhere[] = "(PM5.meta_value IS NULL || PM5.meta_value = '')";
 }
+
 if (isset($atts['user_id']) && $atts['user_id']){
 	$aWhere[] = "U.ID = '{$atts['user_id']}'";
 }
+
 if (isset($atts['manager']) && $atts['manager']){
 	$aInnerTable[] = "INNER JOIN {$wpdb->prefix}postmeta PM_MANAGER ON (PM_MANAGER.post_id = P.ID && PM_MANAGER.meta_key = 'cert_manager')";
 	$aWhere[] = "PM_MANAGER.meta_value = '".get_current_user_id()."'";
@@ -167,6 +172,11 @@ if (isset($atts['practika_statuses']) && $atts['practika_statuses']){
 	}
 }
 
+//Задаем сортировку по умолчанию
+if ( ! $atts['sort'] && ((isset($atts['user_id']) && $atts['user_id'])) || (isset($atts['my']) && $atts['my'])){
+	$sFieldSort = 'PM3.meta_value';
+	$order = 'desc';
+}
 
 //Фильтр
 $cert_practika = '';
@@ -232,7 +242,55 @@ $sQuery = "
 	GROUP BY P.ID 
 	ORDER BY {$sFieldSort} {$order}";
 
-$aData = $wpdb->get_results( $sQuery );
+$aDataT = $wpdb->get_results( $sQuery );
+
+
+$aData = array();
+if ($aDataT){	
+	foreach($aDataT as $oRow){
+		
+		$i_practika_id = wp_get_terms_meta($oRow->cert_type, 'cert_practika', true);
+		$oDataTaxonomyT = get_term_by( 'term_taxonomy_id', $i_practika_id, 'certificate_praktica' );
+		$sPractika = (isset($oDataTaxonomyT->name) ? $oDataTaxonomyT->name : '');
+		
+		$i_status_id = wp_get_terms_meta($oRow->cert_type, 'cert_status', true);
+		$oDataTaxonomyT = get_term_by( 'term_taxonomy_id', $i_status_id, 'certificate_status' );
+		$sStatus = (isset($oDataTaxonomyT->name) ? $oDataTaxonomyT->name : '');
+		
+		$aData[$oRow->user_id][$sPractika][$sStatus][strtotime($oRow->cert_date)] = $oRow;
+	}
+}
+
+if ($aData && isset($atts['practika_double']) && $atts['practika_double']){
+	foreach($aData as $iKey1 => $aItem1){
+		foreach($aItem1 as $iKey2 => $aItem2){
+			foreach($aItem2 as $iKey3 => $aItem3){
+				
+				if (count($aItem3)>1){
+					krsort($aItem3);
+					
+					foreach($aItem3 as $iKey4 => $oItem4){
+						$aData[$iKey1][$iKey2][$iKey3] = array(
+							$iKey4 => $oItem4
+						);
+						
+						break;
+					}
+				}
+			}
+		}
+	}	
+}
+
+if (isset($atts['contact_no_empty']) && $atts['contact_no_empty']){
+	foreach($aData as $iKey1 => $aItem1){
+		$aUserExtra = get_user_meta($iKey1, 'user_extra', true);
+						
+		if ( ! trim($aUserExtra['email']) && ! trim($aUserExtra['site']) && ! trim($aUserExtra['phone'])){
+			unset($aData[$iKey1]);
+		}
+	}								
+}
 ?>
 
 <style>
@@ -314,64 +372,88 @@ $aData = $wpdb->get_results( $sQuery );
 							<th><?=($atts['column_location_title'] ? $atts['column_location_title'] : 'Местоположение')?></th>
 							<th>Дата получения</th>
 						</tr>
-					<?foreach($aData as $oRow){
-						$aLocation  = unserialize($oRow->cert_location);
-						$aLocation2 = ( ! empty($oRow->cert_location_2) ? unserialize($oRow->cert_location_2) : '');
-						
-						if($atts['full'] || $atts['my'] || $atts['user_id']){
-							$i_practika_id = wp_get_terms_meta($oRow->cert_type, 'cert_practika', true);
-							$oDataTaxonomyT = get_term_by( 'term_taxonomy_id', $i_practika_id, 'certificate_praktica' );
-							$sPractika = (isset($oDataTaxonomyT->name) ? $oDataTaxonomyT->name : '');
-							
-							$i_status_id = wp_get_terms_meta($oRow->cert_type, 'cert_status', true);
-							$oDataTaxonomyT = get_term_by( 'term_taxonomy_id', $i_status_id, 'certificate_status' );
-							$sStatus = (isset($oDataTaxonomyT->name) ? $oDataTaxonomyT->name : '');
-						
-							$user_info = get_userdata($oRow->user_id);
-							$aAvatar = wp_get_attachment_image_src( get_user_meta($oRow->user_id, 'wp_user_avatar', true) );
-							
-							$aUserExtra = get_user_meta($oRow->user_id, 'user_extra', true);
-						}
-					?>
-						<tr>
-							<td><a href="<?=get_the_permalink($oRow->ID)?>"><?=str_pad($oRow->ID, 10, 0, STR_PAD_LEFT)?></a></td>
-							
-							<?if($atts['full']){?>
-							<td>
-								<div style='width:100px;height:100px;line-height:100px;text-align;center;vertical-align:middle;'>
-									<img style='max-width:100%;max-height:100%;' src='<?=$aAvatar[0]?>' />
-								</div>
-							</td>
-							<td>
-								<div>Имя: <a href='/users/<?=$oRow->user_id?>' target='_blank'><?=($oRow->cert_user_name ? $oRow->cert_user_name : 'отсуствует')?></a></div>
-								<div>E-mail: <a href='mailto:<?=($aUserExtra['email'] ? $aUserExtra['email'] : $user_info->data->user_email)?>'><?=($aUserExtra['email'] ? $aUserExtra['email'] : $user_info->data->user_email)?></a></div>
-								<div>Практика: <?=$sPractika?></div>
-								<div>Статус: <?=$sStatus?></div>
-								<?if(get_user_meta($oRow->user_id, 'description', true)){?>
-								<br />Описание:<br /><div style='font-style:italic;'><?=get_user_meta($oRow->user_id, 'description', true)?></div>
-								<?}?>
-							</td>
-							<?}else{?>
-								<?if($atts['my'] || $atts['user_id']){?>
-									<td>
-										<div>Практика: <?=$sPractika?></div>
-										<div>Статус: <?=$sStatus?></div>
-									</td>
-								<?}else{?>
-									<td>
-										<div><?=($oRow->cert_user_name ? $oRow->cert_user_name : 'имя отсуствует')?></div>
-									</td>
+					<?foreach($aData as $oItem1){
+						foreach ($oItem1 as $sPractika => $oItem2){
+							foreach ($oItem2 as $sStatus => $oItem3){
+								foreach ($oItem3 as $iDate => $oRow){
+
+									$aLocation  = unserialize($oRow->cert_location);
+									$aLocation2 = ( ! empty($oRow->cert_location_2) ? unserialize($oRow->cert_location_2) : '');
+									
+									if($atts['full'] || $atts['my'] || $atts['user_id']){
+										//$i_practika_id = wp_get_terms_meta($oRow->cert_type, 'cert_practika', true);
+										//$oDataTaxonomyT = get_term_by( 'term_taxonomy_id', $i_practika_id, 'certificate_praktica' );
+										//$sPractika = (isset($oDataTaxonomyT->name) ? $oDataTaxonomyT->name : '');
+										
+										//$i_status_id = wp_get_terms_meta($oRow->cert_type, 'cert_status', true);
+										//$oDataTaxonomyT = get_term_by( 'term_taxonomy_id', $i_status_id, 'certificate_status' );
+										//$sStatus = (isset($oDataTaxonomyT->name) ? $oDataTaxonomyT->name : '');
+									
+										$user_info = get_userdata($oRow->user_id);
+										$aAvatar = wp_get_attachment_image_src( get_user_meta($oRow->user_id, 'wp_user_avatar', true) );
+										
+										$aUserExtra = get_user_meta($oRow->user_id, 'user_extra', true);
+										$aUserExtra = array_map('trim', $aUserExtra);
+										//site,phone
+									}
+								?>
+									<tr>
+										<td><a href="<?=get_the_permalink($oRow->ID)?>"><?=str_pad($oRow->ID, 10, 0, STR_PAD_LEFT)?></a></td>
+										
+										<?if($atts['full']){?>
+										<td>
+											<div style='width:100px;height:100px;line-height:100px;text-align;center;vertical-align:middle;'>
+												<img style='max-width:100%;max-height:100%;' src='<?=$aAvatar[0]?>' />
+											</div>
+										</td>
+										<td>
+											<div>Имя: <a href='/users/<?=$oRow->user_id?>' target='_blank'><?=($oRow->cert_user_name ? $oRow->cert_user_name : 'отсуствует')?></a></div>
+											<div>E-mail: <a href='mailto:<?=($aUserExtra['email'] ? $aUserExtra['email'] : $user_info->data->user_email)?>'><?=($aUserExtra['email'] ? $aUserExtra['email'] : $user_info->data->user_email)?></a></div>
+											<?/*if($aUserExtra['phone']){?>
+											<div>Телефон: <?=($aUserExtra['phone'])?></div>
+											<?}*/?>
+											<?/*if($aUserExtra['site']){?>
+											<div>Сайт: <?=($aUserExtra['site'])?></div>
+											<?}*/?>
+											<div>Практика: <?=$sPractika?></div>
+											<div>Статус: <?=$sStatus?></div>
+											<?if(get_user_meta($oRow->user_id, 'description', true)){?>
+											<br />Описание:<br /><div style='font-style:italic;word-break: break-word;'>
+											<?
+												$sDescription = get_user_meta($oRow->user_id, 'description', true);
+												if (mb_strlen($sDescription, 'UTF-8') > 350){
+													$sDescription = trim(mb_substr($sDescription, 0, 350)) . '... <a href="/users/'.$oRow->user_id.'">Читать далее</a>';
+												}
+												
+												echo $sDescription;
+											?>
+											</div>
+											<?}?>
+										</td>
+										<?}else{?>
+											<?if($atts['my'] || $atts['user_id']){?>
+												<td>
+													<div>Практика: <?=$sPractika?></div>
+													<div>Статус: <?=$sStatus?></div>
+												</td>
+											<?}else{?>
+												<td>
+													<div><?=($oRow->cert_user_name ? $oRow->cert_user_name : 'имя отсуствует')?></div>
+												</td>
+											<?}?>
+										<?}?>
+										
+										<td>
+											<div><?=($oRow->user_extra_adress1 ? $oRow->user_extra_adress1 : $aLocation['address'])?></div>
+											<?if($aLocation2 || $oRow->user_extra_adress2){?>
+											<div><?=($oRow->user_extra_adress2 ? $oRow->user_extra_adress2 : $aLocation2['address'])?></div>	
+											<?}?>
+										</td>
+										<td><?=date('d.m.Y', strtotime($oRow->cert_date))?></td>
+									</tr>
 								<?}?>
 							<?}?>
-							
-							<td>
-								<div><?=($oRow->user_extra_adress1 ? $oRow->user_extra_adress1 : $aLocation['address'])?></div>
-								<?if($aLocation2 || $oRow->user_extra_adress2){?>
-								<div><?=($oRow->user_extra_adress2 ? $oRow->user_extra_adress2 : $aLocation2['address'])?></div>	
-								<?}?>
-							</td>
-							<td><?=date('d.m.Y', strtotime($oRow->cert_date))?></td>
-						</tr>
+						<?}?>
 					<?}?>
 					</table>
 				</div>

@@ -283,6 +283,16 @@ function wc_downloadable_file_permission( $download_id, $product_id, $order, $qt
 		'%d'
 	), $data);
 
+	//Ограничение доступа на введенное количесмтво дней
+	$files = get_post_meta( $product_id, '_downloadable_files', true);
+	if (isset($files[$download_id]['expiry'])){
+		$expiry_tmp = (int)$files[$download_id]['expiry'];
+		if ($expiry_tmp){
+			$order_completed_date = date_i18n( "Y-m-d", strtotime( $order->completed_date ) );
+			$expiry = date_i18n( "Y-m-d", strtotime( $order_completed_date . ' + ' . $expiry_tmp . ' DAY' ) );
+		}
+	}
+	
 	if ( ! is_null( $expiry ) ) {
 			$data['access_expires'] = $expiry;
 			$format[] = '%s';

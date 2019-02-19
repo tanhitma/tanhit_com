@@ -973,7 +973,7 @@ By default, the error rate should not be less than ERROR.', 'wc-robokassa' ),
             $signature = '';
             if(array_key_exists('SignatureValue', $_REQUEST))
             {
-                $signature = $_REQUEST['SignatureValue'];
+                $signature = strtoupper($_REQUEST['SignatureValue']);
             }
 
 

@@ -1,7 +1,7 @@
 <?php  
 class cdek_integrator {
 	
-	protected $base_url = 'http://gw.edostavka.ru:11443/'; // Базовый URL API
+	protected $base_url = 'https://int.cdek.ru/'; // Базовый URL API
 	protected $account; // Учетная запись
 	protected $secure_password; // Cекретный код
 	protected $date;

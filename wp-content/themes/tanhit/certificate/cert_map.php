@@ -24,7 +24,11 @@ $aStatusFilter = array();
 
 if (isset($atts['my']) && $atts['my']){
 	$aWhere[] = "U.ID = '".get_current_user_id()."'";
+}else{
+	$aInnerTable[] = "LEFT JOIN {$wpdb->prefix}postmeta PM5 ON (PM5.post_id = P.ID && PM5.meta_key = 'custom_hidden')";
+	$aWhere[] = "(PM5.meta_value IS NULL || PM5.meta_value = '')";
 }
+
 if (isset($atts['user_id']) && $atts['user_id']){
 	$aWhere[] = "U.ID = '{$atts['user_id']}'";
 }
@@ -164,21 +168,73 @@ $sQuery = "
 	WHERE (PM2.meta_value!='' || UM3.meta_value!='') && P.post_type = 'certificates' && P.`post_status` = 'publish'".($aWhere ? ' && ('.implode(' && ', $aWhere).')' : '').($aFilterWhere ? ' && '.implode(' && ', $aFilterWhere) : '')."  
 	GROUP BY P.ID";
 
-$aData = $wpdb->get_results( $sQuery );
+$aDataT = $wpdb->get_results( $sQuery );
 
+$aData = array();
+if ($aDataT){	
+	foreach($aDataT as $oRow){
+		
+		$i_practika_id = wp_get_terms_meta($oRow->cert_type, 'cert_practika', true);
+		$oDataTaxonomyT = get_term_by( 'term_taxonomy_id', $i_practika_id, 'certificate_praktica' );
+		$sPractika = (isset($oDataTaxonomyT->name) ? $oDataTaxonomyT->name : '');
+		
+		$i_status_id = wp_get_terms_meta($oRow->cert_type, 'cert_status', true);
+		$oDataTaxonomyT = get_term_by( 'term_taxonomy_id', $i_status_id, 'certificate_status' );
+		$sStatus = (isset($oDataTaxonomyT->name) ? $oDataTaxonomyT->name : '');
+		
+		$aData[$oRow->user_id][$sPractika][$sStatus][strtotime($oRow->cert_date)] = $oRow;
+	}
+}
+
+if ($aData && isset($atts['practika_double']) && $atts['practika_double']){
+	foreach($aData as $iKey1 => $aItem1){
+		foreach($aItem1 as $iKey2 => $aItem2){
+			foreach($aItem2 as $iKey3 => $aItem3){
+				
+				if (count($aItem3)>1){
+					krsort($aItem3);
+					
+					foreach($aItem3 as $iKey4 => $oItem4){
+						$aData[$iKey1][$iKey2][$iKey3] = array(
+							$iKey4 => $oItem4
+						);
+						
+						break;
+					}
+				}
+			}
+		}
+	}	
+}
+
+if (isset($atts['contact_no_empty']) && $atts['contact_no_empty']){
+	foreach($aData as $iKey1 => $aItem1){
+		$aUserExtra = get_user_meta($iKey1, 'user_extra', true);
+						
+		if ( ! trim($aUserExtra['email']) && ! trim($aUserExtra['site']) && ! trim($aUserExtra['phone'])){
+			unset($aData[$iKey1]);
+		}
+	}								
+}
 
 if($aData){	
 	$aCertData = $aCoordData = array();
 	//Вычисляем центр координат
-	foreach ($aData as $oRow){
-		$aLocation = unserialize($oRow->cert_location);
-		
-		$aCoordData[] = array($aLocation['lat'], $aLocation['lng']);
-		
-		if( ! empty($oRow->cert_location_2)){
-			$aLocation2 = unserialize($oRow->cert_location_2);
-			
-			$aCoordData[] = array($aLocation2['lat'], $aLocation2['lng']);
+	foreach($aData as $oItem1){
+		foreach ($oItem1 as $sPractika => $oItem2){
+			foreach ($oItem2 as $sStatus => $oItem3){
+				foreach ($oItem3 as $iDate => $oRow){
+					$aLocation = unserialize($oRow->cert_location);
+					
+					$aCoordData[] = array($aLocation['lat'], $aLocation['lng']);
+					
+					if( ! empty($oRow->cert_location_2)){
+						$aLocation2 = unserialize($oRow->cert_location_2);
+						
+						$aCoordData[] = array($aLocation2['lat'], $aLocation2['lng']);
+					}
+				}
+			}
 		}
 	}
 
@@ -203,87 +259,104 @@ if($aData){
 					var geocoder = new google.maps.Geocoder();
 					
 					//Выполняется асинхронно, т.е. переменная beach меняется быстрее чем происходит возврат координат, таким образом - происходит что, данная переменная одинакова на несколько записей
-					<?foreach ($aData as $oRow){
-						$iCertStatusMax = getUserStatus($oRow->user_id);
-					?>
-						<?if($oRow->user_extra_adress1){?>
-							geocoder.geocode({'address': '<?=$oRow->user_extra_adress1?>'}, function(results, status) {
-								if (status === 'OK' && results[0].geometry.location) {
-									var marker = new google.maps.Marker({
-										position: results[0].geometry.location,
-										map: map,
-										//shape: shape,
-										title: '<?="{$oRow->cert_user_name} - ".str_pad($oRow->ID, 10, 0, STR_PAD_LEFT)?>',
-										//zIndex: beach[3],
-										<?if (isset($atts['icon_img']) && $atts['icon_img']){?>
-											icon: '/wp-content/themes/tanhit/images/gmap-label-icon/<?=$atts['icon_img']?>',
-										<?}?>
-										<?if($iCertStatusMax){?>
-											url: '/users/'+'<?=$oRow->user_id?>',
-										<?}?>
-									});
+					<?foreach($aData as $oItem1){
+						foreach ($oItem1 as $sPractika => $oItem2){
+							foreach ($oItem2 as $sStatus => $oItem3){
+								foreach ($oItem3 as $iDate => $oRow){
+									$iCertStatusMax = getUserStatus($oRow->user_id);
+								?>
+									<?if($oRow->user_extra_adress1){?>
+										geocoder.geocode({'address': '<?=$oRow->user_extra_adress1?>'}, function(results, status) {
+											if (status === 'OK' && results[0].geometry.location) {
+												var marker = new google.maps.Marker({
+													position: results[0].geometry.location,
+													map: map,
+													//shape: shape,
+													title: '<?="{$oRow->cert_user_name} - ".str_pad($oRow->ID, 10, 0, STR_PAD_LEFT)?>',
+													//zIndex: beach[3],
+													<?if (isset($atts['icon_img']) && $atts['icon_img']){?>
+														icon: '/wp-content/themes/tanhit/images/gmap-label-icon/<?=$atts['icon_img']?>',
+													<?}?>
+													<?if($iCertStatusMax){?>
+														url: '/users/'+'<?=$oRow->user_id?>',
+													<?}?>
+												});
+												
+												google.maps.event.addListener(marker, 'click', function() {
+													if (this.url){
+														window.open(this.url,'_blank'); 
+														return false;
+													}
+												});
+											}
+										});
+									<?}?>
 									
-									google.maps.event.addListener(marker, 'click', function() {
-										if (this.url){
-											window.open(this.url,'_blank'); 
-											return false;
-										}
-									});
-								}
-							});
-						<?}?>
-						
-						<?if($oRow->user_extra_adress2){?>
-							geocoder.geocode({'address': '<?=$oRow->user_extra_adress2?>'}, function(results, status) {
-								if (status === 'OK' && results[0].geometry.location) {
-									var marker = new google.maps.Marker({
-										position: results[0].geometry.location,
-										map: map,
-										//shape: shape,
-										title: '<?="{$oRow->cert_user_name} - ".str_pad($oRow->ID, 10, 0, STR_PAD_LEFT)?>',
-										//zIndex: beach[3],
-										<?if (isset($atts['icon_img']) && $atts['icon_img']){?>
-											icon: '/wp-content/themes/tanhit/images/gmap-label-icon/<?=$atts['icon_img']?>',
-										<?}?>
-										<?if($iCertStatusMax){?>
-											url: '/users/'+'<?=$oRow->user_id?>',
-										<?}?>
-									});
-									
-									google.maps.event.addListener(marker, 'click', function() {
-										if (this.url){
-											window.open(this.url,'_blank'); 
-											return false;
-										}
-									});
-								}
-							});
+									<?if($oRow->user_extra_adress2){?>
+										geocoder.geocode({'address': '<?=$oRow->user_extra_adress2?>'}, function(results, status) {
+											if (status === 'OK' && results[0].geometry.location) {
+												var marker = new google.maps.Marker({
+													position: results[0].geometry.location,
+													map: map,
+													//shape: shape,
+													title: '<?="{$oRow->cert_user_name} - ".str_pad($oRow->ID, 10, 0, STR_PAD_LEFT)?>',
+													//zIndex: beach[3],
+													<?if (isset($atts['icon_img']) && $atts['icon_img']){?>
+														icon: '/wp-content/themes/tanhit/images/gmap-label-icon/<?=$atts['icon_img']?>',
+													<?}?>
+													<?if($iCertStatusMax){?>
+														url: '/users/'+'<?=$oRow->user_id?>',
+													<?}?>
+												});
+												
+												google.maps.event.addListener(marker, 'click', function() {
+													if (this.url){
+														window.open(this.url,'_blank'); 
+														return false;
+													}
+												});
+											}
+										});
+									<?}?>
+								<?}?>
+							<?}?>
 						<?}?>
 					<?}?>
 				}
 
 				var beaches = [];
-				<?foreach ($aData as $oRow){
-					$aLocation = unserialize($oRow->cert_location);
-					
-					$iCertStatusMax = getUserStatus($oRow->user_id);
-					?>
-					
-					<?if( ! $oRow->user_extra_adress1){?>
-							beaches.push(['<?="{$oRow->cert_user_name} - ".str_pad($oRow->ID, 10, 0, STR_PAD_LEFT)?>', '<?=$aLocation['lat']?>', '<?=$aLocation['lng']?>', '<?=($iCertStatusMax ? $oRow->user_id : '')?>']);
-					<?}?>
-					
-					<?if( ! empty($oRow->cert_location_2)){
-						$aLocation2 = unserialize($oRow->cert_location_2);?>
-							
-						<?if( ! $oRow->user_extra_adress2){?>
-							beaches.push(['<?="{$oRow->cert_user_name} - ".str_pad($oRow->ID, 10, 0, STR_PAD_LEFT)?>', '<?=$aLocation2['lat']?>', '<?=$aLocation2['lng']?>', '<?=($iCertStatusMax ? $oRow->user_id : '')?>']);
+				<?
+				foreach($aData as $oItem1){
+					foreach ($oItem1 as $sPractika => $oItem2){
+						foreach ($oItem2 as $sStatus => $oItem3){
+							foreach ($oItem3 as $iDate => $oRow){
+								$aLocation = unserialize($oRow->cert_location);
+								
+								$iCertStatusMax = getUserStatus($oRow->user_id);
+								?>
+								
+								<?/*if( ! empty($oRow->user_extra_adress1)){*/?>
+								<?if( ! empty($aLocation['address'])){?>
+									beaches.push(['<?="{$oRow->cert_user_name} - ".str_pad($oRow->ID, 10, 0, STR_PAD_LEFT)?>', '<?=$aLocation['lat']?>', '<?=$aLocation['lng']?>', '<?=($iCertStatusMax ? $oRow->user_id : '')?>']);
+								<?}?>
+								
+								<?if( ! empty($oRow->cert_location_2)){
+									$aLocation2 = unserialize($oRow->cert_location_2);?>
+										
+									<?/*if( ! empty($oRow->user_extra_adress2)){*/?>
+									<?if( ! empty($aLocation2['address'])){?>
+										beaches.push(['<?="{$oRow->cert_user_name} - ".str_pad($oRow->ID, 10, 0, STR_PAD_LEFT)?>', '<?=$aLocation2['lat']?>', '<?=$aLocation2['lng']?>', '<?=($iCertStatusMax ? $oRow->user_id : '')?>']);
+									<?}?>
+								<?}?>
+							<?}?>
 						<?}?>
 					<?}?>
 				<?}?>
 
 
 				function setMarkers(map) {
+					var markers = [];
+					
 					// Adds markers to the map.
 					for (var i = 0; i < beaches.length; i++) {
 						var beach = beaches[i];
@@ -308,9 +381,19 @@ if($aData){
 								return false;
 							}
 						});
+						
+						markers.push(marker);
 					}
+					
+					// Add a marker clusterer to manage the markers.
+					var markerCluster = new MarkerClusterer(map, markers,{
+						imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m',
+						gridSize: 50, 
+						maxZoom: 15
+					});
 				}
 				</script>
+				<script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
 				<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDIf-8uF1c86zFX_ElUI8PKv9lQVS_n3wM&callback=initMap"></script>
 			<?}?>
 		</div>

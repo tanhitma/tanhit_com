@@ -90,6 +90,57 @@ class WC_yam_Gateway extends WC_Payment_Gateway{
 
         global $woocommerce;
         $this->order = new WC_Order($order_id);
+		
+		//line_item
+		$order_items = $this->order->get_items(array('line_item','shipping'));
+		
+		$aMerchantReceipt = array();
+		$aMerchantReceipt['customerContact'] = $this->order -> billing_email;
+		$aMerchantReceipt['taxSystem'] = 2;
+		
+		foreach($order_items as $aItem){
+			if ($aItem['type'] == 'line_item'){
+				$aMerchantReceipt['items'][] = array(
+					'quantity' 	=> round($aItem['qty'], 3),
+					'price' 	=> array(
+						'amount' 	=> round($aItem['line_total']/$aItem['qty'], 3)
+					),
+					'tax' 		=> 1,
+					'text' 		=> $aItem['name'],
+				);
+			}
+			
+			if ($aItem['type'] == 'shipping'){
+				$aMerchantReceipt['items'][] = array(
+					'quantity' 	=> 1,
+					'price' 	=> array(
+						'amount' 	=> round($aItem['cost'], 3)
+					),
+					'tax' 		=> 1,
+					'text' 		=> $aItem['name'],
+				);
+			}
+		}
+		
+		$item_totals = $this->order->get_order_item_totals();
+		if ($item_totals){
+			foreach($item_totals as $key => $item){
+				$iVal = (int)str_replace(' ', '', strip_tags($item['value']));
+				
+				if (strpos($key, 'fee_') !== FALSE && $iVal){
+					$aMerchantReceipt['items'][] = array(
+						'quantity' 	=> 1,
+						'price' 	=> array(
+							'amount' 	=> round($iVal, 3)
+						),
+						'tax' 		=> 1,
+						'text' 		=> $item['label'],
+					);
+				}
+			}
+		}
+
+
         $txnid = $order_id;
         $sendurl=get_option('ym_Demo')=='on'?'https://demomoney.yandex.ru/eshop.xml':'https://money.yandex.ru/eshop.xml';
         $result ='';
@@ -106,6 +157,11 @@ class WC_yam_Gateway extends WC_Payment_Gateway{
         $result .= '<input type="hidden" name="Sum" value="'.number_format( $this->order->order_total, 2, '.', '' ).'" size="43">';
         $result .= '<input name="paymentType" value="'.$this->payment_type.'" type="hidden">';
         $result .= '<input name="cms_name" type="hidden" value="wp-woocommerce">';
+		
+		if (isset($aMerchantReceipt['items']) && $aMerchantReceipt['items']){
+			$result .= "<input name='ym_merchant_receipt' type='hidden' value='".json_encode($aMerchantReceipt)."'>";
+		}
+		
         $result .= '<input type="submit" value="Оплатить">';
         $result .='<script type="text/javascript">';
         $result .='jQuery(function(){

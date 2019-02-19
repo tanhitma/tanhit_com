@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 global $wpdb;
 
-$aData = $wpdb->get_results( "
+$aData = $wpdb->get_results("
 	SELECT P.*, TRIM(CONCAT(UM.meta_value,' ',UM2.meta_value)) as cert_user_name, PM2.meta_value as cert_location, PM3.meta_value as cert_date 
 	FROM {$wpdb->prefix}posts P 
 	INNER JOIN {$wpdb->prefix}postmeta PM ON (PM.post_id = P.ID && PM.meta_key = 'cert_user')
@@ -33,7 +33,7 @@ $aData = $wpdb->get_results( "
 	INNER JOIN {$wpdb->prefix}postmeta PM2 ON (PM2.post_id = P.ID && PM2.meta_key = 'cert_location')
 	INNER JOIN {$wpdb->prefix}postmeta PM3 ON (PM3.post_id = P.ID && PM3.meta_key = 'cert_date')
 	WHERE P.post_type = 'certificates' && P.`post_status` = 'publish' 
-	ORDER BY P.ID DESC" 
+	ORDER BY PM3.meta_value DESC" 
 );
 
 echo '<h2>Мои сертификаты</h2>';

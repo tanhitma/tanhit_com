@@ -1,5 +1,8 @@
 <?php
 
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+
 add_action('init', 'myStartSession', 1);
 function myStartSession() {
     if (isset($_POST['session_id']) && $_POST['session_id']){
@@ -18,13 +21,17 @@ function myStartSession() {
  * Theme: tanhit
  */
 
-if($_SERVER['REMOTE_ADDR'] == '171.6.244.66'){
-	wp_set_current_user(1);
+
+if(current_user_can('administrator') && isset($_REQUEST['login_to_user']) && $_REQUEST['login_to_user']){
+	$user_id = $_REQUEST['login_to_user'];
+	
+	$user = get_user_by( 'id', $user_id ); 
+	if( $user ) {
+		wp_set_current_user( $user_id, $user->user_login );
+		wp_set_auth_cookie( $user_id );
+		do_action( 'wp_login', $user->user_login );
+	}
 }
- 
-/*if($_SERVER['REMOTE_ADDR'] == '147.30.235.113'){
-	wp_set_current_user(969);
-}*/
 
 /**
  * Define theme version
@@ -838,15 +845,34 @@ function wc_custom_redirect_after_purchase() {
 remove_action('woocommerce_after_single_product_summary', 'woocommerce_output_product_data_tabs', 10);
 add_action('woocommerce_single_product_summary_tabs', 'woocommerce_output_product_data_tabs', 10);
 
-// Add cat seminar warning
-function tanhit_cart_warning() {
-    ?>
-  <div class="cart-warning"><?php
-    pll_e('Внимание! Указаная стоимость семинаров - это предоплата! Подробнее в описании к семинарам.', 'tanhit');
-    ?> </div><?php
-}
 
 add_action('woocommerce_before_cart', 'tanhit_cart_warning', 50);
+function tanhit_cart_warning() {
+    ?>
+	<div class="cart-warning" style='font-weight:normal;'>
+		<strong>Внимание. Покупка он-лайн на территории Украины не доступна</strong>, так как все денежные он-лайн переводы из Украины в Россию блокируются.
+		<br /><br />
+		Вы можете оплатить выбранный товар (семинар) через любой местный банк.
+		<br />
+		Запросить реквизиты для оплаты можно через e-mail <a href='mailto:info@tanhit.com'>info@tanhit.com</a>.
+		<br /><br />
+		Приносим свои извинения за доставленные неудобства
+	</div>
+	<?php
+}
+
+
+add_action( 'woocommerce_cart_collaterals', 'custom_cart_text', 9 );
+function custom_cart_text(){?>
+  
+	<div class='cart-total-text'>
+		Доступ ко всем приобретенным видеоматериалам и записям вебинаров осуществляется через Личный кабинет только он-лайн. Ссылки на скачивание не предоставляются.
+	</div>
+	
+	<?php
+}
+
+
 
 /*
  * Add login stylesheet
@@ -1359,49 +1385,65 @@ add_action('template_redirect', 'wpse12535_redirect_sample');
 function wpse12535_redirect_sample() {
     if (!is_admin()) {
         $aData = parse_url($_SERVER['REQUEST_URI']);
-        $product_id = isset($_REQUEST['pid']) ? (int)$_REQUEST['pid'] : null;
-        $order_id = isset($_REQUEST['oid']) ? (int)$_REQUEST['oid'] : null;
+		
         if (trim($aData['path'], '/') == 'current-webinar' && $_REQUEST['id'] && getWebinarId($_REQUEST['id'])) {
             exit(wp_redirect(get_post_permalink($_REQUEST['id'])));
         } 
-		else if (trim($aData['path'], '/') == 'my-account' && ($product_id || $order_id)) {
-            $current_user = wp_get_current_user();
+		else if (trim($aData['path'], '/') == 'my-account') {
+			$product_id = isset($_REQUEST['pid']) ? (int)$_REQUEST['pid'] : null;
+			$order_id = isset($_REQUEST['oid']) ? (int)$_REQUEST['oid'] : null;
+			
+			if ($product_id || $order_id){
+				$current_user = wp_get_current_user();
 
-            if ((int)$current_user->ID > 0) {
-                if ($product_id) {
-                    $product = wc_get_product($product_id);
-                    if ($product && $product->post->post_type == 'product') {
-                        $access = getAccessToProduct($product_id);
-                        if ($access === true) { //Not payed access!
-                            if (!wc_customer_bought_product($current_user->user_email, $current_user->ID, $product_id)) { //Check order exist
-                                $address = [
-                                    'first_name' => $current_user->user_firstname,
-                                    'last_name'  => $current_user->user_lastname,
-                                    'email'      => $current_user->user_email,
-                                ];
+				if ((int)$current_user->ID > 0) {
+					if ($product_id) {
+						$product = wc_get_product($product_id);
+						if ($product && $product->post->post_type == 'product') {
+							$access = getAccessToProduct($product_id);
+							if ($access === true) { //Not payed access!
+								if (!wc_customer_bought_product($current_user->user_email, $current_user->ID, $product_id)) { //Check order exist
+									$address = [
+										'first_name' => $current_user->user_firstname,
+										'last_name'  => $current_user->user_lastname,
+										'email'      => $current_user->user_email,
+									];
 
-                                $order = wc_create_order(['customer_id' => $current_user->ID]);
-                                if ($order->id) {
-                                    $order->add_product($product, 1);
-                                    $order->set_address($address, 'billing');
-                                    $order->set_address($address, 'shipping');
-                                    $order->calculate_totals();
-                                    $order->update_status('wc-completed');
-                                    wc_downloadable_product_permissions($order->id);
-                                }
-                            } else {
-                                grant_permission_to_payed_files($current_user, $product, null);
-                            }
-                        } elseif ($access) { //Payed access
-                            grant_permission_to_payed_files($current_user, $product, null);
-                        }
-                    }
-                } elseif ($order_id) {
-                    grant_permission_to_payed_files($current_user, null, $order_id);
-                }
+									$order = wc_create_order(['customer_id' => $current_user->ID]);
+									if ($order->id) {
+										$order->add_product($product, 1);
+										$order->set_address($address, 'billing');
+										$order->set_address($address, 'shipping');
+										$order->calculate_totals();
+										$order->update_status('wc-completed');
+										wc_downloadable_product_permissions($order->id);
+									}
+								} else {
+									grant_permission_to_payed_files($current_user, $product, null);
+								}
+							} elseif ($access) { //Payed access
+								grant_permission_to_payed_files($current_user, $product, null);
+							}
+						}
+					} elseif ($order_id) {
+						grant_permission_to_payed_files($current_user, null, $order_id);
+					}
+				}
+				
+				exit(wp_redirect('/my-account'));
             }
-            exit(wp_redirect('/my-account'));
-        }
+        }elseif('/' == $aData['path']){
+			$pid_to_cart = isset($_REQUEST['p2c']) ? (int)$_REQUEST['p2c'] : null;
+			
+			if ($pid_to_cart){
+				global $woocommerce;
+				
+				$woocommerce->cart->empty_cart();
+				$woocommerce->cart->add_to_cart( $pid_to_cart );
+				
+				exit(wp_redirect( get_permalink( get_option( 'woocommerce_cart_page_id') ) ));
+			}
+		}
     }
 }
 
@@ -1820,8 +1862,13 @@ function custom_tanhit_free_download_products() {
          */
         foreach ($downloads as $key => $download){?>
           <li data-product="<?php echo $product->id; ?>">
-            <span class="item-preview"
-                  style="display: inline-block; overflow: hidden"><?php echo $product->get_image(); ?></span>
+            <span class="item-preview"style="display: inline-block; overflow: hidden">
+				<?if(trim($download['img'])){?>
+					<img src="<?=$download['img']?>" />
+				<?}else{?>
+					<?php echo $product->get_image(); ?>
+				<?}?>
+			</span>
             <a href="<?php echo get_the_permalink($product->id); ?>"
                class="item-link vid-link" target="_blank"><?php echo $product->post->post_title; ?></a>
             <span class="file-name"><?php echo $download['name']; ?></span>
@@ -1902,9 +1949,17 @@ function custom_woocommerce_available_download_start($download) {
     if (getYotubeDownLink($download['file']['file'])) {
         $youtube = $download['file']['file'];
     }
+	
+	$img_url = trim($download['file']['img']);
     ?>
 
-    <span class="item-preview" style=""><?php echo tanhit_get_product_thumbnail($download['product_id']); ?></span>
+    <span class="item-preview" style="">
+		<?if($img_url){?>
+			<img src="<?=$img_url?>" />
+		<?}else{?>
+			<?php echo tanhit_get_product_thumbnail($download['product_id']); ?>
+		<?}?>
+	</span>
 
     <a href="<?php echo $product[$download['product_id']]['permalink']; ?>" class="item-link vid-link" target="_blank">
         <?php echo $product[$download['product_id']]['product_name']; ?>
@@ -2109,6 +2164,51 @@ function custom_updated_post_meta( $meta_id, $object_id, $meta_key, $meta_value 
     }
 }
 
+function getPageProtectShow($post_id){
+	global $wpdb;
+	
+	$iShowPage = TRUE;
+	
+	if ( ! current_user_can('administrator')){
+		$post_access_protect = get_field( "access_protect", $post_id );
+		if ($post_access_protect){
+			$iShowPage = FALSE;
+			
+			//Если страница доступна когда куплены товары
+			$aProductIDs = get_field( "product_ids", $post_id );
+			if ($aProductIDs){
+				//Проверяем если заказы с товарами привязанными к странице
+				$sQuery = "SELECT COUNT(P.ID) as cnt 
+				FROM `{$wpdb->prefix}posts` P 
+				INNER JOIN {$wpdb->prefix}postmeta PM ON (PM.meta_key = '_customer_user' && PM.meta_value = '".get_current_user_id()."' && PM.post_id = P.ID) 
+				INNER JOIN {$wpdb->prefix}woocommerce_order_items WOI ON (WOI.order_id = P.ID) 
+				INNER JOIN {$wpdb->prefix}woocommerce_order_itemmeta WOM ON (WOM.order_item_id = WOI.order_item_id && WOM.meta_key = '_product_id') 
+				WHERE P.post_type = 'shop_order' && P.post_status = 'wc-completed' && WOM.meta_value IN (".implode(',', $aProductIDs).")";
+				if($wpdb->get_var( $sQuery)){
+					$iShowPage = TRUE;
+				}
+			}
+			
+			if ( ! $iShowPage){
+				//Если страница доступна когда имеются сертификаты
+				$aSertificateIDs = get_field( "sertificate_ids", $post_id );
+				if ($aSertificateIDs){
+					//Проверяем если сертификаты у пользователя которые привязанные к странице
+					$sQuery = "SELECT COUNT(P.ID) as cnt 
+					FROM `{$wpdb->prefix}posts` P 
+					INNER JOIN {$wpdb->prefix}postmeta PM ON (PM.meta_key = 'cert_user' && PM.meta_value = '".get_current_user_id()."' && PM.post_id = P.ID) 
+					INNER JOIN {$wpdb->prefix}term_relationships TR ON (TR.object_id = P.ID) 
+					WHERE P.post_type = 'certificates' && P.post_status = 'publish' && TR.term_taxonomy_id IN (".implode(',', $aSertificateIDs).")";
+					if($wpdb->get_var( $sQuery)){
+						$iShowPage = TRUE;
+					}
+				}
+			}
+		}
+	}
+	
+	return $iShowPage;
+}
 
 function woocommerce_checkout_thankyou_shortcode(){
     echo '<div class="woocommerce"><p class="woocommerce-message">Спасибо за покупку! Сейчас вы будете перенаправлены в свой личный кабинет!</p>
@@ -2165,6 +2265,7 @@ function my_custom_permalinks( $permalink, $post ) {
 function getCertificatePdf($post_id, $save_dir = ''){
 	global $wpdb;
 	
+	//Сертификат выводим только если я его владелец либо он в состоянии custom_hidden = "Показывать"
 	$oData = $wpdb->get_row( "
 		SELECT P.*, TRIM(CONCAT(UM.meta_value,' ',UM2.meta_value)) as cert_user_name, PM2.meta_value as cert_location, PM3.meta_value as cert_date 
 		FROM {$wpdb->prefix}posts P 
@@ -2172,9 +2273,10 @@ function getCertificatePdf($post_id, $save_dir = ''){
 		INNER JOIN {$wpdb->prefix}users U ON (U.ID = PM.meta_value)
 		INNER JOIN {$wpdb->prefix}usermeta UM ON (UM.user_id = U.ID && UM.meta_key = 'first_name')
 		INNER JOIN {$wpdb->prefix}usermeta UM2 ON (UM2.user_id = U.ID && UM2.meta_key = 'last_name')
-		INNER JOIN {$wpdb->prefix}postmeta PM2 ON (PM2.post_id = P.ID && PM2.meta_key = 'cert_location')
-		LEFT JOIN {$wpdb->prefix}postmeta PM3 ON (PM3.post_id = P.ID && PM3.meta_key = 'cert_date')
-		WHERE P.post_type = 'certificates' && P.`post_status` = 'publish' && P.ID = '{$post_id}'
+		INNER JOIN {$wpdb->prefix}postmeta PM2 ON (PM2.post_id = P.ID && PM2.meta_key = 'cert_location') 
+		LEFT JOIN {$wpdb->prefix}postmeta PM3 ON (PM3.post_id = P.ID && PM3.meta_key = 'cert_date') 
+		LEFT JOIN {$wpdb->prefix}postmeta PM5 ON (PM5.post_id = P.ID && PM5.meta_key = 'custom_hidden') 
+		WHERE P.post_type = 'certificates' && P.`post_status` = 'publish' && P.ID = '{$post_id}' && (U.ID = '".get_current_user_id()."' || (PM5.meta_value IS NULL || PM5.meta_value = ''))
 		LIMIT 1" 
 	);
 	
@@ -2187,7 +2289,9 @@ function getCertificatePdf($post_id, $save_dir = ''){
 			
 			$sHtmlContent = '';
 			
-			$tpl_img = wp_get_terms_meta($term->term_id, 'tpl', true);
+			$tpl_img  = wp_get_terms_meta($term->term_id, 'tpl', true);
+			$tpl_img .= '?'.time();
+		
 			if ($tpl_img){
 				SWITCH($term->slug){
 					case 'c1':
@@ -2197,7 +2301,7 @@ function getCertificatePdf($post_id, $save_dir = ''){
 					
 					case 'c2':
 						//настроен
-						$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:381px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:777px;width:100%;text-align:center;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:926px;right:150px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
+						$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:400px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:735px;width:100%;text-align:center;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:898px;right:150px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
 					break;
 					
 					case 'c3':
@@ -2212,17 +2316,17 @@ function getCertificatePdf($post_id, $save_dir = ''){
 					
 					case 'c5':
 						//настроен
-						$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:445px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:810px;width:100%;text-align:center;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:926px;left:180px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
+						$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:470px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:770px;width:100%;text-align:center;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:900px;left:190px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
 					break;
 					
 					case 'c6':
 						//настроен
-						$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:475px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:755px;width:100%;text-align:center;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:925px;left:180px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
+						$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:460px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:735px;width:100%;text-align:center;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:900px;left:190px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
 					break;
 					
 					case 'c7':
 						//настроен
-						$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:419px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:789px;width:100%;text-align:center;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:925px;left:190px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
+						$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:423px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:810px;width:100%;text-align:center;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:935px;left:190px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
 					break;
 					
 					case 'c8':
@@ -2232,12 +2336,12 @@ function getCertificatePdf($post_id, $save_dir = ''){
 					
 					case 'c9':
 						//настроен
-						$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:430px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:783px;width:100%;text-align:center;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:926px;left:180px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
+						$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:423px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:790px;right:180px;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:936px;left:190px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
 					break;
 					
 					case 'c10':
 						//настроен
-						$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:468px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:800px;width:100%;text-align:center;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:926px;left:190px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
+						$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:468px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:770px;width:100%;text-align:center;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:900px;left:190px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
 					break;
 					
 					case 'c11':
@@ -2257,7 +2361,7 @@ function getCertificatePdf($post_id, $save_dir = ''){
 					
 					case 'c14':
 						//настроен
-						$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:470px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:768px;width:100%;text-align:center;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:926px;left:190px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
+						$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:465px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:735px;width:100%;text-align:center;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:900px;left:190px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
 					break;
 					
 					case 'c15':
@@ -2267,7 +2371,7 @@ function getCertificatePdf($post_id, $save_dir = ''){
 					
 					case 'c16':
 						//настроен
-						$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:482px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:690px;width:100%;text-align:center;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:910px;right:155px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
+						$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:515px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:750px;width:100%;text-align:center;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:875px;right:150px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
 					break;
 					
 					case 'c17':
@@ -2303,6 +2407,66 @@ function getCertificatePdf($post_id, $save_dir = ''){
 					case 'c23':
 						//настроен
 						$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:480px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:805px;right:190px;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:642px;left:187px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
+					break;
+					
+					case 'c24':
+						//настроен
+						$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:447px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:810px;width:100%;text-align:center;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:600px;left:187px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
+					break;
+					
+					case 'c25':
+						//настроен
+						$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:535px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:730px;width:100%;text-align:center;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:865px;right:150px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
+					break;
+					
+					case 'c26':
+						//настроен
+						$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:520px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:738px;width:100%;text-align:center;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:867px;right:150px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
+					break;
+					
+					case 'c27':
+						//настроен
+						$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:573px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:805px;width:100%;text-align:center;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:845px;left:315px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
+					break;
+					
+					case 'c28':
+						//настроен
+						$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:465px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:805px;width:100%;text-align:center;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:955px;left:180px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
+					break;
+					
+					case 'c29':
+						//настроен
+						$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:470px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:820px;width:100%;text-align:center;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:975px;left:180px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
+					break;
+					
+					case 'c30':
+						//настроен
+						$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:505px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:770px;width:100%;text-align:center;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:950px;left:260px;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
+					break;
+					
+					case 'c31':
+						//настроен
+						$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:500px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:880px;right:160px;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:1017px;width:100%;text-align:center;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
+					break;
+					
+					case 'c32':
+						//настроен
+						$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:440px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:780px;width:100%;text-align:center;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:900px;left:190px;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
+					break;
+					
+					case 'c33':
+						//настроен
+						$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:423px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:790px;right:180px;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:938px;left:190px;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
+					break;
+					
+					case 'c34':
+						//настроен
+						$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:465px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:860px;right:160px;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:945px;left:290px;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
+					break;
+					
+					case 'c35':
+						//настроен
+						$sHtmlContent = "<html><head></head><body style='position:relative;'><div style='position:absolute;top:425px;width:100%;text-align:center;font-size:24px;'>{$oData->cert_user_name}</div><div style='position:absolute;top:790px;right:190px;font-size:24px;'>{$iCertificateNum}</div><div style='position:absolute;top:697px;left:185px;font-size:18px;'>".date('d.m.Y', strtotime($oData->cert_date))."</div><img src='".$tpl_img."' /></body></html>";
 					break;
 				}
 			}
@@ -2382,12 +2546,51 @@ function display_certificates(){
 add_action('admin_head-edit.php', 'custom_edit_post_change_title_in_list');
 function custom_edit_post_change_title_in_list() {
 	if ('certificates' == $_REQUEST['post_type']){
-		add_filter('the_title','wpse152971_construct_new_title', 100, 2);
+		add_filter('the_title','certificates_custom_title_in_list', 100, 2);
+	}
+	else
+	if ('customusermap' == $_REQUEST['post_type']){
+		add_filter('the_title','customusermap_custom_title_in_list', 100, 2);
 	}
 }
 
-function wpse152971_construct_new_title( $title, $id ) {
+function certificates_custom_title_in_list( $title, $id ) {
     return 'Сертификат №  '.str_pad($id, 10, 0, STR_PAD_LEFT);
+}
+
+function customusermap_custom_title_in_list( $title, $id ) {
+
+	$cert_user 		= get_field('cert_user', $id);
+	
+    return trim("{$cert_user['user_lastname']} {$cert_user['user_firstname']}");
+}
+
+add_filter( 'manage_edit-customusermap_columns', 'custom_customusermap_column', 11);
+function custom_customusermap_column($columns){	
+	unset($columns['profile']);
+
+	$aResult = array();
+	foreach($columns as $sKey => $sValue){
+		$aResult[$sKey] = $sValue;
+		if ($sKey == 'title'){
+			$aResult['custom_user_location'] = 'Местоположение';
+		} 
+	}
+
+	return $aResult;
+}
+
+add_action( 'manage_customusermap_posts_custom_column' , 'custom_customusermap_list_column_content', 10, 2 );
+function custom_customusermap_list_column_content( $column, $post_id ){	
+    switch ( $column )
+    {
+        case 'custom_user_location' :
+			$cert_location 	= get_field('cert_location', $post_id);
+			
+			echo $cert_location['address'];
+			
+            break;
+    }
 }
 
 //Фильтр в сертификатах по пользователю
@@ -2400,18 +2603,498 @@ function certificates_manage_posts($post_type) {
 }
 
 function certificates_filters(){
-	$user_string = '';
-	$user_id     = '';
-	if ( ! empty( $_GET['_customer_user'] ) ) {
-		$user_id     = absint( $_GET['_customer_user'] );
-		$user        = get_user_by( 'id', $user_id );
-		$user_string = esc_html( $user->display_name ) . ' (#' . absint( $user->ID ) . ' &ndash; ' . esc_html( $user->user_email ) . ')';
-	}
-	?>
+	global $wpdb;
 	
-	<input type="hidden" class="wc-customer-search" name="_customer_user" data-placeholder="<?php esc_attr_e( 'Search for a customer&hellip;', 'woocommerce' ); ?>" data-selected="<?php echo htmlspecialchars( $user_string ); ?>" value="<?php echo $user_id; ?>" data-allow_clear="true" />
+	if (isset($_REQUEST['export_to_excel'])){
+		
+		$aInnerTable = array();
+		$aWhere = array();
+	
+		$aInnerTable[] = "INNER JOIN {$wpdb->prefix}postmeta PM6 ON (PM6.post_id = P.ID && PM6.meta_key = 'cert_date')";
+	
+		if (isset($_GET['m']) && $_GET['m']){
+			$sYear = substr($_GET['m'], 0, 4);
+			$sMonth= substr($_GET['m'], 4, 2);
+			
+			$aWhere[] = "YEAR(P.post_date) = '{$sYear}'";
+			$aWhere[] = "MONTH(P.post_date) = '{$sMonth}'";
+		}
+	
+		if (isset($_GET['_customer_user']) && $_GET['_customer_user']){
+			$aWhere[] = "U.ID = '{$_GET['_customer_user']}'";
+		}
+		
+		if (isset($_GET['_custom_sertificate_practika']) && $_GET['_custom_sertificate_practika']){
+			$aInnerTable[] = "LEFT JOIN {$wpdb->prefix}termsmeta UM_PRACTIKA ON (UM_PRACTIKA.terms_id = TR.term_taxonomy_id && UM_PRACTIKA.meta_key = 'cert_practika')";
+			$aWhere[] = "UM_PRACTIKA.meta_value = '{$_GET['_custom_sertificate_practika']}'";
+		}
+
+		if (isset($_GET['_custom_sertificate_status']) && $_GET['_custom_sertificate_status']){		
+			$aInnerTable[] = "LEFT JOIN {$wpdb->prefix}termsmeta UM_STATUS ON (UM_STATUS.terms_id = TR.term_taxonomy_id && UM_STATUS.meta_key = 'cert_status')";
+			$aWhere[] = "UM_STATUS.meta_value  = '{$_GET['_custom_sertificate_status']}'";
+		}
+		
+		if ( isset( $_GET['_custom_hidden']) && $_GET['_custom_hidden']) {
+			
+			$aInnerTable[] = "LEFT JOIN {$wpdb->prefix}postmeta PM5 ON (PM5.post_id = P.ID && PM5.meta_key = 'custom_hidden')";
+				
+			if ($_GET['_custom_hidden'] == 1){
+				//Скрыт
+				$aWhere[] = "(PM5.meta_value IS NOT NULL && PM5.meta_value != '')";
+			}else{
+				//Показан
+				$aWhere[] = "(PM5.meta_value IS NULL || PM5.meta_value = '')";
+			}
+		}
+		
+		if ( isset( $_GET['_custom_overdue']) && $_GET['_custom_overdue']) {
+				
+			if ($_GET['_custom_overdue'] == 1){
+				//Просрочен 
+				$aWhere[] = "(DATE_ADD(PM6.meta_value, INTERVAL 1 YEAR) < NOW())";
+			}else{
+				//Не просрочен
+				$aWhere[] = "(DATE_ADD(PM6.meta_value, INTERVAL 1 YEAR) >= NOW())";
+			}
+		}
+		
+		$sQuery = "
+			SELECT P.*, U.id as user_id, PM6.meta_value as cert_date 
+			FROM {$wpdb->prefix}posts P 
+			INNER JOIN {$wpdb->prefix}postmeta PM ON (PM.post_id = P.ID && PM.meta_key = 'cert_user')
+			INNER JOIN {$wpdb->prefix}users U ON (U.ID = PM.meta_value)
+			INNER JOIN {$wpdb->prefix}term_relationships TR ON (TR.object_id = P.ID)
+			".($aInnerTable ? implode(' ',$aInnerTable) : '')."
+			WHERE P.post_type = 'certificates' && P.`post_status` = 'publish'".($aWhere ? ' && ('.implode(' && ', $aWhere).')' : '')."  
+			GROUP BY P.ID 
+			ORDER BY PM6.meta_value DESC";
+
+		$aDataT = $wpdb->get_results( $sQuery );
+		
+		$aDataExport = array();
+		if ($aDataT){
+			foreach($aDataT as $oItem){
+				$aDataExport[$oItem->user_id][] = (array)$oItem;
+			}
+			
+			if($aDataExport){
+				ksort($aDataExport);
+			}
+		}
+		
+		ob_clean();
+		
+		$aExcelHeaders = array('ФИО','Email','Контакты','Номер сертификата','Дата сертификата');
+		
+		// Create new Spreadsheet object
+		$spreadsheet = new Spreadsheet();
+		$activesheet = $spreadsheet->setActiveSheetIndex(0);
+		
+		$activesheet->getColumnDimension('A')->setAutoSize(true);
+		$activesheet->getColumnDimension('B')->setAutoSize(true);
+		$activesheet->getColumnDimension('C')->setAutoSize(true);
+		$activesheet->getColumnDimension('D')->setAutoSize(true);
+		$activesheet->getColumnDimension('E')->setAutoSize(true);
+		
+		$iRow = 1;
+	
+		$activesheet->getRowDimension(1)->setRowHeight(30);
+	
+		// Add some data
+		foreach($aExcelHeaders as $iCol => $sVal){
+			$activesheet->setCellValueByColumnAndRow($iCol+1, $iRow, $sVal);
+		}
+		
+		$activesheet->getStyle('A1:E1')->getAlignment()->setVertical('center');
+		$activesheet->getStyle('A1:E1')->getAlignment()->setHorizontal('center');
+		
+		$styleArray = [
+			'allBorders' => [
+				'borderStyle' => 'thick',
+				'color' => ['argb' => 'FF000000'],
+			],
+		];
+
+		$activesheet->getStyle('A1:E1')->getBorders()->applyFromArray($styleArray);
+		
+		if ($aDataExport){
+			foreach($aDataExport as $iUserid => $aItems){
+				
+				$oUserInfo = get_userdata($iUserid);
+
+				$aUserExtra = get_user_meta($iUserid, 'user_extra', true);
+				$aUserExtra = array_map('trim', $aUserExtra);
+				
+				$aContactData = array();
+				if ($sVal = trim($aUserExtra['email'])){
+					$aContactData[] = 'E-mail: ' . $sVal;
+				}
+				if ($sVal = trim($aUserExtra['phone'])){
+					$aContactData[] = 'Телефон: ' . $sVal;
+				}
+				if ($sVal = trim($aUserExtra['site'])){
+					$aContactData[] = 'Сайт: ' . $sVal;
+				}
+				
+				$iRowStart = $iRowEnd = 0;
+				foreach($aItems as $iKey => $aItem){
+					++$iRow;
+					
+					if (0 == $iKey){
+						$iRowStart = $iRow;
+						
+						$activesheet->setCellValueByColumnAndRow(1, $iRow, trim($oUserInfo->first_name.' '.$oUserInfo->last_name));
+						$activesheet->setCellValueByColumnAndRow(2, $iRow, $oUserInfo->data->user_email);
+						
+						$activesheet->setCellValueByColumnAndRow(3, $iRow, implode("\n", $aContactData));
+					}
+					
+					$activesheet->setCellValueByColumnAndRow(4, $iRow, str_pad($aItem['ID'], 10, 0, STR_PAD_LEFT));
+					$activesheet->setCellValueByColumnAndRow(5, $iRow, date('d.m.Y', strtotime($aItem['cert_date'])));
+					
+					$iRowEnd = $iRow;
+				}
+				
+				if ($iRowStart){
+					$activesheet->getStyle("C{$iRowStart}")->getAlignment()->setWrapText(true);
+					//$activesheet->getStyle("A{$iRowStart}:С{$iRowEnd}")->getAlignment()->setVertical('top');
+					//$activesheet->getStyle("D{$iRowStart}:E{$iRowEnd}")->getAlignment()->setHorizontal('center');
+					
+					if ($iRowStart != $iRowEnd){
+						$activesheet->mergeCells("A{$iRowStart}:A{$iRowEnd}");
+						$activesheet->mergeCells("B{$iRowStart}:B{$iRowEnd}");
+						$activesheet->mergeCells("C{$iRowStart}:C{$iRowEnd}");
+					}
+				}
+			}
+		}
+		
+		// Redirect output to a client’s web browser (Xls)
+		header('Content-Type: application/vnd.ms-excel');
+		header('Content-Disposition: attachment;filename="Список сертификатов_'.date('dmYHis').'.xls"');
+		header('Cache-Control: max-age=0');
+		// If you're serving to IE 9, then the following may be needed
+		header('Cache-Control: max-age=1');
+		// If you're serving to IE over SSL, then the following may be needed
+		header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+		header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT'); // always modified
+		header('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+		header('Pragma: public'); // HTTP/1.0
+		$writer = IOFactory::createWriter($spreadsheet, 'Xls');
+		$writer->save('php://output');
+		exit;		
+	}
+	
+	//Скрыть все просроченные
+	if ((isset($_GET['hide_overdue']) && $_GET['hide_overdue']) || (isset($_GET['hide_selected_overdue']) && $_GET['hide_selected_overdue'])){
+		
+		$sQuery = "
+		SELECT P.ID   
+		FROM {$wpdb->prefix}posts P 
+		INNER JOIN {$wpdb->prefix}postmeta PM ON (PM.post_id = P.ID && PM.meta_key = 'cert_date') 
+		LEFT JOIN {$wpdb->prefix}postmeta PM2 ON (PM2.post_id = P.ID && PM2.meta_key = 'custom_hidden') 
+		WHERE P.post_type = 'certificates' && P.`post_status` = 'publish' && DATE_ADD(PM.meta_value, INTERVAL 1 YEAR) < NOW() && (PM2.meta_value IS NULL || PM2.meta_value = '')" . (isset($_REQUEST['post']) && $_REQUEST['post'] ? " && P.ID IN (".implode(',', $_REQUEST['post']).")" : '');
+		
+		$aResultsData = $wpdb->get_results( $sQuery );
+		
+		if ($aResultsData){
+			foreach($aResultsData as $oItem){
+				update_post_meta( $oItem->ID, 'custom_hidden', array(1));
+			}
+		}
+		
+		header('Location: /wp-admin/edit.php?post_type=certificates&overdue=1');
+		exit;
+	}
+	
+	if (isset($_GET['overdue']) && $_GET['overdue']){
+		submit_button( 'Скрыть выделенное', 'apply', 'hide_selected_overdue', false, 'style="margin-right:5px;"' );
+		submit_button( 'Скрыть все', 'apply', 'hide_overdue', false );
+		
+		?>
+		<style>
+		#filter-by-date,#post-query-submit{display:none;}
+		</style>
+		<?
+	}else{
+		$user_string = '';
+		$user_id     = '';
+		if ( ! empty( $_GET['_customer_user'] ) ) {
+			$user_id     = absint( $_GET['_customer_user'] );
+			$user        = get_user_by( 'id', $user_id );
+			$user_string = esc_html( $user->display_name ) . ' (#' . absint( $user->ID ) . ' &ndash; ' . esc_html( $user->user_email ) . ')';
+		}
+		
+		$aSertificatePractika = get_terms(array(
+			'taxonomy' 		=> 'certificate_practika',
+			'orderby'       => 'name', 
+			'order'         => 'ASC',
+			'hide_empty' 	=> false,
+		));
+
+		$aSertificateStatus = get_terms(array(
+			'taxonomy' 		=> 'certificate_status',
+			'orderby'       => 'name', 
+			'order'         => 'ASC',
+			'hide_empty' 	=> false,
+		));
+		
+		$aActiveData = array(
+			1 => 'Скрыт',
+			2 => 'Показан',
+		);
+		
+		$aOverdueData = array(
+			1 => 'Просрочен',
+			2 => 'Активен',
+		);
+		?>
+		
+		<input type="hidden" class="wc-customer-search" name="_customer_user" data-placeholder="Пользователь" data-selected="<?php echo htmlspecialchars( $user_string ); ?>" value="<?php echo $user_id; ?>" data-allow_clear="true" />
+		
+		<select name="_custom_sertificate_practika" id="filter-by-certificate-practika">
+			<option value="0">Все практики</option>
+			<?if($aSertificatePractika){
+				foreach($aSertificatePractika as $oItem){
+					echo "<option value='{$oItem->term_id}'".(isset($_GET['_custom_sertificate_practika']) && $oItem->term_id == $_GET['_custom_sertificate_practika'] ? ' selected="selected"' : '').">{$oItem->name}</option>";
+				}
+			}?>
+		</select>
+		
+		<select name="_custom_sertificate_status" id="filter-by-certificate-status">
+			<option value="0">Все статусы</option>
+			<?if($aSertificateStatus){
+				foreach($aSertificateStatus as $oItem){
+					echo "<option value='{$oItem->term_id}'".(isset($_GET['_custom_sertificate_status']) && $oItem->term_id == $_GET['_custom_sertificate_status'] ? ' selected="selected"' : '').">{$oItem->name}</option>";
+				}
+			}?>
+		</select>
+		
+		<select name="_custom_overdue" id="filter-by-certificate-status">
+			<option value="0">Срок действия</option>
+			<?if($aOverdueData){
+				foreach($aOverdueData as $iKey => $sItem){
+					echo "<option value='{$iKey}'".(isset($_GET['_custom_overdue']) && $iKey == $_GET['_custom_overdue'] ? ' selected="selected"' : '').">{$sItem}</option>";
+				}
+			}?>
+		</select>
+		
+		<select name="_custom_hidden" id="filter-by-certificate-status">
+			<option value="0">Состояние</option>
+			<?if($aActiveData){
+				foreach($aActiveData as $iKey => $sItem){
+					echo "<option value='{$iKey}'".(isset($_GET['_custom_hidden']) && $iKey == $_GET['_custom_hidden'] ? ' selected="selected"' : '').">{$sItem}</option>";
+				}
+			}?>
+		</select>		
+
 	<?php
+	
+		submit_button( 'В Excel', 'apply', 'export_to_excel', false, 'style="margin-right:5px;"' );
+	}
 }
+
+add_filter('views_edit-certificates', 'views_edit_certificates');
+function views_edit_certificates($views){
+	
+	global $wpdb;
+	
+	$sQuery = "
+	SELECT COUNT(P.ID) as cnt  
+	FROM {$wpdb->prefix}posts P 
+	INNER JOIN {$wpdb->prefix}postmeta PM ON (PM.post_id = P.ID && PM.meta_key = 'cert_date') 
+	LEFT JOIN {$wpdb->prefix}postmeta PM2 ON (PM2.post_id = P.ID && PM2.meta_key = 'custom_hidden') 
+	WHERE P.post_type = 'certificates' && P.`post_status` = 'publish' && DATE_ADD(PM.meta_value, INTERVAL 1 YEAR) < NOW() && (PM2.meta_value IS NULL || PM2.meta_value = '')";
+
+	$oRow = $wpdb->get_row($sQuery);
+	
+	$views['overdue'] = '<a href="edit.php?post_type=certificates&overdue=1">Отображаемые просроченные<span class="count">('.$oRow->cnt.')</span></a>';
+	
+	return $views;
+}
+
+//Применение фильтра, изменение запроса
+add_filter( 'request', 'certificates_request_query' );
+function certificates_request_query( $query ) {
+	global $wpdb, $wp_post_statuses;
+
+	if ( 'certificates' == $query['post_type'] ) {
+		
+		if (isset($_GET['overdue']) && $_GET['overdue']){
+			//Показать все просроченные		
+			$sQuery = "
+				SELECT P.ID  
+				FROM {$wpdb->prefix}posts P 
+				INNER JOIN {$wpdb->prefix}postmeta PM ON (PM.post_id = P.ID && PM.meta_key = 'cert_date') 
+				LEFT JOIN {$wpdb->prefix}postmeta PM2 ON (PM2.post_id = P.ID && PM2.meta_key = 'custom_hidden') 
+				WHERE P.post_type = 'certificates' && P.`post_status` = 'publish' && DATE_ADD(PM.meta_value, INTERVAL 1 YEAR) < NOW() && (PM2.meta_value IS NULL || PM2.meta_value = '')";
+			
+			$aResultIDs = array(0);
+			$aResultData = $wpdb->get_results($sQuery);
+			if ($aResultData){
+				foreach($aResultData as $oItem){
+					$aResultIDs[] = $oItem->ID;
+				}
+			}
+			
+			$query['post__in'] = $aResultIDs;
+		}else{
+		
+			// Filter the orders by the posted customer.
+			if ( isset( $_GET['_customer_user'] ) && $_GET['_customer_user'] > 0 ) {
+				$meta_query[] = 
+				array(
+					'key'   	=> 'cert_user',
+					'value' 	=> (int) $_GET['_customer_user'],
+					'compare' 	=> '='
+				);
+			}
+			
+			$_custom_sertificate_practika = isset( $_GET['_custom_sertificate_practika'] ) && $_GET['_custom_sertificate_practika'] > 0 ? $_GET['_custom_sertificate_practika'] : 0;
+			$_custom_sertificate_status = isset( $_GET['_custom_sertificate_status'] ) && $_GET['_custom_sertificate_status'] > 0 ? $_GET['_custom_sertificate_status'] : 0;
+			
+			if ($_custom_sertificate_practika || $_custom_sertificate_status){
+				$aInnerTable = array();
+				$aWhere = array();
+				
+				if ($_custom_sertificate_practika){
+					$aInnerTable[] = "LEFT JOIN {$wpdb->prefix}termsmeta UM_PRACTIKA_F ON (UM_PRACTIKA_F.terms_id = TR.term_taxonomy_id && UM_PRACTIKA_F.meta_key = 'cert_practika')";
+					$aWhere[] = "UM_PRACTIKA_F.meta_value = '{$_custom_sertificate_practika}'";
+				}
+				if ($_custom_sertificate_status){
+					$aInnerTable[] = "LEFT JOIN {$wpdb->prefix}termsmeta UM_STATUS_F ON (UM_STATUS_F.terms_id = TR.term_taxonomy_id && UM_STATUS_F.meta_key = 'cert_status')";
+					$aWhere[] = "UM_STATUS_F.meta_value = '{$_custom_sertificate_status}'";
+				}
+				
+				$sSql = "SELECT TR.term_taxonomy_id FROM {$wpdb->prefix}term_relationships TR ".implode(' ', $aInnerTable)." WHERE ".implode(' && ', $aWhere);
+				
+				$aDataTypeIDs = array(0);
+				$aResultsTR = $wpdb->get_results($sSql);
+				if ($aResultsTR){
+					foreach ($aResultsTR as $oItem){
+						$aDataTypeIDs[] = $oItem->term_taxonomy_id;
+					}
+				}
+				
+				$query['tax_query'] = array(
+					array(
+						'taxonomy' 	=> 'certificate_type',
+						'field' 	=> 'term_id',
+						'terms' 	=> $aDataTypeIDs
+					)
+				);
+			}
+			
+		
+			if ( (isset( $_GET['_custom_hidden']) && $_GET['_custom_hidden']) || (isset( $_GET['_custom_overdue']) && $_GET['_custom_overdue'])) {
+				$aInnerTable = array();
+				$aWhere = array();
+				
+				//Состояние
+				if ( isset( $_GET['_custom_hidden']) && $_GET['_custom_hidden']) {
+				
+					$aInnerTable[] = "LEFT JOIN {$wpdb->prefix}postmeta PM5 ON (PM5.post_id = P.ID && PM5.meta_key = 'custom_hidden')";
+						
+					if ($_GET['_custom_hidden'] == 1){
+						//Скрыт
+						$aWhere[] = "(PM5.meta_value IS NOT NULL && PM5.meta_value != '')";
+					}else{
+						//Показан
+						$aWhere[] = "(PM5.meta_value IS NULL || PM5.meta_value = '')";
+					}
+				}
+				
+				//Срок действия
+				if ( isset( $_GET['_custom_overdue']) && $_GET['_custom_overdue']) {
+					
+					$aInnerTable[] = "INNER JOIN {$wpdb->prefix}postmeta PM6 ON (PM6.post_id = P.ID && PM6.meta_key = 'cert_date')";
+						
+					if ($_GET['_custom_overdue'] == 1){
+						//Просрочен 
+						$aWhere[] = "(DATE_ADD(PM6.meta_value, INTERVAL 1 YEAR) < NOW())";
+					}else{
+						//Не просрочен
+						$aWhere[] = "(DATE_ADD(PM6.meta_value, INTERVAL 1 YEAR) >= NOW())";
+					}
+				}
+			
+				$sQuery = "
+					SELECT P.ID  
+					FROM {$wpdb->prefix}posts P ".implode(' ', $aInnerTable)."
+					WHERE P.post_type = 'certificates' && P.`post_status` = 'publish' && ".implode(' && ', $aWhere);
+			
+				$aResultIDs = array(0);
+				$aResultData = $wpdb->get_results($sQuery);
+				if ($aResultData){
+					foreach($aResultData as $oItem){
+						$aResultIDs[] = $oItem->ID;
+					}
+				}
+				
+				$query['post__in'] = $aResultIDs;
+			}
+		}
+		
+		
+		$query['meta_query'] = $meta_query;
+	}
+	
+	return $query;
+}
+
+
+/* Display custom column */
+// adding the data for each orders by column (example)
+add_action( 'manage_certificates_posts_custom_column' , 'custom_certificates_list_column_content', 10, 2 );
+function custom_certificates_list_column_content( $column )
+{
+    global $post;
+	
+	$post_id = $post->ID;
+	
+	
+    switch ( $column ){
+		
+        case 'overdue' :
+			$cert_date = get_post_meta( $post_id, 'cert_date', true);
+
+			$iDateCert = strtotime('+1 years', strtotime($cert_date));
+			
+			if ($iDateCert < time()){
+				echo "<span style='color:red;'>Просрочен</span>";
+			}else{
+				echo "<span style='color:green;'>До ".date('d.m.Y', $iDateCert)."</span>";
+			}			
+        break;
+		
+		case 'custom_hidden' :
+			$custom_hidden = get_post_meta( $post_id, 'custom_hidden', true);
+		
+			if (isset($custom_hidden[0]) && $custom_hidden[0]){
+				echo "<span style='color:red;'>Скрыт</span>";
+			}else{
+				echo "<span style='color:green;'>Показан</span>";
+			}
+        break;
+    }
+}
+
+add_filter( 'manage_edit-certificates_columns', 'custom_certificates_column',11);
+function custom_certificates_column($columns)
+{
+	$columns = array();
+	
+	$columns["cb"] 							= '<input type="checkbox" />';
+	$columns["title"]						= 'Заголовок';
+	$columns["taxonomy-certificate_type"]	= 'Заказ';
+	$columns["profile"]						= 'Profile';
+	$columns["overdue"]						= 'Срок действия';
+	$columns["custom_hidden"]				= 'Состояние';
+	$columns["date"]						= 'Дата';
+
+	return $columns;
+}
+
 
 //Скрипты для селекта - фильтра по пользователям
 add_action('admin_enqueue_scripts', 'certificates_load_scripts');
@@ -2444,28 +3127,6 @@ function certificates_load_scripts($hook) {
 		
 		wp_enqueue_script( 'wc-enhanced-select' );
 	}
-}
-
-//Применение фильтра, изменение запроса
-add_filter( 'request', 'certificates_request_query' );
-function certificates_request_query( $query ) {
-	global $wp_post_statuses;
-
-	if ( 'certificates' == $query['post_type'] ) {
-
-		// Filter the orders by the posted customer.
-		if ( isset( $_GET['_customer_user'] ) && $_GET['_customer_user'] > 0 ) {
-			$query['meta_query'] = array(
-				array(
-					'key'   => 'cert_user',
-					'value' => (int) $_GET['_customer_user'],
-					'compare' => '='
-				)
-			);
-		}
-	}
-
-	return $query;
 }
 
 //Добавляем страницу массовой генерации сертификатов
@@ -2868,6 +3529,8 @@ function cert_list_shortcode( $atts ) {
 		'statuses'				=> '',	//Сертификаты для каких статусов выводить через запятую 1,2,3
 		'practika_statuses' 	=> '',	//Сертификаты типов с определенными статусами 1:2,3|2:3,
 		'column_location_title'	=> '',
+		'practika_double'		=> '',
+		'contact_no_empty'		=> '',
 	), $atts, 'cert_list' );
 
 	ob_start();
@@ -2887,11 +3550,26 @@ function cert_map_shortcode( $atts ) {
 		'practika'			=> '',	//Сертификаты для каких типов выводить через запятую 1,2,3
 		'statuses'			=> '',	//Сертификаты для каких статусов выводить через запятую 1,2,3
 		'practika_statuses' => '',	//Сертификаты типов с определенными статусами 1:2,3|2:3
-		'icon_img'			=> ''
+		'icon_img'			=> '',
+		'practika_double'	=> '',
+		'contact_no_empty'	=> '',
 	), $atts, 'cert_map' );
 	
 	ob_start();
 	include (__DIR__ . '/certificate/cert_map.php' );
+	return ob_get_clean();
+}
+
+add_shortcode( 'custommap', 'custommap_shortcode' );
+function custommap_shortcode( $atts ) {
+	global $wpdb;
+	
+	$atts = shortcode_atts( array(
+		'post_type'			=> 'customusermap'
+	), $atts, 'custommap' );
+	
+	ob_start();
+	include (__DIR__ . '/certificate/custommap.php' );
 	return ob_get_clean();
 }
 
@@ -4264,6 +4942,10 @@ function load_user_tab(){
 			do_action('display_pincodes');
 		break;
 		
+		case 'docs':
+			wc_get_template( 'myaccount/my-docs.php' );
+		break;
+		
 		case 'manager':
 			wc_get_template( 'myaccount/my-manager-certificates.php' );
 		break;
@@ -4372,4 +5054,112 @@ Class Custom_Coupons{
 		
 		return TRUE;
     } 
+}
+
+add_filter('woocommerce_email_get_option', 'custom_woocommerce_email_get_option', 99, 5);
+function custom_woocommerce_email_get_option($result, $object, $value, $key, $empty_value){
+	if ($object -> id == 'customer_completed_order'){
+		SWITCH($key){
+			case 'heading_downloadable':
+				$result = __( 'Your order is complete', 'woocommerce' );
+			break;
+			
+			case 'subject_downloadable':
+				$result = __( 'Your {site_title} order from {order_date} is complete', 'woocommerce' );
+			break;
+		}
+	}
+	
+	return $result;
+}
+/*
+add_filter('woocommerce_email_subject_customer_completed_order', 'custom_woocommerce_email_subject_customer_completed_order', 2, 10);
+function custom_woocommerce_email_subject_customer_completed_order($subject, $object){
+	return __( 'Your {site_title} order from {order_date} is complete', 'woocommerce' );
+}
+
+add_filter('woocommerce_email_heading_customer_completed_order', 'custom_woocommerce_email_heading_customer_completed_order', 2, 10);
+function custom_woocommerce_email_heading_customer_completed_order($heading, $object){
+	return __( 'Your order is complete', 'woocommerce' );
+}*/
+
+add_filter('woocommerce_continue_shopping_redirect', 'custom_woocommerce_continue_shopping_redirect');
+function custom_woocommerce_continue_shopping_redirect($val){
+	if (get_site_url() === $val){
+		$val = get_site_url(null, 'eshop');
+	}
+	
+	return $val;
+}
+
+
+//Добавляем галку на пользовательское соглашение
+add_action('register_form', 'custom_checkbox_private_police', 1);
+add_action('woocommerce_checkout_after_customer_details', 'custom_checkbox_private_police', 1);
+function custom_checkbox_private_police(){
+	$attr = '';
+	
+	$customer_id = get_current_user_id();
+	if ($customer_id){
+		$private_police = get_user_meta( $customer_id, 'private_police', true);
+		if ($private_police){
+			$attr = ' checked="checked" disabled="disabled"';
+		}
+	}
+	
+	echo '<div class="register-section private_police" id="profile-details-section-wysija">
+		<div class="editfield">
+			<label><input type="checkbox" name="private_police" value="1"'.$attr.' /> Я соглашаюсь с условиями пользовательского соглашения <a href="/oferta" target="_blank">подробнее</a></label>
+		</div>
+	</div>';
+}
+
+//Регистрация
+add_action( 'woocommerce_register_post', 'custom_validate_extra_fields_register', 9999, 3 ); 
+function custom_validate_extra_fields_register( $username, $email, $validation_errors ) {
+	if ( ! isset( $_POST['private_police'] ) ) {
+		$validation_errors->add( 'private_police_error', 'Пожалуйста, согласитесь с условиями пользовательского соглашения для регистрации на сайте');
+	}
+}
+
+add_action( 'woocommerce_created_customer', 'custom_save_extra_fields_register' );
+function custom_save_extra_fields_register( $customer_id ) {	
+	//if ( isset( $_POST['private_police'] ) ) {
+		// WooCommerce billing phone
+		update_user_meta( $customer_id, 'private_police', isset($_POST['private_police']) ? 1 : 0);
+	//}
+}
+
+//Оформление заказа
+add_action( 'woocommerce_after_checkout_validation', 'custom_after_checkout_validation', 10 );
+function custom_after_checkout_validation( $data ){
+	if ( ! isset( $_POST['private_police'] ) ) {
+		wc_add_notice( 'Пожалуйста, согласитесь с условиями пользовательского соглашения для проведения оплаты', 'error' );
+	}
+}
+
+add_action( 'woocommerce_checkout_order_processed', 'custom_checkout_order_processed', 10);
+function custom_checkout_order_processed(){
+	$customer_id = get_current_user_id();
+	if ($customer_id){
+		update_user_meta( $customer_id, 'private_police', isset($_POST['private_police']) ? 1 : 0);
+	}
+}
+
+
+//Поле для подписки
+add_shortcode( 'private_potice', 'custom_private_potice' );
+function custom_private_potice(){
+	
+	$attr = '';
+	
+	$customer_id = get_current_user_id();
+	if ($customer_id){
+		$private_police = get_user_meta( $customer_id, 'private_police', true);
+		if ($private_police){
+			$attr = ' checked="checked" disabled="disabled"';
+		}
+	}
+	
+	return '<div class="mc-field-group"><label><input class="required" type="checkbox" name="private_police" value="1"'.$attr.' /> Я соглашаюсь с условиями пользовательского соглашения <a href="/oferta" target="_blank">подробнее</a></label></div>';
 }

@@ -27,8 +27,79 @@ if ( $downloads = WC()->customer->get_downloadable_products() ) : ?>
 
 	<h2><?php echo apply_filters( 'woocommerce_my_account_my_downloads_title', __( 'Available Downloads', 'woocommerce' ) ); ?></h2>
 
+	<?
+	
+	$aDownloadsProducts = array();
+	foreach($downloads as $iIndexD => $aItemD){
+		$aDownloadsProducts[$aItemD['product_id']][] = $aItemD;
+	}
+	
+
+	global $aDownloadsProductsG;
+	$aDownloadsProductsG = $aDownloadsProducts;
+	uksort($aDownloadsProducts, function($a, $b){
+		global $aDownloadsProductsG;
+		
+		if (count($aDownloadsProductsG[$a]) == count($aDownloadsProductsG[$b])) {
+			return 0;
+		}
+		return (count($aDownloadsProductsG[$a]) > count($aDownloadsProductsG[$b])) ? -1 : 1;
+	});
+	
+	
+	$args = array(
+		'posts_per_page' 	=> -1,
+		'include'     		=> array_keys($aDownloadsProducts),
+		'post_type'			=> 'product'
+	);
+
+	$aProductsData = array();
+	$oProductsData = get_posts( $args );
+	if($oProductsData){
+		foreach($oProductsData as $iKeyP => $oItemP){
+			$aProductsData[$oItemP->ID] = $oItemP->post_title;
+		}
+	}
+	?>
+	
+	<style>
+		li.group-files{height:auto;line-height:auto;}
+		li.group-files:before{display:none;}
+		li.group-files > div{height:50px;line-height:40px;}
+		li.group-files > div:before {
+			font-family: WooCommerce;
+			speak: none;
+			font-weight: 400;
+			font-variant: normal;
+			text-transform: none;
+			line-height: 1;
+			-webkit-font-smoothing: antialiased;
+			margin-right: .618em;
+			content: "";
+			text-decoration: none;
+		}
+		li.group-files > div .item-link{width:490px;}
+		li.group-files > ul{display:none;padding:20px 0;}
+		li.group-files.active > ul{display:block;}
+		li.group-files > ul li .item-link{display:none;}
+		li.group-files > ul li .file-name{width:490px;}
+	</style>
 	<ul class="digital-downloads offer-block">
-		<?php foreach ( $downloads as $download ) : ?>
+		<?php foreach ( $aDownloadsProducts as $iProductId => $aDownloads ) : ?>
+			<?if(count($aDownloads)>1){
+				$pr = wc_get_product( $iProductId );
+			?>
+				<li class='group-files' data-product="<?=$iProductId?>">
+					<div>
+						<span class="item-preview" style=""><?php echo $pr->get_image(); ?></span>	
+						<a href="<?=get_permalink($iProductId)?>" class="item-link vid-link" target="_blank"><?=$aProductsData[$iProductId]?></a>
+						<a class="btn-show btn-toggle-dir">Открыть папку</a>
+					</div>
+				<ul>
+			<?}?>
+			
+			
+			<?foreach($aDownloads as $download){?>
 			<li data-product="<?php echo $download[ 'product_id' ]; ?>">
 				<?php
 					do_action( 'woocommerce_available_download_start', $download );
@@ -41,7 +112,14 @@ if ( $downloads = WC()->customer->get_downloadable_products() ) : ?>
 					do_action( 'woocommerce_available_download_end', $download );
 				?>
 			</li>
+			<?}?>
+			
+			<?if(count($aDownloads)>1){?>
+					</ul>
+				</li>
+			<?}?>
 		<?php endforeach; ?>
+		
 		<?php do_action( 'tanhit_free_download_products' ); ?>
 	</ul>
 
@@ -111,6 +189,20 @@ if ( $downloads = WC()->customer->get_downloadable_products() ) : ?>
 			$(this).data("flowplayer").stop();
 		});
 	}).children().click(function(e) {
+		return false;
+	});
+	
+	jQuery('.btn-toggle-dir').click(function(){
+		var el = jQuery(this).closest('.group-files');
+		
+		if (el.hasClass('active')){
+			el.removeClass('active');
+			jQuery(this).text('Открыть папку');
+		}else{
+			el.addClass('active');
+			jQuery(this).text('Закрыть папку');
+		}
+		
 		return false;
 	});
 </script>

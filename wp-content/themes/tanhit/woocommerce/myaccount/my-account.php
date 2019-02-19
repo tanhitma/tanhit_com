@@ -27,6 +27,10 @@ wc_print_notices();
 $iCertStatusMax = getUserStatus();
 ?>
 
+<style>
+#ajax-tabs.nav>li>a{padding: 15px 10px;}
+</style>
+
 <div class="myaccount_user" style="margin-bottom: 20px;">
 	<?php
 	printf('Здравствуйте, <strong>%s</strong>! Выберите, пожалуйста, раздел.',
@@ -54,6 +58,9 @@ $iCertStatusMax = getUserStatus();
 		}	
 	}	*/
 	?>
+	
+	<br /><br />
+	<p style='color:red;'>Все приобретенные Вами вебинары, видео и аудио практики будут находится в разделе: &laquo;ВЕБИНАРЫ и ПРАКТИКИ&raquo;</p>
 </div>
 
 <ul id='ajax-tabs' class="nav nav-tabs" role="tablist">
@@ -63,6 +70,7 @@ $iCertStatusMax = getUserStatus();
 	<li role="presentation"><a href="#webinars" aria-controls="webinars" role="tab" data-toggle="tab">Вебинары и практики</a></li>
 	<li role="presentation"><a href="#orders" aria-controls="orders" role="tab" data-toggle="tab">Заказы</a></li>
 	<li role="presentation"><a href="#pins" aria-controls="pins" role="tab" data-toggle="tab">Пин-коды</a></li>
+	<li role="presentation"><a href="#docs" aria-controls="docs" role="tab" data-toggle="tab">Методички</a></li>
 	<?if($iCertStatusMax){?>
 		<li role="presentation"><a href="#manager" aria-controls="manager" role="tab" data-toggle="tab" data-load="1"><?=(220==$iCertStatusMax ? 'ВЕДУЩИЙ' : 'МАСТЕР')?></a></li>
 	<?}?>
@@ -75,6 +83,7 @@ $iCertStatusMax = getUserStatus();
 	<div role="tabpanel" class="tab-pane fade" id="webinars"></div>
 	<div role="tabpanel" class="tab-pane fade" id="orders"></div>
 	<div role="tabpanel" class="tab-pane fade" id="pins"></div>
+	<div role="tabpanel" class="tab-pane fade" id="docs"></div>
 	<?if($iCertStatusMax){?>
 	<div role="tabpanel" class="tab-pane fade" id="manager"><?php wc_get_template( 'myaccount/my-manager-certificates.php' );?></div>
 	<?}?>

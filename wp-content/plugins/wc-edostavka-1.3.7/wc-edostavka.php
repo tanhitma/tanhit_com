@@ -241,7 +241,7 @@ if (!class_exists('WC_Edostavka')) :
                     'type'   => 'ALL'
                 ];
 
-                $url = add_query_arg($args, 'http://gw.edostavka.ru:11443/pvzlist.php');
+                $url = add_query_arg($args, 'https://int.cdek.ru/pvzlist.php');
 
                 $response = wp_remote_get($url, ['sslverify' => false, 'timeout' => 30]);
 
@@ -251,6 +251,7 @@ if (!class_exists('WC_Edostavka')) :
 
                     if (isset($result['Pvz'])) {
                         if (sizeof($result['Pvz']) > 1) {
+                        //if ( ! isset($result['Pvz']['@attributes'])){
                             foreach ($result['Pvz'] as $pvz) {
                                 $przlist[$pvz['@attributes']['Code']] = $pvz['@attributes'];
                             }

@@ -24,6 +24,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 
+<p style='font-weight:bold;'>Все приобритенные Вами записи вебинаров, видео и аудио находятся в вашем <a href="<?=get_site_url()?>/my-account">личном кабинете</a> во вкладке <a href="<?=get_site_url()?>/my-account#webinars">Вебинары и Практики</a>.</p>
+
+<br />
+
 <p><?php printf( __( "Hi there. Your recent order on %s has been completed. Your order details are shown below for your reference:", 'woocommerce' ), get_option( 'blogname' ) ); ?></p>
 
 <?php

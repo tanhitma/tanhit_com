@@ -122,6 +122,22 @@
 			background-image: url("http://static.wppage.ru/wppage/i/video/10/720x405.png");
 			padding: 0 4.6% 9% 4.3%;
 		}
+		
+		.protection-content,.protection-content *{
+			-ms-user-select: none!important;
+			-moz-user-select: none!important;
+			-khtml-user-select: none!important;
+			-webkit-user-select: none!important;
+		}
+		
+		#menu-item-5990,#menu-item-5989{font-weight:bold;}
+		
+		.private_police label{margin-bottom: 20px;font-size: 90%;font-weight: normal;}
+		
+		.cart-total-text{float:left;width:48%;padding-top:70px;font-size:14px;font-weight:normal;}
+		@media only screen and (max-width: 768px) {
+			.cart-total-text{float:none;width:100%;padding-top:0px;}
+		}
 	</style>
 
   <link href="/wp-content/themes/tanhit/js/videojs/video-js.min.css" rel="stylesheet">

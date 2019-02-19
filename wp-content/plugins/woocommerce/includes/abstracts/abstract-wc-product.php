@@ -399,6 +399,7 @@ class WC_Product {
 
 				if ( ! is_array( $file ) ) {
 					$downloadable_files[ $key ] = array(
+						'img'  => '',
 						'file' => $file,
 						'name' => ''
 					);
@@ -411,6 +412,8 @@ class WC_Product {
 
 				// Filter URL
 				$downloadable_files[ $key ]['file'] = apply_filters( 'woocommerce_file_download_path', $downloadable_files[ $key ]['file'], $this, $key );
+				
+				$downloadable_files[ $key ]['img'] = apply_filters( 'woocommerce_img_download_path', $downloadable_files[ $key ]['img'], $this, $key );
 			}
 		}
 
