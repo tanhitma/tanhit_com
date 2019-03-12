@@ -231,6 +231,9 @@ function tanhit_add_style() {
     //wp_enqueue_style( 'fotorama', get_template_directory_uri() . '/css/fotorama.css', array('my-bootstrap-extension'), '1');
     //wp_enqueue_style( 'my-styles', get_template_directory_uri() . '/css/style.css', array('my-bootstrap-extension'), '1');
     wp_enqueue_style('my-sass', get_template_directory_uri() . '/sass/style.css', ['my-bootstrap-extension'], '2.38');
+    
+    //custom css
+    wp_enqueue_style('custom', get_template_directory_uri() . '/css/custom.css', array(), filemtime(get_template_directory() . '/css/custom.css'));
 }
 
 function tanhit_add_script() {
@@ -267,7 +270,7 @@ function tanhit_add_script() {
         'frontend-script',
         TM_URL . '/js/script.js',
         ['jquery'],
-        TANHIT_VERSION,
+        2,
         true
     );
     wp_enqueue_script('frontend-script');
@@ -1860,18 +1863,21 @@ function custom_tanhit_free_download_products() {
         /**
          * for download @see 'init' action in tanhit-functions.php
          */
-        foreach ($downloads as $key => $download){?>
+        foreach ($downloads as $key => $download){
+            $download_expiry = isset($download['access_expires']) ? " (Доступно до: ".date('d.m.Y', strtotime($download['access_expires'])).")" : '';
+        ?>
+
           <li data-product="<?php echo $product->id; ?>">
             <span class="item-preview"style="display: inline-block; overflow: hidden">
 				<?if(trim($download['img'])){?>
-					<img src="<?=$download['img']?>" />
+					<img src="<?=httpToHttps($download['img'])?>" />
 				<?}else{?>
-					<?php echo $product->get_image(); ?>
+					<?php echo httpToHttps($product->get_image()); ?>
 				<?}?>
 			</span>
-            <a href="<?php echo get_the_permalink($product->id); ?>"
+            <a href="<?php echo httpToHttps(get_the_permalink($product->id)); ?>"
                class="item-link vid-link" target="_blank"><?php echo $product->post->post_title; ?></a>
-            <span class="file-name"><?php echo $download['name']; ?></span>
+            <span class="file-name"><?php echo $download['name'] . $download_expiry; ?></span>
             
             <?php
             
@@ -1895,31 +1901,31 @@ function custom_tanhit_free_download_products() {
                     $link = getVideoFileByKey($product->id, $key);
                     ?>
             
-                    <a href="#vid<?php echo $product->id . "-" . $key; ?>" class="show-video btn-show">
+                    <div class="show-video btn-show" data-src="<?=getVideoFromLink(httpToHttps($link));?>" data-type="<?=getTypeFromVideoLink($link)?>">
                         <?php pll_e('Онлайн-просмотр', 'tanhit'); ?>
-                    </a>
+                    </div>
 
-                    <div style="display:none;" class="show_vid" id="vid<?php echo $product->id . "-" . $key; ?>" data-src="<?= $link; ?>">
+                    <?/*<div style="display:none;" class="show_vid" id="vid<?php echo $product->id . "-" . $key; ?>" data-src="<?= $link; ?>">
                         <div class="vid_player vid_player2">2
                             <?= (getPlayerForm($link)) ?>
                         </div>
-                    </div>
+                    </div>*/?>
                 <?}else{?>
                     <a href="<?php echo home_url() . '/?tanhit_download=true&product=' . $product->id . '&key=' . $key; ?>"
                         class="btn-download"><?php pll_e('Скачать', 'tanhit'); ?>
                      </a>
                 <?}?>
               <?}elseif ($youtube){?>
-                <a href="#vid<?php echo $product->id . "-" . $key; ?>" class="show-video btn-show">
+                <div class="show-video btn-show" data-src="<?=getVideoFromLink(httpToHttps($youtube));?>" data-type="<?=getTypeFromVideoLink($youtube)?>">
                     <?php pll_e('Онлайн-просмотр', 'tanhit'); ?>
-                </a>
+                </div>
 
-                <div style="display:none;" class="show_vid" id="vid<?php echo $product->id . "-" . $key; ?>"
+                <?/*<div style="display:none;" class="show_vid" id="vid<?php echo $product->id . "-" . $key; ?>"
                      data-src="<?= $youtube; ?>">
                   <div class="vid_player vid_player2">
                       <?= (getPlayerForm($youtube)) ?>
                   </div>
-                </div>
+                </div>*/?>
               <?}?>
           </li>
         <?}
@@ -1932,6 +1938,8 @@ add_action('woocommerce_available_download_start', 'custom_woocommerce_available
 function custom_woocommerce_available_download_start($download) {
     global $tanhit_customer_products;
 
+    $download_expiry = isset($download['access_expires']) ? " (Доступно до: ".date('d.m.Y', strtotime($download['access_expires'])).")" : '';
+    
     $product = [];
 
     foreach ($tanhit_customer_products as $pr) {
@@ -1955,17 +1963,17 @@ function custom_woocommerce_available_download_start($download) {
 
     <span class="item-preview" style="">
 		<?if($img_url){?>
-			<img src="<?=$img_url?>" />
+			<img src="<?=httpToHttps($img_url)?>" />
 		<?}else{?>
-			<?php echo tanhit_get_product_thumbnail($download['product_id']); ?>
+			<?php echo httpToHttps(tanhit_get_product_thumbnail($download['product_id'])); ?>
 		<?}?>
 	</span>
 
-    <a href="<?php echo $product[$download['product_id']]['permalink']; ?>" class="item-link vid-link" target="_blank">
+    <a href="<?php echo httpToHttps($product[$download['product_id']]['permalink']); ?>" class="item-link vid-link" target="_blank">
         <?php echo $product[$download['product_id']]['product_name']; ?>
     </a>
 
-    <span class="file-name"><?php /* pll_e( 'Файл:', 'tanhit' );*/echo $download['file']['name']; ?></span>
+    <span class="file-name"><?php /* pll_e( 'Файл:', 'tanhit' );*/echo $download['file']['name'] . $download_expiry; ?></span>
 
     <?php
     if ( ! empty($download['file']['file']) && ! $youtube){
@@ -1979,33 +1987,31 @@ function custom_woocommerce_available_download_start($download) {
         if (!$disabled) {
             $link = getVideoFile($download['file']['file']);
             ?>
-          <a href="#vid<?php echo md5($download['file']['file']); ?>" class="show-video btn-show">
+          <div class="show-video btn-show" data-src="<?=getVideoFromLink(httpToHttps($link));?>" data-type="<?=getTypeFromVideoLink($link)?>">
               <?php pll_e('Онлайн-просмотр', 'tanhit'); ?>
-          </a>
-
-
-          <div style="display:none;" class="show_vid" id="vid<?php echo md5($download['file']['file']); ?>"
-               data-src="<?= $link; ?>">
-            <div class="vid_player vid_player2">
-                <?php/* echo do_shortcode("[wpm_video video=".getVideoFile($download['file']['file'])." ratio=16by9 autoplay=off]"); */ ?>
-                <?= (getPlayerForm($link)) ?>
-            </div>
           </div>
+
+
+          <?/*<div style="display:none;" class="show_vid" id="vid<?php echo md5($download['file']['file']); ?>" data-src="<?= $link; ?>">
+            <div class="vid_player vid_player2">
+                <?=(getPlayerForm($link))?>
+            </div>
+          </div>*/?>
         <?}else{?>
             <a href="<?php echo esc_url($download['download_url']); ?>"
                 class="btn-download"><?php pll_e('Скачать', 'tanhit'); ?>
             </a>
         <?}
     }elseif ($youtube) {?>
-        <a href="#vid<?php echo md5($download['file']['file']); ?>" class="show-video btn-show">
+        <div class="show-video btn-show" data-src="<?=getVideoFromLink(httpToHttps($youtube));?>" data-type="<?=getTypeFromVideoLink($youtube)?>">
             <?php pll_e('Онлайн-просмотр', 'tanhit'); ?>
-        </a>
-
-        <div style="display:none;" class="show_vid" id="vid<?php echo md5($download['file']['file']); ?>" data-src="<?= $youtube; ?>">
-            <div class="vid_player vid_player2">
-                <?= (getPlayerForm($youtube)) ?>
-            </div>
         </div>
+
+        <?/*<div style="display:none;" class="show_vid" id="vid<?php echo md5($download['file']['file']); ?>" data-src="<?= $youtube; ?>">
+            <div class="vid_player vid_player2">
+                <?=(getPlayerForm($youtube))?>
+            </div>
+        </div>*/?>
     <?}
 }
 
@@ -2108,6 +2114,37 @@ function getVideoFileByKey($product_id, $key) {
     return $file;
 }
 
+function getTypeFromVideoLink($file){
+	$videoUrl = parse_url($file);
+	
+	$type = 0;
+	if (strpos($videoUrl['host'], 'youtu') !== false) {
+		$type = 1;
+	}
+	
+	return$type;
+}
+
+function getVideoFromLink($file){
+	$videoUrl = parse_url($file);
+	
+	$link = $file;
+	if (strpos($videoUrl['host'], 'youtu') !== false) {
+        $pattern = '#(?<=(?:v|i)=)[a-zA-Z0-9-]+(?=&)|(?<=(?:v|i)\/)[^&\n]+|(?<=embed\/)[^"&\n]+|(?<=‌​(?:v|i)=)[^&\n]+|(?<=youtu.be\/)[^&\n]+#';
+        preg_match($pattern, $file, $matches);
+        if (isset($matches[0])) {
+            $youtubeId = $matches[0];
+        } else {
+            parse_str(parse_url($file, PHP_URL_QUERY), $params);
+            $youtubeId = isset($params['v']) ? $params['v'] : (isset($params['amp;v']) ? $params['amp;v'] : '0');
+        }
+
+        $link = $youtubeId;
+    }
+	
+	return $link;
+}
+
 function getPlayerForm($file) {
 
     $videoUrl = parse_url($file);
@@ -2124,7 +2161,7 @@ function getPlayerForm($file) {
             $youtubeId = isset($params['v']) ? $params['v'] : (isset($params['amp;v']) ? $params['amp;v'] : '0');
         }
 
-        $link = 'http://www.youtube.com/watch?v=' . $youtubeId;
+        $link = httpToHttps('http://www.youtube.com/watch?v=' . $youtubeId);
         $data = 'data-setup=\'{"techOrder": ["youtube"], "sources": [{ "type": "video/youtube", "src": "' . $link . '"}], "youtube": { "controls": 0 }}\'';
     } else {
         $link = $file;
@@ -2136,7 +2173,7 @@ function getPlayerForm($file) {
 
     $video = '<video id="' . $videoId . '" class="video-js vjs-default-skin" controls preload="auto" ' . $data . ' width="490" height="275">' . $source_html . '  
       <p class="vjs-no-js">
-        To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank"> supports HTML5 video</a>
+        To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="https://videojs.com/html5-video-support/" target="_blank"> supports HTML5 video</a>
       </p>
     </video>';
 
@@ -5092,24 +5129,29 @@ function custom_woocommerce_continue_shopping_redirect($val){
 	return $val;
 }
 
-
-//Добавляем галку на пользовательское соглашение
-add_action('register_form', 'custom_checkbox_private_police', 1);
-add_action('woocommerce_checkout_after_customer_details', 'custom_checkbox_private_police', 1);
 function custom_checkbox_private_police(){
 	$attr = '';
+	
+	$html = '<input class="required" type="checkbox" name="private_police" value="1" />';
 	
 	$customer_id = get_current_user_id();
 	if ($customer_id){
 		$private_police = get_user_meta( $customer_id, 'private_police', true);
 		if ($private_police){
-			$attr = ' checked="checked" disabled="disabled"';
+			$html = '<input type="hidden" name="private_police" value="1" /><input type="checkbox" value="1" checked="checked" disabled="disabled" />';
 		}
 	}
 	
+	return '<label>'.$html.' Я соглашаюсь с условиями пользовательского соглашения <a href="/oferta" target="_blank">подробнее</a></label>';
+}
+
+//Добавляем галку на пользовательское соглашение
+add_action('register_form', 'custom_add_fields', 1);
+add_action('woocommerce_checkout_after_customer_details', 'custom_add_fields', 1);
+function custom_add_fields(){
 	echo '<div class="register-section private_police" id="profile-details-section-wysija">
 		<div class="editfield">
-			<label><input type="checkbox" name="private_police" value="1"'.$attr.' /> Я соглашаюсь с условиями пользовательского соглашения <a href="/oferta" target="_blank">подробнее</a></label>
+			'.custom_checkbox_private_police().'
 		</div>
 	</div>';
 }
@@ -5148,18 +5190,308 @@ function custom_checkout_order_processed(){
 
 
 //Поле для подписки
-add_shortcode( 'private_potice', 'custom_private_potice' );
+/*add_shortcode( 'private_potice', 'custom_private_potice' );*/
 function custom_private_potice(){
+	return '<div class="mc-field-group">'.custom_checkbox_private_police().'</div>';
+}
+
+remove_shortcode('shortcode','odras_content_func');
+add_shortcode('shortcode','custom_odras_content_func');
+function custom_odras_content_func($atts){
+	extract( shortcode_atts( array(
+		'id' => null,
+	), $atts ) );
 	
-	$attr = '';
+	$post = get_post($id);
+	$content = $post->post_content;
+	if (strpos($content, '<' . '?') !== false) {
+		ob_start();
+		eval('?' . '>' . $content);
+		$content = ob_get_clean();
+	}
 	
+	$content = str_replace('[private_potice]', custom_private_potice(), $content);
+	
+	return $content;
+}
+
+function httpToHttps($link){
+	return str_replace('http://', 'https://', $link);
+}
+
+add_filter('wp_get_attachment_image_attributes', 'custom_wp_get_attachment_image_attributes', 10, 3);
+function custom_wp_get_attachment_image_attributes($attr, $attachment, $size){
+	$attr['src'] = httpToHttps($attr['src']);
+	
+	return $attr;
+}
+
+add_filter('woocommerce_customer_get_downloadable_products', 'custom_woocommerce_customer_get_downloadable_products', 99);
+function custom_woocommerce_customer_get_downloadable_products($downloads){
+	global $wpdb;
+
 	$customer_id = get_current_user_id();
-	if ($customer_id){
-		$private_police = get_user_meta( $customer_id, 'private_police', true);
-		if ($private_police){
-			$attr = ' checked="checked" disabled="disabled"';
+	
+	$downloads   = array();
+	$_product    = null;
+	$order       = null;
+	$file_number = 0;
+
+	// Get results from valid orders only
+	$results = apply_filters( 'woocommerce_permission_list', $wpdb->get_results( $wpdb->prepare( "
+		SELECT permissions.*
+		FROM {$wpdb->prefix}woocommerce_downloadable_product_permissions as permissions
+		WHERE user_id = %d
+		AND permissions.order_id > 0
+		AND
+			(
+				permissions.downloads_remaining > 0
+				OR
+				permissions.downloads_remaining = ''
+			)
+		AND
+			(
+				permissions.access_expires IS NULL
+				OR
+				permissions.access_expires >= %s
+				OR
+				permissions.access_expires = '0000-00-00 00:00:00'
+			)
+		ORDER BY permissions.order_id, permissions.product_id, permissions.permission_id;
+		", $customer_id, date( 'Y-m-d', current_time( 'timestamp' ) ) ) ), $customer_id );
+
+	if ($results) {
+		$looped_downloads = array();
+		foreach ($results as $result) {
+			if (!$order || $order->id != $result->order_id ) {
+				// new order
+				$order    = wc_get_order( $result->order_id );
+				$_product = null;
+			}
+
+			// Make sure the order exists for this download
+			if (!$order) {
+				continue;
+			}
+
+			// Downloads permitted?
+			if (!$order->is_download_permitted() ) {
+				continue;
+			}
+
+			$product_id = intval( $result->product_id );
+
+			if ( ! $_product || $_product->id != $product_id ) {
+				// new product
+				$file_number = 0;
+				$_product    = wc_get_product( $product_id );
+			}
+			
+			// Check product exists and has the file
+			if ( ! $_product || ! $_product->exists() || ! $_product->has_file( $result->download_id ) ) {
+				continue;
+			}
+
+			$download_file = $_product->get_file( $result->download_id );
+
+			// Check if the file has been already added to the downloads list
+			if ( isset($looped_downloads[$product_id]) && in_array( $download_file, $looped_downloads[$product_id] ) ) {
+				continue;
+			}
+
+			$looped_downloads[$product_id][] = $download_file;
+
+			// Download name will be 'Product Name' for products with a single downloadable file, and 'Product Name - File X' for products with multiple files
+			$download_name = apply_filters(
+				'woocommerce_downloadable_product_name',
+				$_product->get_title() . ' &ndash; ' . $download_file['name'],
+				$_product,
+				$result->download_id,
+				$file_number
+			);
+
+			$downloads[] = array(
+				'download_url'        => add_query_arg(
+					array(
+						'download_file' => $product_id,
+						'order'         => $result->order_key,
+						'email'         => $result->user_email,
+						'key'           => $result->download_id
+					),
+					home_url( '/' )
+				),
+				'download_id'         => $result->download_id,
+				'product_id'          => $product_id,
+				'download_name'       => $download_name,
+				'order_id'            => $order->id,
+				'order_key'           => $order->order_key,
+				'downloads_remaining' => $result->downloads_remaining,
+				'access_expires' 	  => $result->access_expires,
+				'file'                => $download_file
+			);
+
+			$file_number++;
 		}
 	}
 	
-	return '<div class="mc-field-group"><label><input class="required" type="checkbox" name="private_police" value="1"'.$attr.' /> Я соглашаюсь с условиями пользовательского соглашения <a href="/oferta" target="_blank">подробнее</a></label></div>';
+	return $downloads;
+}
+
+
+//Social thumb
+remove_action('wp_head', 'fbfixhead');
+add_action('wp_head', 'custom_fbfixhead');
+function custom_fbfixhead() {
+
+	 // Required for is_plugin_active to work.
+	include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+
+	 // If BuddyPress is active
+	if ( is_plugin_active( 'buddypress/bp-loader.php' ) ) {
+
+		// If not on a BuddyPress members page
+		if (!bp_current_component('members')) {
+
+			 // If not the homepage
+			if ( !is_home() ) {
+
+				// If there is a post image...
+				if (has_post_thumbnail()) {
+				// Set '$featuredimg' variable for the featured image.
+				$featuredimg = wp_get_attachment_image_src( get_post_thumbnail_id($post->ID), "Full");
+				$ftf_description = get_the_excerpt($post->ID);
+				global $post;
+				$ot = get_post_meta($post->ID, 'ftf_open_type', true);
+				if($ot == "") { $default = "article"; } else $default = get_post_meta($post->ID, 'ftf_open_type', true);
+				$ftf_head = '
+				<!--/ Facebook Thumb Fixer Open Graph /-->
+				<meta property="og:type" content="'. $default . '" />
+				<meta property="og:url" content="' . get_permalink() . '" />
+				<meta property="og:title" content="' . wp_kses_data(get_the_title($post->ID)) . '" />
+				<meta property="og:description" content="' . wp_kses($ftf_description, array ()) . '" />
+				<meta property="og:site_name" content="' . wp_kses_data(get_bloginfo('name')) . '" />
+				<meta property="og:image" content="' . $featuredimg[0] . '" />
+                                <link rel="image_src" href="' . $featuredimg[0] . '" />
+
+				<meta itemscope itemtype="'. $default . '" />
+				<meta itemprop="description" content="' . wp_kses($ftf_description, array ()) . '" />
+				<meta itemprop="image" content="' . $featuredimg[0] . '" />
+				';
+				} //...otherwise, if there is no post image.
+				else {
+				$ftf_description = get_the_excerpt($post->ID);
+				global $post;
+				$ot = get_post_meta($post->ID, 'ftf_open_type', true);
+				if($ot == "") { $default = "article"; } else $default = get_post_meta($post->ID, 'ftf_open_type', true);
+				$ftf_head = '
+				<!--/ Facebook Thumb Fixer Open Graph /-->
+				<meta property="og:type" content="'. $default . '" />
+				<meta property="og:url" content="' . get_permalink() . '" />
+				<meta property="og:title" content="' . wp_kses_data(get_the_title($post->ID)) . '" />
+				<meta property="og:description" content="' . wp_kses($ftf_description, array ()) . '" />
+				<meta property="og:site_name" content="' . wp_kses_data(get_bloginfo('name')) . '" />
+				<meta property="og:image" content="' . get_option('default_fb_thumb') . '" />
+                                <link rel="image_src" href="' . get_option('default_fb_thumb') . '" />
+                                
+				<meta itemscope itemtype="'. $default . '" />
+				<meta itemprop="description" content="' . wp_kses($ftf_description, array ()) . '" />
+				<meta itemprop="image" content="' . get_option('default_fb_thumb') . '" />
+				';
+				}
+				} //...otherwise, it must be the homepage so do this:
+				else {
+				$ftf_name = get_bloginfo('name');
+				$ftf_description = get_bloginfo('description');
+				$ot = get_option( 'homepage_object_type', '');
+				if($ot == "") { $default = "website"; } else $default = get_option( 'homepage_object_type', '');
+				$ftf_head = '
+				<!--/ Facebook Thumb Fixer Open Graph /-->
+				<meta property="og:type" content="' . $default . '" />
+				<meta property="og:url" content="' . get_option('home') . '" />
+				<meta property="og:title" content="' . wp_kses($ftf_name, array ()) . '" />
+				<meta property="og:description" content="' . wp_kses_data($ftf_description, array ()) . '" />
+				<meta property="og:site_name" content="' . wp_kses($ftf_name, array ()) . '" />
+				<meta property="og:image" content="' . get_option('default_fb_thumb') . '" />
+                                <link rel="image_src" href="' . get_option('default_fb_thumb') . '" />
+                                
+				<meta itemscope itemtype="'. $default . '" />
+				<meta itemprop="description" content="' . wp_kses($ftf_description, array ()) . '" />
+				<meta itemprop="image" content="' . get_option('default_fb_thumb') . '" />
+				';
+			}
+		}
+  	} // Otherwie, if BuddyPress is NOT active...
+	else if ( !is_plugin_active( 'buddypress/bp-loader.php' ) ) {
+
+		// If not the homepage
+		global $post;
+		if ( !is_home() ) {
+
+			// If there is a post image...
+			if (has_post_thumbnail()) {
+			// Set '$featuredimg' variable for the featured image.
+			$featuredimg = wp_get_attachment_image_src( get_post_thumbnail_id($post->ID), "Full");
+			$ftf_description = get_the_excerpt($post->ID);
+			global $post;
+			$ot = get_post_meta($post->ID, 'ftf_open_type', true);
+			if($ot == "") { $default = "article"; } else $default = get_post_meta($post->ID, 'ftf_open_type', true);
+			$ftf_head = '
+			<!--/ Facebook Thumb Fixer Open Graph /-->
+			<meta property="og:type" content="'. $default . '" />
+			<meta property="og:url" content="' . get_permalink() . '" />
+			<meta property="og:title" content="' . wp_kses_data(get_the_title($post->ID)) . '" />
+			<meta property="og:description" content="' . wp_kses($ftf_description, array ()) . '" />
+			<meta property="og:site_name" content="' . wp_kses_data(get_bloginfo('name')) . '" />
+			<meta property="og:image" content="' . $featuredimg[0] . '" />
+                        <link rel="image_src" href="' . $featuredimg[0] . '" />
+                                
+			<meta itemscope itemtype="'. $default . '" />
+			<meta itemprop="description" content="' . wp_kses($ftf_description, array ()) . '" />
+			<meta itemprop="image" content="' . $featuredimg[0] . '" />
+			';
+			} //...otherwise, if there is no post image.
+			else {
+			$ftf_description = get_the_excerpt($post->ID);
+			global $post;
+			$ot = get_post_meta($post->ID, 'ftf_open_type', true);
+			if($ot == "") { $default = "article"; } else $default = get_post_meta($post->ID, 'ftf_open_type', true);
+			$ftf_head = '
+			<!--/ Facebook Thumb Fixer Open Graph /-->
+			<meta property="og:type" content="'. $default . '" />
+			<meta property="og:url" content="' . get_permalink() . '" />
+			<meta property="og:title" content="' . wp_kses_data(get_the_title($post->ID)) . '" />
+			<meta property="og:description" content="' . wp_kses($ftf_description, array ()) . '" />
+			<meta property="og:site_name" content="' . wp_kses_data(get_bloginfo('name')) . '" />
+			<meta property="og:image" content="' . get_option('default_fb_thumb') . '" />
+                        <link rel="image_src" href="' . get_option('default_fb_thumb') . '" />
+                                
+			<meta itemscope itemtype="'. $default . '" />
+			<meta itemprop="description" content="' . wp_kses($ftf_description, array ()) . '" />
+			<meta itemprop="image" content="' . get_option('default_fb_thumb') . '" />
+			';
+			}
+			} //...otherwise, it must be the homepage so do this:
+			else {
+			$ftf_name = get_bloginfo('name');
+			$ftf_description = get_bloginfo('description');
+			$ot = get_option( 'homepage_object_type', '');
+			if($ot == "") { $default = "website"; } else $default = get_option( 'homepage_object_type', '');
+			$ftf_head = '
+			<!--/ Facebook Thumb Fixer Open Graph /-->
+			<meta property="og:type" content="' . $default . '" />
+			<meta property="og:url" content="' . get_option('home') . '" />
+			<meta property="og:title" content="' . wp_kses($ftf_name, array ()) . '" />
+			<meta property="og:description" content="' . wp_kses_data($ftf_description, array ()) . '" />
+			<meta property="og:site_name" content="' . wp_kses($ftf_name, array ()) . '" />
+			<meta property="og:image" content="' . get_option('default_fb_thumb') . '" />
+                        <link rel="image_src" href="' . get_option('default_fb_thumb') . '" />
+                                
+			<meta itemscope itemtype="'. $default . '" />
+			<meta itemprop="description" content="' . wp_kses($ftf_description, array ()) . '" />
+			<meta itemprop="image" content="' . get_option('default_fb_thumb') . '" />
+			';
+		}
+	}
+  echo $ftf_head;
+  print "\n";
 }

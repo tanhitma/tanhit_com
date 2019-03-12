@@ -33,7 +33,6 @@ if ( $downloads = WC()->customer->get_downloadable_products() ) : ?>
 	foreach($downloads as $iIndexD => $aItemD){
 		$aDownloadsProducts[$aItemD['product_id']][] = $aItemD;
 	}
-	
 
 	global $aDownloadsProductsG;
 	$aDownloadsProductsG = $aDownloadsProducts;
@@ -60,6 +59,11 @@ if ( $downloads = WC()->customer->get_downloadable_products() ) : ?>
 			$aProductsData[$oItemP->ID] = $oItemP->post_title;
 		}
 	}
+	
+	/*if (current_user_can('administrator')){
+		echo '<pre>';
+		die(var_dump($downloads));
+	}*/
 	?>
 	
 	<style>
@@ -92,7 +96,7 @@ if ( $downloads = WC()->customer->get_downloadable_products() ) : ?>
 				<li class='group-files' data-product="<?=$iProductId?>">
 					<div>
 						<span class="item-preview" style=""><?php echo $pr->get_image(); ?></span>	
-						<a href="<?=get_permalink($iProductId)?>" class="item-link vid-link" target="_blank"><?=$aProductsData[$iProductId]?></a>
+						<a href="<?=httpToHttps(get_permalink($iProductId))?>" class="item-link vid-link" target="_blank"><?=$aProductsData[$iProductId]?></a>
 						<a class="btn-show btn-toggle-dir">Открыть папку</a>
 					</div>
 				<ul>
@@ -107,7 +111,7 @@ if ( $downloads = WC()->customer->get_downloadable_products() ) : ?>
 					if ( is_numeric( $download['downloads_remaining'] ) )
 						echo apply_filters( 'woocommerce_available_download_count', '<span class="count">' . sprintf( _n( '%s download remaining', '%s downloads remaining', $download['downloads_remaining'], 'woocommerce' ), $download['downloads_remaining'] ) . '</span> ', $download );
 
-					echo apply_filters( 'woocommerce_available_download_link', '<a href="' . esc_url( $download['download_url'] ) . '">' . $download['download_name'] . '</a>', $download );
+					echo apply_filters( 'woocommerce_available_download_link', '<a href="' . httpToHttps(esc_url( $download['download_url'] )) . '">' . $download['download_name'] . '</a>', $download );
 
 					do_action( 'woocommerce_available_download_end', $download );
 				?>
@@ -135,10 +139,43 @@ if ( $downloads = WC()->customer->get_downloadable_products() ) : ?>
 
 <?php endif; ?>
 
+<script id="tpl-video-0" type="text/template">
+	<div class="vid_player vid_player2">
+		<div class="wpm-video-size-wrap">
+			<div class="wpm-video-youtube video_wrap video_margin_center wpmjw inactive style-9">
+				<div class="embed-responsive embed-responsive-16by9">
+					<video id='tpl-video-js{{INDEX}}' class="video-js vjs-default-skin" controls preload="auto" width="490" height="275">
+						<source src="{{LINK}}" type="video/mp4"></source>
+						<p class="vjs-no-js">
+							To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="https://videojs.com/html5-video-support/" target="_blank"> supports HTML5 video</a>
+						</p>
+					</video>
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+
+<script id="tpl-video-1" type="text/template">
+	<div class="vid_player vid_player2">
+		<div class="wpm-video-size-wrap">
+			<div class="wpm-video-youtube video_wrap video_margin_center wpmjw inactive style-9">
+				<div class="embed-responsive embed-responsive-16by9">
+					<video id='tpl-video-js{{INDEX}}' class="video-js vjs-default-skin" controls preload="auto" width="490" height="275" data-setup='{"techOrder": ["youtube"], "sources": [{ "type": "video/youtube", "src": "https://www.youtube.com/watch?v={{LINK}}"}], "youtube": { "controls": 0 }}'>
+						<p class="vjs-no-js">
+							To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="https://videojs.com/html5-video-support/" target="_blank"> supports HTML5 video</a>
+						</p>
+					</video>
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+
 <link href="/wp-content/themes/tanhit/js/videojs/video-js.min.css" rel="stylesheet">
-<script type="text/javascript" src="/wp-content/themes/tanhit/js/videojs/video.min.js"></script>
-<script type="text/javascript" src="/wp-content/themes/tanhit/js/videojs/youtube.min.js"></script>
-<script type="text/javascript" src="/wp-content/themes/tanhit/js/videojs/video_init.js"></script>
+<script type="text/javascript" src="/wp-content/themes/tanhit/js/videojs/video.min2.js"></script>
+<script type="text/javascript" src="/wp-content/themes/tanhit/js/videojs/youtube.min.js?v2"></script>
+<?/*<script type="text/javascript" src="/wp-content/themes/tanhit/js/videojs/video_init.js"></script>*/?>
 
 <style>
 	.vid_player2{height:400px;margin-top:-200px;width:600px;margin-left:-300px;}
@@ -171,13 +208,40 @@ if ( $downloads = WC()->customer->get_downloadable_products() ) : ?>
 		}*/
 	//}
 	
+	var player_index = 0;
 	/* Player */
 	jQuery('.show-video').click(function() {
-		var pContainer = jQuery(jQuery(jQuery(this).attr("href"))[0]);
-		pContainer.show();
+		/*var pContainer = jQuery(jQuery(jQuery(this).attr("href"))[0]);
+		pContainer.show();*/
+		
+		player_index++;
+		
+		var el = this;
+		var template = '';
+
+		var data_type 	= jQuery(el).attr('data-type');
+		var data_src 	= jQuery(el).attr('data-src');
+		
+		template 	= jQuery('#tpl-video-'+data_type).html();
+		template 	= template.replace(/{{LINK}}/, data_src);
+		template 	= template.replace(/{{INDEX}}/, ('-'+player_index));
+		
+		jQuery('#video-player').remove();
+		jQuery('body').append('<div id="video-player" class="show_vid">'+template+'</div>');
+		
+		var player = videojs('#tpl-video-js-'+player_index);
+		//player.pause();
+		
+		jQuery(document).on('click', function(e) {
+			if (jQuery(e.target).closest("#video-player").length && !jQuery(e.target).closest(".video_wrap").length) {
+				jQuery('#video-player').remove();
+			}
+			
+			e.stopPropagation();
+		});
 	});
 
-	jQuery('.show_vid').click(function() {
+	/*jQuery('.show_vid').click(function() {
 		if (jQuery(this).find('.video-js').length){
 			var plId = jQuery(this).find('.video-js').attr('id');
 			var player = videojs(plId);
@@ -190,7 +254,7 @@ if ( $downloads = WC()->customer->get_downloadable_products() ) : ?>
 		});
 	}).children().click(function(e) {
 		return false;
-	});
+	});*/
 	
 	jQuery('.btn-toggle-dir').click(function(){
 		var el = jQuery(this).closest('.group-files');

@@ -6,6 +6,26 @@
  * @package Tanhit
  */
  
+function wpguruLink() {
+	var istS = 'Материал взят с сайта https://tanhit.com/ ТАНИТ – мастер интегрального знания об изначальной природе человека. Все права защищены © 2017.';
+	var copyR = '';
+	var body_element = document.getElementsByTagName('body')[0];
+	var choose = window.getSelection();
+	var myLink = document.location.href;
+	/*var authorLink = "<br /><br />" + istS + ' ' + "<a href='"+myLink+"'>"+myLink+"</a>" + copyR + '';*/
+	var authorLink = "<br /><br />" + istS;
+	var copytext = choose + authorLink;
+	var addDiv = document.createElement('div');
+	addDiv.style.position='absolute';
+	addDiv.style.left='-99999px';
+	body_element.appendChild(addDiv);
+	addDiv.innerHTML = copytext;
+	choose.selectAllChildren(addDiv);
+	window.setTimeout(function() {
+		body_element.removeChild(addDiv);
+	},0);
+}
+document.oncopy = wpguruLink;
 
 /*jslint browser: true*/
 /*global jQuery, console, TanhitFrontManager*/

@@ -25,8 +25,12 @@ if ( ! $post->post_excerpt ) {
 	return;
 }
 
-add_filter( 'woocommerce_short_description', 'do_shortcode', 12 );
+$post->post_excerpt = apply_filters( 'woocommerce_short_description', $post->post_excerpt );
+
+//add_filter( 'woocommerce_short_description', 'do_shortcode', 12 );
+//$post->post_excerpt = str_replace('[private_potice]', custom_private_potice(), $post->post_excerpt);
+
 ?>
 <div itemprop="description">
-	<?php echo apply_filters( 'woocommerce_short_description', $post->post_excerpt ) ?>
+	<?php echo $post->post_excerpt ?>
 </div>

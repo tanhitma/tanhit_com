@@ -193,7 +193,9 @@ class WC_Meta_Box_Product_Data {
 									<th><?php _e( 'Name', 'woocommerce' ); ?> <?php echo wc_help_tip( __( 'This is the name of the download shown to the customer.', 'woocommerce' ) ); ?></th>
 									<th colspan="2"><?php _e( 'File URL', 'woocommerce' ); ?> <?php echo wc_help_tip( __( 'This is the URL or absolute path to the file which customers will get access to. URLs entered here should already be encoded.', 'woocommerce' ) ); ?></th>
 									<th colspan="2">Изображение</th>
+                                                                        <th>Дата (с которой отсчитывать, дату окончания)</th>
 									<th>Доступ истекает через (дней)</th>
+                                                                        <th>Дата до которой доступна запись</th>
 									<th>&nbsp;</th>
 								</tr>
 							</thead>
@@ -202,15 +204,22 @@ class WC_Meta_Box_Product_Data {
 								$downloadable_files = get_post_meta( $post->ID, '_downloadable_files', true );
 
 								if ( $downloadable_files ) {
-									foreach ( $downloadable_files as $key => $file ) {
-										include( 'views/html-product-download.php' );
-									}
+                                                                    $global_dstart = get_post_meta( $post->ID, '_download_start', true );
+                                                                    $global_expiry = get_post_meta( $post->ID, '_download_expiry', true );
+                                                                    
+                                                                    foreach ( $downloadable_files as $key => $file ) {
+                                                                        $dstart = $file['start'] ? $file['start'] : $global_dstart;
+                                                                        $expiry = (int)$file['expiry'] ? $file['expiry'] : $global_expiry;
+                                                                        $file['dend'] = $dstart && $expiry ? date('d.m.Y', strtotime($dstart)+60*60*24*$expiry) : '';
+
+                                                                        include( 'views/html-product-download.php' );
+                                                                    }
 								}
 								?>
 							</tbody>
 							<tfoot>
 								<tr>
-									<th colspan="7">
+									<th colspan="8">
 										<a href="#" class="button insert" data-row="<?php
 											$file = array(
 												'img'  => '',
@@ -226,6 +235,7 @@ class WC_Meta_Box_Product_Data {
 							</tfoot>
 						</table>
 					</div>
+                            
 					<?php
 
 					// Download Limit
@@ -234,6 +244,9 @@ class WC_Meta_Box_Product_Data {
 						'min'	=> '0'
 					) ) );
 
+                                        // Start
+					woocommerce_wp_text_input( array( 'id' => '_download_start', 'label' => 'Дата (с которой отсчитывать, дату окончания)', 'placeholder' => 'Дата заказа', 'description' => '', 'class' => 'short input_field_date' ) );
+                                        
 					// Expirey
 					woocommerce_wp_text_input( array( 'id' => '_download_expiry', 'label' => __( 'Download Expiry', 'woocommerce' ), 'placeholder' => __( 'Never', 'woocommerce' ), 'description' => __( 'Enter the number of days before a download link expires, or leave blank.', 'woocommerce' ), 'type' => 'number', 'custom_attributes' => array(
 						'step' 	=> '1',
@@ -247,10 +260,67 @@ class WC_Meta_Box_Product_Data {
 						'music'       => __( 'Music', 'woocommerce' ),
 					) ) );
 
+                                        woocommerce_wp_checkbox( array( 'id' => '_download_expiry_recalculate', 'label' => 'Пересчитать доступ, для уже оформленных заказов' ) );
+                                        
 					do_action( 'woocommerce_product_options_downloads' );
-
 				echo '</div>';
-
+                                ?>
+                            
+                                <style>
+                                    .ui-acf .datepicker_wrapper .ui-datepicker .ui-datepicker-prev, .ui-acf .datepicker_wrapper .ui-datepicker .ui-datepicker-next{display:block;}
+                                </style>
+                                <script>
+                                    jQuery('.show_if_downloadable .input_field_date').datepicker({
+                                        dateFormat: 'dd.mm.yy',
+                                        monthNames : ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
+                                        dayNamesMin : ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'],
+                                        beforeShow : function(){
+                                            if( ! jQuery('.datepicker_wrapper').length){
+                                                jQuery('#ui-datepicker-div').wrap('<span class="datepicker_wrapper"></span>');
+                                            }
+                                       }
+                                    });
+                                    
+                                    function customToDate(dateStr) {
+                                        var parts = dateStr.split(".");
+                                        return new Date(parts[2], parts[1] - 1, parts[0]);
+                                    }
+                                    
+                                    jQuery('.show_if_downloadable .input_field_date,.show_if_downloadable .download_expiry input,.show_if_downloadable ._download_expiry_field input').change(function(){
+                                        var global_dstart = jQuery('.show_if_downloadable ._download_start_field  input').val();
+                                        var global_expiry = jQuery('.show_if_downloadable ._download_expiry_field input').val();
+                                        
+                                        jQuery.each(jQuery('.show_if_downloadable .downloadable_files tbody tr'), function(i, v){
+                                            var tr_dstart = jQuery(v).find('.download_start input').val();
+                                            var tr_expiry = jQuery(v).find('.download_expiry input').val();
+                                            
+                                            var v_dstart = jQuery.trim(tr_dstart ? tr_dstart : global_dstart);
+                                            var v_expiry = parseInt(tr_expiry ? tr_expiry : global_expiry) || 0;
+                                            
+                                            var result = '';
+                                            if (v_dstart && v_expiry){
+                                                var date = customToDate(v_dstart);
+                                                date.setDate(date.getDate() + 1 + v_expiry);
+                                                
+                                                var d = date.getUTCDate();
+                                                if (d < 10){
+                                                    d = '0' + d;
+                                                }
+                                                
+                                                var m = date.getUTCMonth()+1;
+                                                if (m < 10){
+                                                    m = '0' + m;
+                                                }
+                                                
+                                                result = d+'.'+m+'.'+date.getUTCFullYear();
+                                            }
+                                            
+                                            jQuery(v).find('.download_dend').text(result);              
+                                        });
+                                    });
+                                </script>
+                                
+                                <?                                
 				if ( wc_tax_enabled() ) {
 
 					echo '<div class="options_group show_if_simple show_if_external show_if_variable">';
@@ -1147,6 +1217,11 @@ class WC_Meta_Box_Product_Data {
 				$_download_limit = ''; // 0 or blank = unlimited
 			}
 
+                        $_download_start = trim( $_POST['_download_start'] );
+			if ( ! $_download_start ) {
+				$_download_start = ''; // 0 or blank = unlimited
+			}
+                        
 			$_download_expiry = absint( $_POST['_download_expiry'] );
 			if ( ! $_download_expiry ) {
 				$_download_expiry = ''; // 0 or blank = unlimited
@@ -1159,7 +1234,8 @@ class WC_Meta_Box_Product_Data {
 				$file_names         = isset( $_POST['_wc_file_names'] ) ? $_POST['_wc_file_names'] : array();
 				$img_urls           = isset( $_POST['_wc_img_urls'] )  ? wp_unslash( array_map( 'trim', $_POST['_wc_img_urls'] ) ) : array();
 				$file_urls          = isset( $_POST['_wc_file_urls'] )  ? wp_unslash( array_map( 'trim', $_POST['_wc_file_urls'] ) ) : array();
-				$download_expires   = isset( $_POST['_wc_download_expires'] ) ? $_POST['_wc_download_expires'] : array();
+				$download_starts    = isset( $_POST['_wc_download_start'] ) ? $_POST['_wc_download_start'] : array();
+                                $download_expires   = isset( $_POST['_wc_download_expires'] ) ? $_POST['_wc_download_expires'] : array();
 				
 				$file_url_size      = sizeof( $file_urls );
 				$allowed_file_types = apply_filters( 'woocommerce_downloadable_file_allowed_mime_types', get_allowed_mime_types() );
@@ -1181,6 +1257,11 @@ class WC_Meta_Box_Product_Data {
 						$file_name = wc_clean( $file_names[ $i ] );
 						$file_hash = md5( $file_url );
 						
+                                                $download_start = trim(wc_clean( $download_starts[ $i ] ));
+						if ( ! $download_start){
+							$download_start = '';
+						}
+                                                
 						$download_expiry = (int)wc_clean( $download_expires[ $i ] );
 						if ( ! $download_expiry){
 							$download_expiry = '';
@@ -1228,6 +1309,7 @@ class WC_Meta_Box_Product_Data {
 							'img'  		=> $img_url,
 							'name' 		=> $file_name,
 							'file' 		=> $file_url,
+                                                        'start' 	=> $download_start,
 							'expiry' 	=> $download_expiry
 						);
 					}
@@ -1239,11 +1321,51 @@ class WC_Meta_Box_Product_Data {
 
 			update_post_meta( $post_id, '_downloadable_files', $files );
 			update_post_meta( $post_id, '_download_limit', $_download_limit );
-			update_post_meta( $post_id, '_download_expiry', $_download_expiry );
-
+			update_post_meta( $post_id, '_download_start', $_download_start );
+                        update_post_meta( $post_id, '_download_expiry', $_download_expiry );
+                        
 			if ( isset( $_POST['_download_type'] ) ) {
 				update_post_meta( $post_id, '_download_type', wc_clean( $_POST['_download_type'] ) );
 			}
+                        
+                        //Если пересчитать выданный ранее доступ
+                        if (isset($_POST['_download_expiry_recalculate']) && $files){
+                            $global_dstart = $_download_start;
+                            $global_expiry = $_download_expiry;
+                            
+                            $aOrdersDateById = array();
+                            $aOrdersData = $wpdb->get_results("SELECT ID, post_date FROM {$wpdb->prefix}posts WHERE `post_type` = 'shop_order'", ARRAY_A);
+                            if ($aOrdersData){
+                                foreach($aOrdersData as $aOrderItem){
+                                    $aOrdersDateById[$aOrderItem['ID']] = $aOrderItem['post_date'];
+                                }
+                            }
+                            
+                            $aDownloadsData = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}woocommerce_downloadable_product_permissions WHERE `product_id` = '{$post_id}'", ARRAY_A);
+                            if ($aDownloadsData){
+                                foreach($aDownloadsData as $aDownloadItem){
+                                    if (isset($aOrdersDateById[$aDownloadItem['order_id']]) && isset($files[$aDownloadItem['download_id']])){
+                                        //Пересчитываем доступ, и обновляем
+                                        $order_date = $aOrdersDateById[$aDownloadItem['order_id']];
+                                        
+                                        $file_dstart = $files[$aDownloadItem['download_id']]['start'] ? $files[$aDownloadItem['download_id']]['start'] : $global_dstart;
+                                        $file_expiry = (int)$files[$aDownloadItem['download_id']]['expiry'] ? $files[$aDownloadItem['download_id']]['expiry'] : $global_expiry;
+                                        
+                                        if (strtotime($order_date) > strtotime($file_dstart)){
+                                            $file_dstart = $order_date;
+                                        }
+                                        
+                                        $access_expires = 'NULL';
+                                        if ($file_expiry){
+                                            $access_expires = "'" . date('Y-m-d H:i:s', strtotime($file_dstart) + 60*60*24*$file_expiry) . "'";
+                                        }
+                                        
+                                        $sql = "UPDATE {$wpdb->prefix}woocommerce_downloadable_product_permissions SET `access_expires` = {$access_expires} WHERE `permission_id` = '{$aDownloadItem['permission_id']}'";
+                                        $wpdb->query($sql);
+                                    }
+                                }
+                            }
+                        }
 		}
 
 		// Product url

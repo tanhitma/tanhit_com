@@ -61,18 +61,20 @@ function odras_myshortcodes_custom_columns($column){
 }
 ?>
 <?php 
+add_shortcode('shortcode','odras_content_func');
 function odras_content_func($atts){
 	extract( shortcode_atts( array(
 		'id' => null,
 	), $atts ) );
-$post = get_post($id);
-$content = $post->post_content;
-if (strpos($content, '<' . '?') !== false) {
-        ob_start();
-        eval('?' . '>' . $content);
-        $content = ob_get_clean();
-    }
-return $content;
+	
+	$post = get_post($id);
+	$content = $post->post_content;
+	if (strpos($content, '<' . '?') !== false) {
+		ob_start();
+		eval('?' . '>' . $content);
+		$content = ob_get_clean();
+	}
+	
+	return $content;
 }
-add_shortcode('shortcode','odras_content_func');
  ?>

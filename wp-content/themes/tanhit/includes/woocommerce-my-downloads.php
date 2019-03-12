@@ -23,6 +23,8 @@ function tanhit_available_download_start( $download ) {
 
 	global $tanhit_customer_products;	
 
+        $download_expiry = isset($download['access_expires']) ? " (Доступно до: ".date('d.m.Y', strtotime($download['access_expires'])).")" : '';
+        
 	$product = array();
 	
 	foreach( $tanhit_customer_products as $pr ) :
@@ -37,16 +39,16 @@ function tanhit_available_download_start( $download ) {
 	?>
 	
 
-	<span class="item-preview" style=""><?php echo tanhit_get_product_thumbnail( $download[ 'product_id' ] );?></span>
+	<span class="item-preview" style=""><?php echo httpToHttps(tanhit_get_product_thumbnail( $download[ 'product_id' ] ));?></span>
 	
-	<a href="<?php echo $product[ $download[ 'product_id' ] ][ 'permalink' ]; ?>"
+	<a href="<?php echo httpToHttps($product[ $download[ 'product_id' ] ][ 'permalink' ]); ?>"
 		class="item-link vid-link" target="_blank"><?php echo $product[ $download[ 'product_id' ] ][ 'product_name' ]; ?></a>
 	
-	<span class="file-name"><?php	/* pll_e( 'Файл:', 'tanhit' );*/ echo $download[ 'file' ][ 'name' ]; ?></span>
+	<span class="file-name"><?php	/* pll_e( 'Файл:', 'tanhit' );*/ echo $download[ 'file' ][ 'name' ] . $download_expiry; ?></span>
 
 
 
-	<a href="<?php echo esc_url( $download['download_url'] ); ?>" class="btn-download"><?php pll_e( 'Скачать', 'tanhit' ); ?></a>
+	<a href="<?php echo httpToHttps(esc_url( $download['download_url'] )); ?>" class="btn-download"><?php pll_e( 'Скачать', 'tanhit' ); ?></a>
 	
 	<?php
 	if ( empty( $download[ 'file' ][ 'file' ] ) ) :	?>
@@ -73,11 +75,12 @@ function tanhit_available_download_start( $download ) {
                 <?php pll_e( 'Онлайн-просмотр', 'tanhit' ); ?>
             </a>
 
-            <div style="display:none;" class="show_vid" id="vid<?php echo md5($download['download_url']); ?>">
+            <?/*<div style="display:none;" class="show_vid" id="vid<?php echo md5($download['download_url']); ?>">
                 <div class="vid_player">
                     <?php  echo do_shortcode('[evp_embed_video url="'.$download['download_url']. '" width="800" ratio="0.7"]'); ?>
                 </div>
-            </div>
+            </div>*/?>
+			555
 
         <?php
 		}	?>
@@ -172,12 +175,13 @@ function _tanhit_free_download_products() {
 		 * for download @see 'init' action in tanhit-functions.php
 		 */
 		foreach( $downloads as $key => $download ) :
-			?>
+                    $download_expiry = isset($download['access_expires']) ? " (Доступно до: ".date('d.m.Y', strtotime($download['access_expires'])).")" : '';
+                ?>
 			<li data-product="<?php echo $product->id; ?>">
 				<span class="item-preview" style="display: inline-block; overflow: hidden"><?php echo $product->get_image(); ?></span>
-				<a href="<?php echo get_the_permalink( $product->id ); ?>"
+				<a href="<?php echo httpToHttps(get_the_permalink( $product->id )); ?>"
 					class="item-link vid-link" target="_blank"><?php echo $product->post->post_title; ?></a>
-				<span class="file-name"><?php echo $download[ 'name' ]; ?></span>
+				<span class="file-name"><?php echo $download[ 'name' ] . $download_expiry; ?></span>
 				<?php
 				/**
 				 * @see class-wc-download-handler.php for query string handle
@@ -207,11 +211,12 @@ function _tanhit_free_download_products() {
 							<?php pll_e( 'Онлайн-просмотр', 'tanhit' ); ?>
 						</a>
 
-                        <div style="display:none;" class="show_vid" id="vid<?php echo $product->id."-".$key; ?>">
+                        <?/*<div style="display:none;" class="show_vid" id="vid<?php echo $product->id."-".$key; ?>">
                             <div class="vid_player">
                                 <?php  echo do_shortcode('[evp_embed_video url="'.home_url() . '?tanhit_download=true&product=' . $product->id . '&key=' . $key.'" width="800" ratio="0.7"]'); ?>
                             </div>
-                        </div>
+                        </div>*/?>
+						666
 
                     <?php
 					}	?>

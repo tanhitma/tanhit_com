@@ -247,16 +247,23 @@ function wc_downloadable_file_permission( $download_id, $product_id, $order, $qt
 
 	$user_email = sanitize_email( $order->billing_email );
 	$limit      = trim( get_post_meta( $product_id, '_download_limit', true ) );
+        $dstart     = trim( get_post_meta( $product_id, '_download_dstart', true ) );
 	$expiry     = trim( get_post_meta( $product_id, '_download_expiry', true ) );
-
+        
 	$limit      = empty( $limit ) ? '' : absint( $limit ) * $qty;
 
 	// Default value is NULL in the table schema
 	$expiry     = empty( $expiry ) ? null : absint( $expiry );
 
 	if ( $expiry ) {
-		$order_completed_date = date_i18n( "Y-m-d", strtotime( $order->completed_date ) );
-		$expiry = date_i18n( "Y-m-d", strtotime( $order_completed_date . ' + ' . $expiry . ' DAY' ) );
+            $order_completed_date = date_i18n( "Y-m-d", strtotime( $order->completed_date ) );
+            
+            $order_dstart = $order_completed_date;
+            if (strtotime($dstart) > strtotime($order_completed_date)){
+                $order_dstart = $dstart;
+            }
+            
+            $expiry = date_i18n( "Y-m-d", strtotime( $order_dstart . ' + ' . $expiry . ' DAY' ) );
 	}
 
 	$data = apply_filters( 'woocommerce_downloadable_file_permission_data', array(
@@ -283,19 +290,27 @@ function wc_downloadable_file_permission( $download_id, $product_id, $order, $qt
 		'%d'
 	), $data);
 
-	//Ограничение доступа на введенное количесмтво дней
+	//Ограничение доступа на введенное количество дней
 	$files = get_post_meta( $product_id, '_downloadable_files', true);
 	if (isset($files[$download_id]['expiry'])){
-		$expiry_tmp = (int)$files[$download_id]['expiry'];
-		if ($expiry_tmp){
-			$order_completed_date = date_i18n( "Y-m-d", strtotime( $order->completed_date ) );
-			$expiry = date_i18n( "Y-m-d", strtotime( $order_completed_date . ' + ' . $expiry_tmp . ' DAY' ) );
-		}
+            $dstart_tmp = trim($files[$download_id]['dstart']);
+            $expiry_tmp = (int)$files[$download_id]['expiry'];
+            
+            if ($expiry_tmp){
+                $order_completed_date = date_i18n( "Y-m-d", strtotime( $order->completed_date ) );
+                
+                $order_dstart = $order_completed_date;
+                if (strtotime($dstart_tmp) > strtotime($order_dstart)){
+                    $order_dstart = $dstart_tmp;
+                }
+                
+                $expiry = date_i18n( "Y-m-d", strtotime( $order_dstart . ' + ' . $expiry_tmp . ' DAY' ) );
+            }
 	}
 	
 	if ( ! is_null( $expiry ) ) {
-			$data['access_expires'] = $expiry;
-			$format[] = '%s';
+            $data['access_expires'] = $expiry;
+            $format[] = '%s';
 	}
 
 	// Downloadable product - give access to the customer
