@@ -242,12 +242,12 @@ function wc_register_order_type( $type, $args = array() ) {
  * @param  int $qty purchased
  * @return int|bool insert id or false on failure
  */
-function wc_downloadable_file_permission( $download_id, $product_id, $order, $qty = 1 ) {
+function wc_downloadable_file_permission( $download_id, $product_id, $order, $qty = 1, $file = false ) {
 	global $wpdb;
 
 	$user_email = sanitize_email( $order->billing_email );
 	$limit      = trim( get_post_meta( $product_id, '_download_limit', true ) );
-        $dstart     = trim( get_post_meta( $product_id, '_download_dstart', true ) );
+        $dstart     = trim( get_post_meta( $product_id, '_download_start', true ) );
 	$expiry     = trim( get_post_meta( $product_id, '_download_expiry', true ) );
         
 	$limit      = empty( $limit ) ? '' : absint( $limit ) * $qty;
@@ -267,15 +267,15 @@ function wc_downloadable_file_permission( $download_id, $product_id, $order, $qt
 	}
 
 	$data = apply_filters( 'woocommerce_downloadable_file_permission_data', array(
-		'download_id'			=> $download_id,
-		'product_id' 			=> $product_id,
-		'user_id' 				=> absint( $order->user_id ),
-		'user_email' 			=> $user_email,
-		'order_id' 				=> $order->id,
-		'order_key' 			=> $order->order_key,
-		'downloads_remaining' 	=> $limit,
-		'access_granted'		=> current_time( 'mysql' ),
-		'download_count'		=> 0
+		'download_id'		=> $download_id,
+		'product_id' 		=> $product_id,
+		'user_id' 		=> absint( $order->user_id ),
+		'user_email' 		=> $user_email,
+		'order_id' 		=> $order->id,
+		'order_key' 		=> $order->order_key,
+		'downloads_remaining'   => $limit,
+		'access_granted'	=> current_time( 'mysql' ),
+		'download_count'	=> 0
 	));
 
 	$format = apply_filters( 'woocommerce_downloadable_file_permission_format', array(
@@ -290,11 +290,17 @@ function wc_downloadable_file_permission( $download_id, $product_id, $order, $qt
 		'%d'
 	), $data);
 
-	//Ограничение доступа на введенное количество дней
-	$files = get_post_meta( $product_id, '_downloadable_files', true);
-	if (isset($files[$download_id]['expiry'])){
-            $dstart_tmp = trim($files[$download_id]['dstart']);
-            $expiry_tmp = (int)$files[$download_id]['expiry'];
+        if ( ! $file){
+            //Ограничение доступа на введенное количество дней
+            $files = get_post_meta( $product_id, '_downloadable_files', true);
+            if (isset($files[$download_id])){
+                $file = $files[$download_id];
+            }
+        }
+        
+        if (isset($file['expiry'])){
+            $dstart_tmp = trim($file['start']);
+            $expiry_tmp = (int)$file['expiry'];
             
             if ($expiry_tmp){
                 $order_completed_date = date_i18n( "Y-m-d", strtotime( $order->completed_date ) );
@@ -306,17 +312,25 @@ function wc_downloadable_file_permission( $download_id, $product_id, $order, $qt
                 
                 $expiry = date_i18n( "Y-m-d", strtotime( $order_dstart . ' + ' . $expiry_tmp . ' DAY' ) );
             }
-	}
+        }
 	
 	if ( ! is_null( $expiry ) ) {
             $data['access_expires'] = $expiry;
             $format[] = '%s';
 	}
 
+        //Удаляем ранее выданные права
+        $wpdb->delete( $wpdb->prefix . 'woocommerce_downloadable_product_permissions', array(
+            'download_id'	=> $data['download_id'],
+            'product_id' 	=> $data['product_id'],
+            'order_id' 		=> $data['order_id'],
+            'user_id' 		=> $data['user_id'],
+        ), array( '%s','%d','%d','%d' ) );
+        
 	// Downloadable product - give access to the customer
 	$result = $wpdb->insert( $wpdb->prefix . 'woocommerce_downloadable_product_permissions',
-		$data,
-		$format
+            $data,
+            $format
 	);
 
 	do_action( 'woocommerce_grant_product_download_access', $data );

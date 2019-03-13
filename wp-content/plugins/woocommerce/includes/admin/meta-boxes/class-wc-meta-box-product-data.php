@@ -270,54 +270,62 @@ class WC_Meta_Box_Product_Data {
                                     .ui-acf .datepicker_wrapper .ui-datepicker .ui-datepicker-prev, .ui-acf .datepicker_wrapper .ui-datepicker .ui-datepicker-next{display:block;}
                                 </style>
                                 <script>
-                                    jQuery('.show_if_downloadable .input_field_date').datepicker({
-                                        dateFormat: 'dd.mm.yy',
-                                        monthNames : ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
-                                        dayNamesMin : ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'],
-                                        beforeShow : function(){
-                                            if( ! jQuery('.datepicker_wrapper').length){
-                                                jQuery('#ui-datepicker-div').wrap('<span class="datepicker_wrapper"></span>');
-                                            }
-                                       }
-                                    });
-                                    
                                     function customToDate(dateStr) {
                                         var parts = dateStr.split(".");
                                         return new Date(parts[2], parts[1] - 1, parts[0]);
                                     }
                                     
-                                    jQuery('.show_if_downloadable .input_field_date,.show_if_downloadable .download_expiry input,.show_if_downloadable ._download_expiry_field input').change(function(){
-                                        var global_dstart = jQuery('.show_if_downloadable ._download_start_field  input').val();
-                                        var global_expiry = jQuery('.show_if_downloadable ._download_expiry_field input').val();
-                                        
-                                        jQuery.each(jQuery('.show_if_downloadable .downloadable_files tbody tr'), function(i, v){
-                                            var tr_dstart = jQuery(v).find('.download_start input').val();
-                                            var tr_expiry = jQuery(v).find('.download_expiry input').val();
-                                            
-                                            var v_dstart = jQuery.trim(tr_dstart ? tr_dstart : global_dstart);
-                                            var v_expiry = parseInt(tr_expiry ? tr_expiry : global_expiry) || 0;
-                                            
-                                            var result = '';
-                                            if (v_dstart && v_expiry){
-                                                var date = customToDate(v_dstart);
-                                                date.setDate(date.getDate() + 1 + v_expiry);
-                                                
-                                                var d = date.getUTCDate();
-                                                if (d < 10){
-                                                    d = '0' + d;
+                                    function custom_date_bind(){
+                                        jQuery('.show_if_downloadable .input_field_date').datepicker({
+                                            dateFormat: 'dd.mm.yy',
+                                            monthNames : ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
+                                            dayNamesMin : ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'],
+                                            beforeShow : function(){
+                                                if( ! jQuery('.datepicker_wrapper').length){
+                                                    jQuery('#ui-datepicker-div').wrap('<span class="datepicker_wrapper"></span>');
                                                 }
-                                                
-                                                var m = date.getUTCMonth()+1;
-                                                if (m < 10){
-                                                    m = '0' + m;
-                                                }
-                                                
-                                                result = d+'.'+m+'.'+date.getUTCFullYear();
-                                            }
-                                            
-                                            jQuery(v).find('.download_dend').text(result);              
+                                           }
                                         });
+                                        
+                                        jQuery('.show_if_downloadable .input_field_date,.show_if_downloadable .download_expiry input,.show_if_downloadable ._download_expiry_field input').change(function(){
+                                            var global_dstart = jQuery('.show_if_downloadable ._download_start_field  input').val();
+                                            var global_expiry = jQuery('.show_if_downloadable ._download_expiry_field input').val();
+
+                                            jQuery.each(jQuery('.show_if_downloadable .downloadable_files tbody tr'), function(i, v){
+                                                var tr_dstart = jQuery(v).find('.download_start input').val();
+                                                var tr_expiry = jQuery(v).find('.download_expiry input').val();
+
+                                                var v_dstart = jQuery.trim(tr_dstart ? tr_dstart : global_dstart);
+                                                var v_expiry = parseInt(tr_expiry ? tr_expiry : global_expiry) || 0;
+
+                                                var result = '';
+                                                if (v_dstart && v_expiry){
+                                                    var date = customToDate(v_dstart);
+                                                    date.setDate(date.getDate() + 1 + v_expiry);
+
+                                                    var d = date.getUTCDate();
+                                                    if (d < 10){
+                                                        d = '0' + d;
+                                                    }
+
+                                                    var m = date.getUTCMonth()+1;
+                                                    if (m < 10){
+                                                        m = '0' + m;
+                                                    }
+
+                                                    result = d+'.'+m+'.'+date.getUTCFullYear();
+                                                }
+
+                                                jQuery(v).find('.download_dend').text(result);              
+                                            });
+                                        });
+                                    }
+                                    
+                                    jQuery(document).bind('downloadable_files_insert_row', function(){
+                                        custom_date_bind();
                                     });
+                                    
+                                    jQuery(document).trigger('downloadable_files_insert_row');
                                 </script>
                                 
                                 <?                                
@@ -1316,20 +1324,22 @@ class WC_Meta_Box_Product_Data {
 				}
 			}
 
+                        update_post_meta( $post_id, '_download_start', $_download_start );
+                        update_post_meta( $post_id, '_download_expiry', $_download_expiry );
+                        
 			// grant permission to any newly added files on any existing orders for this product prior to saving
 			do_action( 'woocommerce_process_product_file_download_paths', $post_id, 0, $files );
 
 			update_post_meta( $post_id, '_downloadable_files', $files );
 			update_post_meta( $post_id, '_download_limit', $_download_limit );
-			update_post_meta( $post_id, '_download_start', $_download_start );
-                        update_post_meta( $post_id, '_download_expiry', $_download_expiry );
                         
 			if ( isset( $_POST['_download_type'] ) ) {
-				update_post_meta( $post_id, '_download_type', wc_clean( $_POST['_download_type'] ) );
+                            update_post_meta( $post_id, '_download_type', wc_clean( $_POST['_download_type'] ) );
 			}
                         
                         //Если пересчитать выданный ранее доступ
                         if (isset($_POST['_download_expiry_recalculate']) && $files){
+
                             $global_dstart = $_download_start;
                             $global_expiry = $_download_expiry;
                             

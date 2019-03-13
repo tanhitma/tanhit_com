@@ -208,6 +208,7 @@ jQuery( function( $ ) {
 	// File inputs
 	$( '#woocommerce-product-data' ).on( 'click','.downloadable_files a.insert', function() {
 		$( this ).closest( '.downloadable_files' ).find( 'tbody' ).append( $( this ).data( 'row' ) );
+                $(document).trigger('downloadable_files_insert_row');
 		return false;
 	});
 	$( '#woocommerce-product-data' ).on( 'click','.downloadable_files a.delete',function() {
