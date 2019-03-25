@@ -135,6 +135,18 @@ class cdek_integrator {
 		throw new Exception($file_name  . ' not found.');
 	}
 	
+	protected function xml_entities($string) {
+		return strtr(
+			$string, 
+			array(
+				"<" => "&lt;",
+				">" => "&gt;",
+				'"' => "&quot;",
+				"'" => "&apos;",
+				"&" => "&amp;",
+			)
+		);
+	}
 }
 
 ?>

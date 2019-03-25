@@ -23,7 +23,7 @@
                                 </div>
                             </div>
 <center><a href="https://tanhit.com/oferta" target="_blank">Пользовательское соглашение</a><br>
-Все права защищены © 2017 Попова Татьяна Николаевна. Копирование и распространением материалов запрещено.<br><br><a href="https://idea4web.biz" target="_blank"><img src="https://tanhit.com/wp-content/uploads/2017/02/foot_ico.png" width="88" height="31" border="0"></a><br><br></center>
+ТАНИТ © 2017 Все права защищены. Копирование и распространение материалов запрещено.<br><br><a href="https://idea4web.biz" target="_blank"><img src="https://tanhit.com/wp-content/uploads/2017/02/foot_ico.png" width="88" height="31" border="0"></a><br><br></center>
                         </div>
                     </div>
                 </div>

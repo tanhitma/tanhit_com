@@ -129,10 +129,13 @@ if ( ! empty( $list ) ) :
 
     foreach( $list as $item ) {
 	
+		//Выводим в списке, даже если дата начала больше текущей
+		$fixed_in_shedule = (int)get_post_meta( $item->ID, 'fixed_in_shedule', true );
+	
 		$date_start = strtotime( get_post_meta( $item->ID, 'product_date_start', true ) );
 	
 		$action = pll__( 'Участвовать', 'tanhit' ); 
-		if ( $date_start < strtotime( $now ) ) {
+		if ( ! $fixed_in_shedule && $date_start < strtotime( $now ) ) {
 			
 			if ( $show_only_future_events ) {
 				continue;
